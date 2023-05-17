@@ -1,0 +1,32 @@
+.navTweeter{
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.navTweeter img{
+    width: 70px;
+    object-fit: contain;
+}
+
+.navButtons{
+    margin: 0 auto;
+}
+
+.navButtons button{
+    width: 170px;
+}
+
+.navButtons button, .navUser button{
+    background-color: transparent;
+    border: transparent;
+    font-weight: 600;
+}
+
+.navButtons button:hover, .navUser:hover{
+    cursor: pointer;
+    color: rgb(65, 65, 248);
+    transition: all .3s;
+}

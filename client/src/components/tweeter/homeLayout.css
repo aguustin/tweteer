@@ -1,0 +1,70 @@
+.profileInfo{
+    width: 100vw;
+    position: relative;
+}
+
+.portadaProfile{
+    width: 100%;
+    position: absolute;
+    z-index: 0;
+}
+.portadaProfile img{
+    width: 100%;
+    height: 350px;
+    object-fit:cover;
+}
+
+.profileDesc{
+    width: 86vw;
+    position: absolute;
+    background-color: white;
+    border-radius: 10px;
+    top:300px;
+    left: 7.5vw;
+    transform: translateX(-1vw);
+    padding-bottom: 2rem;
+    box-shadow: 0px 1px 3px 0px rgba(168,168,168,0.75);
+    -webkit-box-shadow: 0px 1px 3px 0px rgba(168,168,168,0.75);
+    -moz-box-shadow: 0px 1px 3px 0px rgba(168,168,168,0.75);
+}
+
+.profileDesc button{
+    position: absolute;
+    right: 1rem;
+    top:1rem;
+    border-style:none;
+    background-color: rgb(65, 65, 248);
+    color: white;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: .5rem 1.3rem;
+}
+
+.photoUser{
+    position: relative;
+    width: 18vw;
+    margin-left: 1rem;
+    height: 130px;
+}
+
+.photoUser img{
+    position: relative;
+    bottom: 6vh;
+    width: 18vw;
+}
+
+.userDesc{
+    width: 34vw;
+    margin-top: 1rem;
+    margin-left: 1.5rem;
+    text-align: left;
+}
+
+.userDesc label{
+    margin-left: 1rem;
+}
+
+.description{
+    margin-top: 1.5rem;
+}
+
