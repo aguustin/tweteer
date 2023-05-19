@@ -1,0 +1,193 @@
+.tweets{
+    background-color: rgb(247, 247, 247);
+}
+
+.search{
+    position: relative;
+    top: 1rem;
+    margin-bottom: 1rem;
+    background-color: white;
+    left: 8.5vw;
+    width: 51.5vw;
+    padding: .5rem;
+    border-radius: 8px;
+
+     && form{
+        width: 100%;
+        
+        && input{
+            width: 100%;
+            border: none;
+            outline: none;
+            padding: .5rem 1rem;
+        }
+
+        && button{
+            background-color: rgb(65, 65, 248);
+            color: white;
+            padding: .5rem 1rem;
+            border-radius: 4px;
+        }
+     }
+}
+
+.lists-publications-container{
+    width: 86vw;
+    transform: translateX(-.6vw);
+}
+
+.publications{
+    background-color: rgb(247, 247, 247);
+}
+
+.lists{
+ background-color: white;
+ margin-top: 1rem;
+ border-radius: 4px;
+ list-style: none;
+ height: 200px;
+ box-shadow: 0px 0px 12px -10px rgba(128,128,128,0.75);
+ -webkit-box-shadow: 0px 0px 12px -10px rgba(128,128,128,0.75);
+ -moz-box-shadow: 0px 0px 12px -10px rgba(128,128,128,0.75);
+}
+
+.lists li{
+    display: flex;
+    align-items: center;
+    padding: .7rem;
+    width: 370px;
+}
+
+.lists li button{
+    background-color: transparent;
+    font-weight: 600;
+    border: none;
+    color: rgb(92, 92, 92);
+}
+
+.lists li:hover{
+    cursor: pointer;
+    border-left: 2px solid rgb(65, 65, 248);
+    background-color: rgb(247, 247, 247);
+
+    && button{
+        color: rgb(65, 65, 248);
+    }
+}
+
+.publications{
+    position: relative;
+    width: 64vw;
+    top: 1rem;
+    margin-bottom: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    margin-left: 3rem;
+    text-align: left;
+    padding: 1rem;
+    box-shadow: 0px 0px 12px -10px rgba(128,128,128,0.75);
+    -webkit-box-shadow: 0px 0px 12px -10px rgba(128,128,128,0.75);
+    -moz-box-shadow: 0px 0px 12px -10px rgba(128,128,128,0.75);
+}
+
+.imgProfile img{
+    width: 66px;
+    height: 66px;
+    border-radius: 8px;
+}
+
+.imgProfile > div p, label{
+    margin-left: 1rem;
+}
+
+.imgProfile > div label{
+    color: rgb(182, 182, 182);
+}
+
+.tweetDesc-img p{
+    margin-top: 1rem;
+}
+
+.tweetDesc-img img{
+    width: 100%;
+}
+
+.tweetDesc-img li button img{
+    width: 24px;
+}
+
+.tweetDesc-img li{
+    margin-top: .3rem;
+    border: 1px solid rgb(212, 211, 211);
+    border-radius: 6px;
+}
+
+.tweetDesc-img li button{
+    width: 25%;
+    background-color: transparent;
+    border: none;
+    padding: .5rem 1rem;
+    margin: auto;
+    border-radius: 5px;
+}
+
+.tweetDesc-img li button:hover{
+    background-color: rgb(238, 238, 238);
+    transition: all .5s;
+}
+
+.comments-form{
+    margin-top: .5rem;
+
+    && img{
+        width: 66px;
+        height: 66px;
+        border-radius: 8px;
+    };
+
+    && input{
+        background-color: rgb(241, 240, 240);
+        margin-left: .3rem;
+        padding: 0rem 1rem;
+        border: none;
+        outline: none;
+        width: 100%;
+        border-radius: 8px;
+    }
+}
+
+.comments-container{
+    text-align: left;
+
+    && img{
+        border-radius: 8px;
+    };
+
+    && button{
+        color: rgb(179, 179, 179);
+        background-color: transparent;
+        border: none;
+    };
+
+    && label{
+        color: rgb(179, 179, 179);
+        font-size: 14px;
+        margin-top: 2px;
+    }
+}
+
+#comment-image-profile{
+    width: 66px;
+    height: 66px;
+}
+
+.comment{
+    background-color: rgb(245, 245, 245);
+    margin-left: 1rem;
+    padding: .5rem .9rem;
+    border-radius: 8px;
+}
+
+#like-comment img{
+    width: 24px;
+}

@@ -7,11 +7,43 @@ const tweeterSchema = new mongoose.Schema({
     userImg:{
         type:String
     },
+    userMail:{
+        type:String
+    },
     userName:{
         type:String
     },
     userDesc:{
         type:String
+    },
+    password:{
+        type:String
+    },
+    alias:{
+        type:String
+    },
+    userHobbies:[{
+        hobbieA:{
+            type:String
+        },
+        hobbieB:{
+            type:String
+        },
+        hobbieC:{
+            type:String
+        },
+        hobbieD:{
+            type:String
+        },
+        hobbieE:{
+            type:String
+        },
+    }],
+    followers:{
+        type: Number
+    },
+    following:{
+        type: Number
     },
     tweets:[{
         tweetUsername:{

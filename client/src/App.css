@@ -1,3 +1,13 @@
+* img{
+  object-fit: cover;
+}
+
+* button{
+  border: none;
+  outline: none;
+}
+
 .App {
   text-align: center;
+  overflow-x: hidden;
 }

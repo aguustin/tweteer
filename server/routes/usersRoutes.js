@@ -3,7 +3,7 @@ import { authenticateUserController, createUserController, deleteAllUsersControl
 
 const router = Router();
 
-router.get('/getAllUser', getUsersController);
+router.get('/getAllUsers', getUsersController);
 
 router.post('/createUser', createUserController);
 

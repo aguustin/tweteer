@@ -137,3 +137,33 @@ export const increaseRetweetsController = async (req, res) => {
   
     res.sendStatus(200);
 }
+
+export const getPeopleByHobbiesController = async (req, res) => {
+    const {userId} = req.params;
+
+    const findUserId = await tweets.find({userId: userId});
+
+    const getPeople = await tweets.find({
+        $expr: {
+          $gt: [
+            {
+              $arrayElemAt: [ { $arrayElemAt: [ "userHobbies", 0, 1, 2, 3, 4 ] }, findUserId[0].hobbieA ]
+            },
+            {
+              $arrayElemAt: [ { $arrayElemAt: [ "userHobbies", 0, 1, 2, 3, 4  ] }, findUserId[0].hobbieB ]
+            },
+            {
+                $arrayElemAt: [ { $arrayElemAt: [ "userHobbies", 0, 1, 2, 3, 4 ] }, findUserId[0].hobbieC ]
+            },
+            {
+                $arrayElemAt: [ { $arrayElemAt: [ "userHobbies", 0, 1, 2, 3, 4 ] }, findUserId[0].hobbieD ]
+            },
+            {
+                $arrayElemAt: [ { $arrayElemAt: [ "userHobbies", 0, 1, 2, 3, 4 ] }, findUserId[0].hobbieE ]
+            },
+          ]
+        }
+      })
+
+    res.send(getPeople);
+}

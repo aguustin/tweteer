@@ -1,18 +1,24 @@
 import './homeLayout.css';
 import prueba from "../../imgs/prueba.jpg";
+import { useContext } from 'react';
+import UserContext from '../../context/usersContext';
+
 const HomeLayout = () => {
+
+    const {session} = useContext(UserContext);
+
     return(
         <div className='profileInfo'>
             <div className='portadaProfile'>
                 <img src={prueba} alt=""></img>
             </div>
-            <div className='profileDesc d-flex'>
+            <div className='profileDesc d-flex mx-auto'>
                 <div className='photoUser'>
-                    <img src={prueba} alt=""></img>
+                    {session.map((s) => <img src={prueba} alt=""></img>)}
                 </div>
                 <div className='userDesc'>
                     <div className='d-flex align-items-center'>
-                        <h1>Username Lastname</h1>
+                        {session.map((s) => <h1>{s.userName}</h1>)}
                         <label>2031 following</label>
                         <label>2031 followers</label>
                     </div>

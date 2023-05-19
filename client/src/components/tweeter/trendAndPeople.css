@@ -1,0 +1,101 @@
+.trendAndPeople{
+    min-width: 400px;
+    margin: 1rem;
+    text-align: left;
+
+    && p{
+        font-weight: 600;
+    };
+
+    && li{
+        list-style: none;
+        width: 92%;
+        margin: auto;
+        padding: .5rem 0rem;
+    }
+}
+
+.trends-header{
+    border-bottom: .3px solid rgb(182, 182, 182);
+    width: 95%;
+    margin: auto;
+    padding: .8rem 0rem;
+}
+
+.trends, .people{
+    background-color: white;
+    padding: .5rem .2rem;
+    border-radius: 8px;
+}
+
+.trends{
+    && p{
+        margin: -.1rem;
+    }
+    && label{
+        font-size: 14px;
+        color: rgb(182, 182, 182);
+    }
+}
+
+
+.people{
+    position: relative;
+    margin-top: 1rem;
+
+    && .people-body{
+        margin-top: 1.4rem;
+        align-items: center;
+    };
+
+    && .user-followers{
+      text-align: left;
+      margin-left: 1rem;
+
+      && label{
+        margin-left: 0;
+        font-size: 14px;
+        color: rgb(182, 182, 182);
+      }
+    }
+
+    && button{
+        position: absolute;
+        height: 30px;
+        right: 1rem;
+        background-color: rgb(65, 65, 248);
+        color: white;
+        padding: 0rem .7rem;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+
+    && .peopleHobbies{
+        margin-top: 1rem;
+        
+        && label{
+            font-size: 16px;
+            color: rgb(182, 182, 182);
+        }
+    }
+
+    && .peoplePortada{
+        margin-top: .7rem;
+        padding-bottom: 1.7rem;
+        border-bottom: .1px solid rgb(182, 182, 182);
+        
+        && img{
+            height: 100px;
+            width: 96%;
+            border-radius: 8px;
+        }
+    }
+
+}
+
+#peopleImg{
+    height: 66px;
+    width: 66px;
+    border-radius: 8px;
+    margin-left: .7rem;
+}

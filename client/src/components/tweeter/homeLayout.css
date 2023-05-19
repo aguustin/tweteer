@@ -5,7 +5,6 @@
 
 .portadaProfile{
     width: 100%;
-    position: absolute;
     z-index: 0;
 }
 .portadaProfile img{
@@ -16,11 +15,9 @@
 
 .profileDesc{
     width: 86vw;
-    position: absolute;
     background-color: white;
     border-radius: 10px;
     top:300px;
-    left: 7.5vw;
     transform: translateX(-1vw);
     padding-bottom: 2rem;
     box-shadow: 0px 1px 3px 0px rgba(168,168,168,0.75);
