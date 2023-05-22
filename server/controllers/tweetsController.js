@@ -1,42 +1,57 @@
 import tweets from "../models/tweeterModel.js";
 
+export const  getProfileController = async (req, res) => {
+    const {userId} = req.params;
+    const ownProfile = await tweets.find({_id: userId});
+
+    res.send(ownProfile);
+}
+
 export const getProfileInformationController = async (req, res) => {
-   const {userName} = req.params;
-   const getProfile = await tweets.find({userName: userName});
+   const {userId} = req.params;
+   const getProfile = await tweets.find({_id: userId});
 
    res.send(getProfile);
 }
 
 export const createTweetController = async (req, res) => {
-    const {userId, photo, userName, publication, tweetImg} = req.body;
-
-    const firstTweet = await tweets.find({userId: userId});
+    const {userId, photo, userName, publication, tweetImg, tweetPrivacy} = req.body;
+    const firstTweet = await tweets.find({_id: userId});
 
     if(firstTweet.length > 0){
         await tweets.updateOne(
-            {userId: userId},
+            {_id: userId},
             {
                 $addToSet:{
                     tweets:{
                         tweetProfileImg: photo,
                         tweetUsername: userName,
                         tweetPublication: publication,
-                        tweetImg: tweetImg
+                        tweetImg: tweetImg,
+                        tweetPrivacy: tweetPrivacy,
+                        tweetLikes: 0,
+                        tweetComments: 0,
+                        retweets: 0
                     }
                 }
             }
             )
-        res.sendStatus(200);
+        const updateState = await tweets.find({_id: userId});
+        res.send(updateState);
        
     }else{
-        const saveTweet = await tweets({
-            userId: userId,
+        const saveTweet = new tweets({
+            _id: userId,
             userName: userName,
             tweets:[{
                 tweetProfileImg: photo,
                 tweetUsername: userName,
-                tweetPublication:publication,
-                tweetImg: tweetImg
+                tweetPublication: publication,
+                tweetImg: tweetImg,
+                tweetPrivacy: tweetPrivacy,
+                tweetLikes: 0,
+                tweetComments: 0,
+                retweets: 0
             }]
         })
         await saveTweet.save();
@@ -141,7 +156,7 @@ export const increaseRetweetsController = async (req, res) => {
 export const getPeopleByHobbiesController = async (req, res) => {
     const {userId} = req.params;
 
-    const findUserId = await tweets.find({userId: userId});
+    const findUserId = await tweets.find({_id: userId});
 
     const getPeople = await tweets.find({
         $expr: {

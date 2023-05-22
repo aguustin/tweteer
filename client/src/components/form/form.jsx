@@ -5,40 +5,39 @@ import UserContext from '../../context/usersContext';
 import {useNavigate} from "react-router-dom";
 
 const Form = () => {
-
+    const nav = useNavigate();
     const {createUserContext, setSessionContext} = useContext(UserContext);
     const [form, setForm] = useState(false);
-    const nav = useNavigate();
 
     const createUser = async (e) => {
-        e.preventDefault();
+
         const userMail = e.target.elements.userMail.value;
-        const password = e.target.elements.password.value;   
-        const repitePassword = e.target.elements.password.value;
+        const userName = e.target.elements.userName.value;
+        const password = e.target.elements.password.value;  
+        const repitePassword = e.target.elements.repitePassword.value;
         
         const accountData = {
             userMail: userMail,
+            userName: userName,
             password: password,
             repitePassword: repitePassword
-        }
-
+        };
         await createUserContext(accountData);
-
+        console.log(userMail);
         setForm(!form);
     }
 
     const authenticateUser = async (e) => {
             e.preventDefault();
             const userMail = e.target.elements.userMail.value;
-            const password = e.target.elements.password.value;
-
+            const password = e.target.elements.password.value; 
             const authenticateData = {
                 userMail: userMail,
                 password: password,
-            }
-
+                
+            };
+    
             await setSessionContext(authenticateData);
-
             nav('/tweeterio');
     }
 
@@ -46,27 +45,31 @@ const Form = () => {
     const Register = () => {
         return(
             <div>
-                <form className='form mx-auto' onSubmit={(e) => createUser(e)}>
+                <form onSubmit={(e) => createUser(e)} className='form mx-auto'>
                     <div className='form-header d-flex'>
                         <h1>TweeterIo</h1>
                     </div>
                     <div>
                         <div className='form-group'>
-                            <input type="mail" name="userMail" placeholder='...'></input>
-                            <label>userMail</label>
+                            <input type="text" name="userMail" placeholder='...'/>
+                            <label>Mail</label>
                         </div>
                         <div className='form-group'>
-                            <input type="password" name="password" placeholder='...'></input>
+                            <input type="text" name="userName" placeholder='...'/>
+                            <label>UserName</label>
+                        </div>
+                        <div className='form-group'>
+                            <input type="password" name="password" placeholder='...'/>
                             <label>Password</label>
                         </div>
                         <div className='form-group'>
-                            <input type="password" name="repitePassword" placeholder='...'></input>
+                            <input type="password" name="repitePassword" placeholder='...'/>
                             <label>Repite password</label>
                         </div>
                     </div>
                     <div className='form-footer'>
                         <div>
-                            <button onClick={(e) => setForm(!form)}>Back</button>
+                            <button onClick={() => setForm(!form)}>Back</button>
                             <button type="submit">Register</button>
                         </div>
                     </div>
@@ -84,18 +87,18 @@ const Form = () => {
                     </div>
                     <div>
                         <div className='form-group'>
-                            <input type="mail" name="userMail" placeholder='...'></input>
-                            <label>userMail</label>
+                            <input type="text" name="userMail" placeholder='...'/>
+                            <label>Mail</label>
                         </div>
                         <div className='form-group'>
-                            <input type="password" name="password" placeholder='...'></input>
+                            <input type="password" name="password" placeholder='...'/>
                             <label>Password</label>
                         </div>
                     </div>
                     <div className='form-footer'>
                         <div className='d-flex justify-content-between'>
                             <button type="submit">Login</button>
-                            <button onClick={(e) => setForm(!form)}>Sign In</button>
+                            <button onClick={() => setForm(!form)}>Sign In</button>
                         </div>
                     </div>
                 </form>
@@ -109,7 +112,10 @@ const Form = () => {
                 <img src={test} alt=""></img>
                 <img src={test} alt=""></img>
             </nav>
+            <div>
+
              {form ? <Register/> : <Login/>}
+            </div>
         </div>
     )
 }

@@ -1,31 +1,34 @@
-import users from "../models/userModel.js";
 import tweets from "../models/tweeterModel.js";
 import bcrypt from "bcrypt";
 import { imageUploader } from "../libs/cloudinary.js";
 import fs from 'fs-extra';
 
 export const getUsersController = async (req, res) => {
-    const getAllUsers = await users.find();
+    const getAllUsers = await tweets.find();
     res.send(getAllUsers);
 }
 
 export const createUserController = async (req, res) => {
-    const {userMail, password, repitePassword} = req.body;
+    const {userMail, userName, password, repitePassword} = req.body;
+    const userExist = await tweets.find({userMail: userMail});
 
+    if(userExist.length <= 0){
         if(password === repitePassword){
             const hashedPass = await bcrypt.hash(password, 12);
 
             if(req.files){
-                const createUser = new users({
+                const createUser = new tweets({
                     userMail: userMail,
+                    userName: userName,
                     profilePhoto: profilePhoto,
                     password: hashedPass
                 })
                 await createUser.save();
                 res.send(createUser);
             }else{
-                const createUser = new users({
+                const createUser = new tweets({
                     userMail: userMail,
+                    userName: userName,
                     password: hashedPass
                 })
                 await createUser.save();
@@ -36,27 +39,19 @@ export const createUserController = async (req, res) => {
             console.log("las contrasenas son diferentes");
             res.sendStatus(401);
         }
+    }
+
+    
     
 }
 
 export const authenticateUserController = async (req, res) => {
     const {userMail, password} = req.body;
-    const usersExist = await users.find({userMail: userMail});
+    const usersExist = await tweets.find({userMail: userMail});
 
     if(usersExist.length > 0){
         const authenticatePassword = await bcrypt.compare(password, usersExist[0].password);
         if(authenticatePassword > 0){
-            const saveOnTweet = await tweets.find({userMail: userMail});
-                if(saveOnTweet.length > 0){
-                    res.send(usersExist);
-                }else{
-                    await tweets({
-                        userId: usersExist[0]._id,
-                        userImg: usersExist[0]?.profilePhoto,
-                        userName: usersExist[0].userName
-                    })
-                    tweets.save();
-                }
             res.send(usersExist);
         }else{
             console.log("contrasena incorrecta");
@@ -70,12 +65,12 @@ export const authenticateUserController = async (req, res) => {
 
 export const editPasswordController = async (req, res) => {
     const {userMail, password, confirmPassword} = req.params;
-    const userExist = await users.find({userMail: userMail});
+    const userExist = await tweets.find({userMail: userMail});
 
     if(userExist.length > 0){
         if(password === confirmPassword){
                 const hash = await bcrypt.hash(password, 12);
-                await users.updateOne(
+                await tweets.updateOne(
                     {userMail: userMail},
                     {
                         $set:{
@@ -115,7 +110,7 @@ export const setImageProfileController = async (req, res) => {
         try{
             const userUpdate = await users.updateOne({_id: userId}, 
                 {$set : {
-                    profilePhoto: photo.url
+                    userImg: photo.url
                 }
         })
         
@@ -127,6 +122,6 @@ export const setImageProfileController = async (req, res) => {
 }
 
 export const deleteAllUsersController = async (req, res) => {
-    await users.deleteMany({});
+    await tweets.deleteMany({});
     res.sendStatus(200);
 }
