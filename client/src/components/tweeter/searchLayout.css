@@ -1,0 +1,59 @@
+.searchedPeople{
+    position: absolute;
+    max-height: 600px;
+    width: 550px;
+    top: 9.2rem;
+    left: 29vw;
+    transform: translateX(-20vw);
+    background-color: white;
+    z-index: 2;
+    padding: 0rem 2rem 2rem;
+    border-radius: 5px;
+    overflow-y: scroll;
+    box-shadow: 1px 2px 5px 0px rgba(179,179,179,0.75);
+    -webkit-box-shadow: 1px 2px 5px 0px rgba(179,179,179,0.75);
+    -moz-box-shadow: 1px 2px 5px 0px rgba(179,179,179,0.75);
+
+    && .peopleData{
+        position: relative;
+        display: flex;
+        align-items: center;
+        margin-top: 15px;
+        border-bottom: 1px solid rgb(216, 216, 216);
+        padding-bottom: 15px;
+        font-weight: 600;
+
+        && .data{
+            margin-left: 10px;
+        }
+        && img{
+            width: 70px;
+            height: 70px;
+            border-radius: 50px;
+        }
+
+        && label{
+            color: rgb(182, 182, 182);
+        }
+
+        && button{
+            position: absolute;
+            right: 0;
+            padding: .5rem .7rem;
+            background-color: rgb(65, 65, 248);
+            color: white;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+    }
+}
+
+.searchedPeople::-webkit-scrollbar{
+    background-color: transparent;
+    width: 6px;
+}
+
+.searchedPeople::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background-color: rgb(65, 65, 248);
+}

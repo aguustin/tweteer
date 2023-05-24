@@ -10,18 +10,18 @@ import Form from './components/form/form';
 function App() {
   return (
     <div className="App">
-      <UserContextProvider>
-        <LayoutContextProvider>
-          <TweetsContextProvider>
-            <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<Form/>}></Route>
-                  <Route path="/tweeterio" element={<Tweets/>} />
-                </Routes>
-            </BrowserRouter>
-          </TweetsContextProvider>
-        </LayoutContextProvider>
-      </UserContextProvider>
+      <TweetsContextProvider>
+        <UserContextProvider>
+          <LayoutContextProvider>
+              <BrowserRouter>
+                  <Routes>
+                    <Route path="/" element={<Form/>} />
+                    <Route path="/tweeterio" element={<Tweets/>} />
+                  </Routes>
+              </BrowserRouter>
+          </LayoutContextProvider>
+        </UserContextProvider>
+      </TweetsContextProvider>
     </div>
   );
 }

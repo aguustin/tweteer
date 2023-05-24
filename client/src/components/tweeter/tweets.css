@@ -9,6 +9,7 @@
     background-color: white;
     left: 8.5vw;
     width: 51.5vw;
+    min-width: 405px;
     padding: .5rem;
     border-radius: 8px;
 
@@ -182,10 +183,14 @@
 }
 
 .comment{
-    background-color: rgb(245, 245, 245);
     margin-left: 1rem;
-    padding: .5rem .9rem;
     border-radius: 8px;
+}
+
+.comment-width{
+    background-color: rgb(245, 245, 245);
+    padding: .5rem .5rem;
+    width: 45vw;
 }
 
 #like-comment img{

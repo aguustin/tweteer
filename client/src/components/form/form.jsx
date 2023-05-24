@@ -3,12 +3,15 @@ import test from '../../imgs/test.png';
 import { useContext, useState } from 'react';
 import UserContext from '../../context/usersContext';
 import {useNavigate} from "react-router-dom";
+import TweetsContext from '../../context/tweetsContext';
+import { getProfileInformationRequest } from "../../api/tweetsRequests";
 
 const Form = () => {
     const nav = useNavigate();
-    const {createUserContext, setSessionContext} = useContext(UserContext);
+    const {session, createUserContext, setSessionContext, getProfileInformationContext} = useContext(UserContext);
     const [form, setForm] = useState(false);
-
+    const {setTweets} = useContext(TweetsContext);
+    
     const createUser = async (e) => {
 
         const userMail = e.target.elements.userMail.value;
@@ -23,7 +26,7 @@ const Form = () => {
             repitePassword: repitePassword
         };
         await createUserContext(accountData);
-        console.log(userMail);
+        
         setForm(!form);
     }
 
@@ -34,14 +37,19 @@ const Form = () => {
             const authenticateData = {
                 userMail: userMail,
                 password: password,
-                
             };
-    
-            await setSessionContext(authenticateData);
-            nav('/tweeterio');
+           const confirmUser = await setSessionContext(authenticateData);
+           
+           if(confirmUser !== 0){
+               await getProfileInformationContext(session[0]._id);
+               nav('/tweeterio');
+
+           }else{
+               console.log("error")
+           }
+           
     }
-
-
+   
     const Register = () => {
         return(
             <div>

@@ -2,10 +2,12 @@ import './homeLayout.css';
 import prueba from "../../imgs/prueba.jpg";
 import { useContext } from 'react';
 import UserContext from '../../context/usersContext';
+import TweetsContext from '../../context/usersContext';
 
 const HomeLayout = () => {
 
     const {session} = useContext(UserContext);
+    const {tweets} = useContext(TweetsContext);
 
     return(
         <div className='profileInfo'>

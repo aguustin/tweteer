@@ -49,13 +49,13 @@ export const authenticateUserController = async (req, res) => {
     const {userMail, password} = req.body;
     const usersExist = await tweets.find({userMail: userMail});
 
-    if(usersExist.length > 0){
-        const authenticatePassword = await bcrypt.compare(password, usersExist[0].password);
-        if(authenticatePassword > 0){
+    if(usersExist.length !== 0){
+        let authenticatePassword = bcrypt.compareSync(password, usersExist[0].password);
+        if(authenticatePassword !== 0){
             res.send(usersExist);
         }else{
             console.log("contrasena incorrecta");
-            res.sendStatus(401);
+            res.sendStatus(400);
         }
     }else{
         console.log("el usuario no existe");
@@ -67,9 +67,10 @@ export const editPasswordController = async (req, res) => {
     const {userMail, password, confirmPassword} = req.params;
     const userExist = await tweets.find({userMail: userMail});
 
-    if(userExist.length > 0){
+    if(userExist.length !== 0){
         if(password === confirmPassword){
-                const hash = await bcrypt.hash(password, 12);
+                const salt = bcrypt.genSaltSync(12)
+                const hash = await bcrypt.hash(password, salt);
                 await tweets.updateOne(
                     {userMail: userMail},
                     {

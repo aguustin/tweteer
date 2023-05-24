@@ -1,14 +1,8 @@
 import tweets from "../models/tweeterModel.js";
 
-export const  getProfileController = async (req, res) => {
-    const {userId} = req.params;
-    const ownProfile = await tweets.find({_id: userId});
-
-    res.send(ownProfile);
-}
-
 export const getProfileInformationController = async (req, res) => {
-   const {userId} = req.params;
+   const {userId} = req.body;
+   console.log(userId);
    const getProfile = await tweets.find({_id: userId});
 
    res.send(getProfile);
@@ -61,14 +55,14 @@ export const createTweetController = async (req, res) => {
 
 
 export const respondTweetController = async (req, res) => {
-    const {tweetId, userComment, commentsProfilesImg, commentsPublication} = req.body;
+    const {tweetId, commentsUsers, commentsProfilesImg, commentsPublication} = req.body;
    
     await tweets.updateOne(
         {"tweets._id" : tweetId},
         {
             $addToSet:{
                 "tweets.$[a].comments":{
-                    commentsUsers: userComment,
+                    commentsUsers: commentsUsers,
                     commentsProfilesImg: commentsProfilesImg,
                     commentsPublication: commentsPublication
                 }
@@ -76,14 +70,12 @@ export const respondTweetController = async (req, res) => {
         },
         {arrayFilters: [
             {"a._id": tweetId}
-        ]},
-        {
-        $inc:{ //todavia no funciona
-            "tweets.$.tweetCommentsQuantity": 1 
-        }
-        }
+        ]}
     )
-        res.sendStatus(200);
+
+        const actualice = await tweets.find({"tweets._id": tweetId});
+        console.log(actualice);
+        res.send(actualice);
 }
 
 export const deepRespondController = async (req, res) => {
@@ -94,7 +86,6 @@ export const deepRespondController = async (req, res) => {
         {
             $addToSet:{
                 "tweets.$[t].comments.$[c].deepComments":{
-                    commentsQuantity: {$inc: 1},
                     deepArroba: deepUsername,
                     deepProfilesImg: deepProfilesImg,
                     deepDesc: deepPublication
@@ -112,7 +103,6 @@ export const deepRespondController = async (req, res) => {
 export const searchController = async (req, res) => {
     const {search} = req.body;
     const findUsers = await tweets.find({userName:{$regex : search, $options: 'i'}});
-
     res.send(findUsers);
 }
 

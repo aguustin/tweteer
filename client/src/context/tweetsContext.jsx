@@ -1,19 +1,11 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { createTweetRequest, getOwnProfileRequest, respondTweetRequest } from "../api/tweetsRequests";
-import UserContext from "./usersContext";
+import { createContext, useState } from "react";
+import { createTweetRequest, respondTweetRequest, searchRequest } from "../api/tweetsRequests";
 
 const TweetsContext = createContext();
 
 export const TweetsContextProvider = ({children}) => {
-
-    const {session} = useContext(UserContext);
     const [tweets, setTweets] = useState([]);
-
-    useEffect(() => {
-        (async() => {
-            await getOwnProfileRequest(session[0]?._id);
-        })();
-    },[]);
+    const [searchUser, setSearchUser] = useState([]);
 
     const createTweetContext = async (tweetData) => {
         const res = await createTweetRequest(tweetData);
@@ -22,22 +14,19 @@ export const TweetsContextProvider = ({children}) => {
 
     const respondTweetContext = async (commentData) => { 
         const res = await respondTweetRequest(commentData);
-        setTweets(...tweets, res.data);
+        setTweets(res.data);
     }
 
     const deepRespondContext = async () => {
 
     }
 
-    const searchContext = async () => {
-
+    const searchContext = async (searchData) => {
+        const res = await searchRequest(searchData);
+        setSearchUser(res.data);
     }
 
     const tendenciesContext = async () => {
-
-    }
-
-    const increaseLikesContext = async () => {
 
     }
 
@@ -52,12 +41,14 @@ export const TweetsContextProvider = ({children}) => {
     return(
         <TweetsContext.Provider value={{
             tweets,
+            setTweets,
+            searchUser, 
+            setSearchUser,
             createTweetContext,
             respondTweetContext,
             deepRespondContext,
             searchContext,
             tendenciesContext,
-            increaseLikesContext,
             increaseRetweetsContext,
             getPeopleByHobbiesContext
         }}>{children}</TweetsContext.Provider>

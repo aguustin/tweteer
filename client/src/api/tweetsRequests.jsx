@@ -1,8 +1,6 @@
 import axios from "axios";
 
-export const getOwnProfileRequest = (userId) => axios.get(`/tweeterio/${userId}`);
-
-export const getProfileInformationRequest = (userId) => axios.get(`/tweeterio/${userId}`);
+export const getProfileInformationRequest = (userId) => axios.post('/tweeterio', {userId});
 
 export const createTweetRequest = (tweetData) => axios.post('/publicTweet', tweetData);
 
@@ -10,7 +8,7 @@ export const respondTweetRequest = (commentData) => axios.post('/respondTweet', 
 
 export const deepRespondRequest = (deepRespondData) => axios.post('/responseDeepTw', deepRespondData);
 
-export const searchRequest = (searchData) => axios.post('/search', searchData);
+export const searchRequest = (searchData) => axios.post('/search', searchData, console.log(searchData));
 
 export const increaseLikesRequest = (tweetId) => axios.put(`/like/${tweetId}`);
 

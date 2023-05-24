@@ -1,7 +1,6 @@
 import express from "express";
 import fileUpload from "express-fileupload";
 import morgan from "morgan";
-import passport from "passport";
 import { port } from "./config.js";
 import { dbConnection } from "./db.js";
 import tweeterRoutes from "./routes/tweeterRoutes.js";
@@ -15,7 +14,7 @@ const app = express();
 //middlewares
 app.use(express.text());
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: false}));
 app.use(fileUpload({
     useTempFiles: true,
     tempFileDir: './profiles'

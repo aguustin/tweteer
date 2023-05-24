@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const tweeterSchema = new mongoose.Schema({
+    userPortada: {type: String},
     userImg:{ type:String },
     userMail:{ type:String },
     userName:{ type:String },
@@ -14,8 +15,14 @@ const tweeterSchema = new mongoose.Schema({
         hobbieD:{ type:String },
         hobbieE:{ type:String },
     }],
-    followers:{ type: Number },
-    following:{ type: Number },
+    followers:[{
+        followerName:{ type: String },
+        userId: { type: String }
+    }],
+    following:[{
+        followingName:{ type: String },
+        userId: { type: String }
+    }],
     tweets:[{
         tweetUsername:{ type:String },
         tweetDate:{ type: Date },
@@ -31,20 +38,13 @@ const tweeterSchema = new mongoose.Schema({
             commentsProfilesImg:{ type:String },
             commentsPublication:{ type:String },
             commentsDate:{ type: Date},
-            commentsQuantity:{ type:Number },
-            commentsLikes:{ type:Number },
             deepComments:[{
                     deepArroba:{ type:String },
                     deepProfilesImg:{ type:String },
-                    deepDesc:{ type:String },
-                    deepLikes:{ type:Number }
+                    deepDesc:{ type:String }
             }]
         }]
     }]
 })
 
 export default mongoose.model('tweets', tweeterSchema);
-
-/* userImg:{
-        type:String
-    },*/

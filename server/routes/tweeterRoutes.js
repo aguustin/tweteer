@@ -1,11 +1,9 @@
 import { Router } from "express";
-import {  getProfileController, createTweetController, deepRespondController, getProfileInformationController, increaseLikesController, increaseRetweetsController, respondTweetController, searchController, tendenciesController, getPeopleByHobbiesController } from "../controllers/tweetsController.js";
+import { createTweetController, deepRespondController, getProfileInformationController, increaseLikesController, increaseRetweetsController, respondTweetController, searchController, tendenciesController, getPeopleByHobbiesController } from "../controllers/tweetsController.js";
 
 const router = Router();
 
-router.get('/tweeterio/:userId', getProfileController);
-
-router.get('/profile/:userId', getProfileInformationController);
+router.post('/tweeterio', getProfileInformationController);
 
 router.post('/publicTweet', createTweetController);
 

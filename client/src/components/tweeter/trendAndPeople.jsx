@@ -1,8 +1,13 @@
 import './trendAndPeople.css';
 import prueba from "../../imgs/prueba.jpg";
 import hearth from "../../imgs/hearth.png";
+import { useContext } from 'react';
+import UserContext from '../../context/usersContext';
 
 const TrendAndPeople = () => {
+
+    const {allUsers} = useContext(UserContext);
+
     return(
         <div className="trendAndPeople">
             <div className="trends">
@@ -36,43 +41,27 @@ const TrendAndPeople = () => {
                     </li>
                 </div>
             </div>
-            <div className="people">
+            {allUsers.map((allU) => <div key={allU._id} className="people">
                 <div className='mx-auto'>
                     <div className='trends-header'>
                         <label>Who to follow</label>
                     </div>
                     <div className="people-body d-flex">
-                        <img id="peopleImg" src={prueba} alt=""></img>
+                        <img id="peopleImg" src={allU?.userImg} alt=""></img>
                         <div className='user-followers'>
-                            <p>userName Lastname</p>
-                            <label>230k Followers</label>
+                            <p>{allU.userName}</p>
+                            <label>{allU.followers} Followers</label>
                         </div>
                         <button><img src={hearth} alt=""></img>Follow</button>
                     </div>
                     <div className='peopleHobbies'>
-                        <label>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae, illo! A saepe earum magnam fugiat.</label>
+                        {allU.userHobbies.map((ho) => <label>{ho}</label>)}
                     </div>
                     <div className='peoplePortada text-center'>
-                        <img src={prueba} alt=""></img>
-                    </div>
-                    <div className="people-body d-flex">
-                        <img id="peopleImg" src={prueba} alt=""></img>
-                        <div className='user-followers'>
-                            <p>userName Lastname</p>
-                            <label>230k Followers</label>
-                        </div>
-                        <button><img src={hearth} alt=""></img>Follow</button>
-                    </div>
-                    <div className='peopleHobbies'>
-                        <label>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae, illo! A saepe earum magnam fugiat.</label>
-                    </div>
-                    <div className='peoplePortada text-center'>
-                        <img src={prueba} alt=""></img>
+                        <img src={allU.userPortada} alt=""></img>
                     </div>
                 </div>
-                
-            </div>
-            
+            </div>)}
         </div>
     )
 }
