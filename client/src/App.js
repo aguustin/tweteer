@@ -1,17 +1,15 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { UserContextProvider } from './context/usersContext';
-import { TweetsContextProvider } from './context/tweetsContext';
 import { LayoutContextProvider } from './context/layoutsContext';
 import { BrowserRouter , Routes ,Route } from 'react-router-dom';
 import Tweets from './components/tweeter/tweets';
 import Form from './components/form/form';
+import { TweetsContextProvider } from './context/tweetsContext';
 
 function App() {
   return (
     <div className="App">
       <TweetsContextProvider>
-        <UserContextProvider>
           <LayoutContextProvider>
               <BrowserRouter>
                   <Routes>
@@ -20,7 +18,6 @@ function App() {
                   </Routes>
               </BrowserRouter>
           </LayoutContextProvider>
-        </UserContextProvider>
       </TweetsContextProvider>
     </div>
   );

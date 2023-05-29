@@ -6,18 +6,22 @@ import PublicTweet from './publicTweet';
 import TrendAndPeople from './trendAndPeople';
 import prueba from '../../imgs/prueba.jpg';
 import hearth from "../../imgs/hearth.png";
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import LayoutContext from '../../context/layoutsContext';
 import Nav from './nav';
-import UserContext from '../../context/usersContext';
-import TweetsContext from '../../context/tweetsContext';
 import notUser from '../../imgs/notUser.jpg';
+import TweetsContext from '../../context/tweetsContext';
 
 const Tweets = () => {
     const [se, setSe] = useState("");
     const {homeLayout, listsLayout, searching} = useContext(LayoutContext);
-    const {session, allUsers} = useContext(UserContext);
-    const {tweets, respondTweetContext} = useContext(TweetsContext);
+    const {session, setSession, allUsers, tweets, respondTweetContext, getProfileInformationContext} = useContext(TweetsContext);
+    
+    useEffect(() => {
+        (async() => {
+            await getProfileInformationContext(session[0]?._id);
+        })();
+    },[]);
    
     const respondTweet = async (e, tweetId) => {
         e.preventDefault();

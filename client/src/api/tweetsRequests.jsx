@@ -14,4 +14,4 @@ export const increaseLikesRequest = (tweetId) => axios.put(`/like/${tweetId}`);
 
 export const increaseRetweetsRequest = (tweetId) => axios.put(`/retweets/${tweetId}`);
 
-export const gerPeopleHobbiesRequest = (userId) => axios.get(`/hobbies/${userId}`);
+export const getPeopleHobbiesRequest = (userId) => axios.get(`/hobbies/${userId}`);

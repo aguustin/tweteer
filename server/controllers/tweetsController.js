@@ -2,7 +2,6 @@ import tweets from "../models/tweeterModel.js";
 
 export const getProfileInformationController = async (req, res) => {
    const {userId} = req.body;
-   console.log(userId);
    const getProfile = await tweets.find({_id: userId});
 
    res.send(getProfile);

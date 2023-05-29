@@ -2,11 +2,11 @@ import './trendAndPeople.css';
 import prueba from "../../imgs/prueba.jpg";
 import hearth from "../../imgs/hearth.png";
 import { useContext } from 'react';
-import UserContext from '../../context/usersContext';
+import TweetsContext from '../../context/tweetsContext';
 
 const TrendAndPeople = () => {
 
-    const {allUsers} = useContext(UserContext);
+    const {allUsers} = useContext(TweetsContext);
 
     return(
         <div className="trendAndPeople">
@@ -50,7 +50,8 @@ const TrendAndPeople = () => {
                         <img id="peopleImg" src={allU?.userImg} alt=""></img>
                         <div className='user-followers'>
                             <p>{allU.userName}</p>
-                            <label>{allU.followers} Followers</label>
+                            <label>{allU.followers.length} Followers</label>
+                            <label>{allU.following.length} Following</label>
                         </div>
                         <button><img src={hearth} alt=""></img>Follow</button>
                     </div>

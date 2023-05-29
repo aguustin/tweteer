@@ -1,13 +1,15 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
+import TweetsContext from "./tweetsContext";
 
 const LayoutContext = createContext();
 
 export const LayoutContextProvider = ({children}) => {
+    const {session, getProfileInformationContext} = useContext(TweetsContext);
     const [homeLayout, setHomeLayout] = useState(true);
     const [listsLayout, setListLayout] = useState(false);
     const [searching, setSearching] = useState(false);
 
-    const layoutHomeContext = (e) => {
+    const layoutHomeContext = async (e) => {
         e.preventDefault();
         setSearching(false);
         setListLayout(false);

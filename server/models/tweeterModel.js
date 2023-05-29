@@ -16,12 +16,14 @@ const tweeterSchema = new mongoose.Schema({
         hobbieE:{ type:String },
     }],
     followers:[{
+        followerImg: {type: String},
         followerName:{ type: String },
-        userId: { type: String }
+        followerId: { type: String }
     }],
     following:[{
+        followingImg: {type: String},
         followingName:{ type: String },
-        userId: { type: String }
+        followingId: { type: String }
     }],
     tweets:[{
         tweetUsername:{ type:String },

@@ -1,16 +1,14 @@
 import './form.css';
 import test from '../../imgs/test.png';
 import { useContext, useState } from 'react';
-import UserContext from '../../context/usersContext';
 import {useNavigate} from "react-router-dom";
 import TweetsContext from '../../context/tweetsContext';
-import { getProfileInformationRequest } from "../../api/tweetsRequests";
+
 
 const Form = () => {
     const nav = useNavigate();
-    const {session, createUserContext, setSessionContext, getProfileInformationContext} = useContext(UserContext);
+    const {session, createUserContext, setSessionContext, getProfileInformationContext} = useContext(TweetsContext);
     const [form, setForm] = useState(false);
-    const {setTweets} = useContext(TweetsContext);
     
     const createUser = async (e) => {
 
@@ -41,9 +39,10 @@ const Form = () => {
            const confirmUser = await setSessionContext(authenticateData);
            
            if(confirmUser !== 0){
+            console.log(session[0]._id);
                await getProfileInformationContext(session[0]._id);
-               nav('/tweeterio');
 
+               nav('/tweeterio');
            }else{
                console.log("error")
            }

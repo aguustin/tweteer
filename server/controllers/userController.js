@@ -63,6 +63,26 @@ export const authenticateUserController = async (req, res) => {
     }
 }
 
+export const editProfileController = async (req, res) => {
+    const {sessionId, userPortada, userImg, userName, userDesc} = req.body;
+
+    await tweets.updateOne(
+        {_id: sessionId},
+        {
+            $set:{
+                userPortada: userPortada,
+                userImg: userImg,
+                userName: userName,
+                userDesc: userDesc
+            }
+        }
+    )
+
+    const updateProfile = await tweets.find({_id: sessionId});
+
+    res.send(updateProfile);
+}
+
 export const editPasswordController = async (req, res) => {
     const {userMail, password, confirmPassword} = req.params;
     const userExist = await tweets.find({userMail: userMail});
@@ -120,6 +140,91 @@ export const setImageProfileController = async (req, res) => {
         }catch(error){
             console.log(error);
         }
+}
+
+export const followingController = async (req, res) => {
+    const {followingId, sessionId} = req.params;
+    const findFollowedUser = await tweets.find({_id: followingId});
+    const findUser = await tweets.find({_id: sessionId});
+
+    await tweets.updateOne(
+        {_id: followingId},
+        {
+            $addToSet:
+            {
+                 followers: 
+                 [{
+                    followerImg: findUser[0].userImg,
+                    followerName: findUser[0].userName,
+                    followerId: sessionId
+                 }]
+                 
+            }
+        }  
+    )
+
+    await tweets.updateOne(
+        {_id: sessionId},
+        {
+            $addToSet:
+            {
+                following:
+                [{
+                    followingImg: findFollowedUser[0].userImg,
+                    followingName: findFollowedUser[0].userName,
+                    followingId: followingId
+                }]
+            }
+        }
+    )
+
+    res.sendStatus(200);
+}
+
+export const unFollowController = async (req, res) => {
+    const {followingId, sessionId} = req.params;
+
+    await tweets.updateOne(
+        {_id: followingId},
+        {
+            $pull:
+            {
+                followers:
+                {
+                  followerId: sessionId  
+                }
+                
+            }
+        }
+    )
+
+    await tweets.updateOne(
+        {_id: sessionId},
+        {
+            $pull:
+            {
+                following:
+                {
+                    followingId: followingId 
+                }
+                
+            }
+        }
+    )
+
+    res.sendStatus(200);
+}
+
+export const checkFollowController = async (req, res) => {
+    const {followingId} = req.params;
+    const findFollow = await tweets.find({"following.followingId": followingId});
+
+    if(findFollow.length <= 0){
+        res.sendStatus(200);
+    }else{
+        res.sendStatus(201);
+    }
+
 }
 
 export const deleteAllUsersController = async (req, res) => {

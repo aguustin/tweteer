@@ -3,12 +3,9 @@ import prueba from "../../imgs/prueba.jpg";
 import hearth from "../../imgs/hearth.png";
 import { useContext } from 'react';
 import TweetsContext from '../../context/tweetsContext';
-import UserContext from '../../context/usersContext';
 
 const PublicTweet = () => {
-
-    const {session} = useContext(UserContext);
-    const {tweets, createTweetContext} = useContext(TweetsContext);
+    const {session, createTweetContext} = useContext(TweetsContext);
 
     const createTweet = async (e) => {
         e.preventDefault();
@@ -25,8 +22,6 @@ const PublicTweet = () => {
         await createTweetContext(tweetData);
       
     }
-
-    console.log("tweets", tweets);
 
     return(
         <div className='publicTweet'>

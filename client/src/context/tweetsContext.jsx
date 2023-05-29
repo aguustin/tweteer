@@ -1,11 +1,80 @@
-import { createContext, useState } from "react";
-import { createTweetRequest, respondTweetRequest, searchRequest } from "../api/tweetsRequests";
+import { createContext, useState, useEffect } from "react";
+import { authenticateUserRequest, createUserRequest, editPasswordRequest, editProfileRequest, followRequest, checkFollowRequest, unFollowRequest, getAllUsersRequest } from "../api/userRequests";
+import { createTweetRequest, respondTweetRequest, searchRequest, getProfileInformationRequest  } from "../api/tweetsRequests";
 
 const TweetsContext = createContext();
 
 export const TweetsContextProvider = ({children}) => {
+
+    const [session, setSession] = useState([]);
+    const [allUsers, setAllUsers] = useState([]);
     const [tweets, setTweets] = useState([]);
     const [searchUser, setSearchUser] = useState([]);
+    const [checkF, setCheckF] = useState(0);
+
+    const [changeHomeLayout, setChangeHomeLayout] = useState(false);
+
+    useEffect(() => {
+        (async () => {
+            setSession(JSON.parse(localStorage.getItem("credentials")));
+            const res = await getAllUsersRequest();
+            setAllUsers(res.data);
+        })()
+    },[setAllUsers])
+   
+    const createUserContext = async (accountData) => {
+        await createUserRequest(accountData);
+    }
+
+    const setSessionContext = async (authenticateData) => {
+        const res = await authenticateUserRequest(authenticateData);
+        localStorage.setItem("credentials", JSON.stringify(res.data));
+        setSession(JSON.parse(localStorage.getItem("credentials")));
+
+        return 1
+    }
+
+    const editProfileContext = async (editData) => {
+        const res = await editProfileRequest(editData);
+        setTweets(res.data);
+    }
+
+    const editPasswordContext = async (editAccount) => {
+        localStorage.clear();
+        const res = await editPasswordRequest(editAccount);
+        localStorage.setItem("credentials", JSON.stringify(res.data));
+        setSession(JSON.parse(localStorage.getItem("credentials")));
+    }
+
+    const getProfileInformationContext = async (se) => {
+        const ownTweets = await getProfileInformationRequest(se);
+        setChangeHomeLayout(true);
+        setTweets(ownTweets.data);
+    }
+
+    const seeProfileContext = async (userId) => {
+        const res = await getProfileInformationRequest(userId);
+        const check = await checkFollowRequest(userId);
+        console.log(check.status);
+        setChangeHomeLayout(false);
+        setTweets(res.data);
+        if(check.status == 200){
+            console.log("asd");
+            setCheckF(1);
+        }else{
+            setCheckF(0);
+        }
+    }
+
+    const followContext = async (followingId) => {
+        await followRequest(followingId, session[0]._id);
+        setCheckF(1);
+    }
+
+    const unFollowContext = async (followingId) => {
+        await unFollowRequest(followingId, session[0]._id);
+        setCheckF(0);
+    }
 
     const createTweetContext = async (tweetData) => {
         const res = await createTweetRequest(tweetData);
@@ -44,13 +113,27 @@ export const TweetsContextProvider = ({children}) => {
             setTweets,
             searchUser, 
             setSearchUser,
+            changeHomeLayout, 
+            setChangeHomeLayout,
+            followContext,
+            unFollowContext,
             createTweetContext,
             respondTweetContext,
             deepRespondContext,
             searchContext,
             tendenciesContext,
             increaseRetweetsContext,
-            getPeopleByHobbiesContext
+            getPeopleByHobbiesContext,
+            session,
+            setSession,
+            allUsers,
+            checkF,
+            createUserContext,
+            setSessionContext,
+            editProfileContext,
+            editPasswordContext,
+            getProfileInformationContext,
+            seeProfileContext
         }}>{children}</TweetsContext.Provider>
     )
 }

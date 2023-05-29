@@ -1,29 +1,21 @@
 import './searchLayout.css';
 import { useContext } from "react";
-import TweetsContext from "../../context/tweetsContext";
+import TweetsContext from '../../context/tweetsContext';
 import prueba from "../../imgs/prueba.jpg";
-import UserContext from '../../context/usersContext';
+import LayoutContext from '../../context/layoutsContext';
 
 const SearchLayout = (users) => {
-    const {allUsers, seeProfileContext} = useContext(UserContext);
-    const {tweets, setTweets} = useContext(TweetsContext);
+    const { layoutHomeContext } = useContext(LayoutContext);
+    const { seeProfileContext } = useContext(TweetsContext);
 
     const seeProfile = async (e, userId) => {
         e.preventDefault();
         await seeProfileContext(userId);
+        layoutHomeContext(e);
     }
-console.log("users:", users);
+
+    console.log("users:", users);
     return(
-        /*<div>
-            {tweets.map((t) => <div key={t._id} className="seachedPeople">
-                <img src={notUser} alt=""></img>
-                <div>
-                    <p>{t.userName}</p>
-                    <label>{t?.followers}</label>
-                    <label>{t?.following}</label>
-                </div>
-            </div>)}
-        </div>*/
         <div className="searchedPeople">
             {users.users.map((all) => <div className="peopleData">
                     <div>

@@ -38,7 +38,19 @@
 }
 
 .publications{
+    height: 1700px;
     background-color: rgb(247, 247, 247);
+    overflow-y: scroll;
+}
+
+.publications::-webkit-scrollbar{
+    background-color: transparent;
+    width: 5px;
+}
+
+.publications::-webkit-scrollbar-thumb{
+    background-color: rgb(65, 65, 248);
+    border-radius: 10px;
 }
 
 .lists{
