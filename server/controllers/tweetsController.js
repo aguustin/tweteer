@@ -9,7 +9,7 @@ export const getProfileInformationController = async (req, res) => {
 }
 
 export const createTweetController = async (req, res) => {
-    const {userId, photo, userName, publication, tweetImg, tweetPrivacy} = req.body;
+    const {userId, userImg, userName, publication, tweetImg, tweetPrivacy} = req.body;
     const firstTweet = await tweets.find({_id: userId});
 
     if(firstTweet.length > 0){
@@ -18,7 +18,7 @@ export const createTweetController = async (req, res) => {
             {
                 $addToSet:{
                     tweets:{
-                        tweetProfileImg: photo,
+                        tweetProfileImg: userImg,
                         tweetUsername: userName,
                         tweetPublication: publication,
                         tweetImg: tweetImg,
@@ -38,7 +38,7 @@ export const createTweetController = async (req, res) => {
             _id: userId,
             userName: userName,
             tweets:[{
-                tweetProfileImg: photo,
+                tweetProfileImg: userImg,
                 tweetUsername: userName,
                 tweetPublication: publication,
                 tweetImg: tweetImg,

@@ -39,10 +39,9 @@ const Form = () => {
            const confirmUser = await setSessionContext(authenticateData);
            
            if(confirmUser !== 0){
-            console.log(session[0]._id);
                await getProfileInformationContext(session[0]._id);
-
                nav('/tweeterio');
+               
            }else{
                console.log("error")
            }

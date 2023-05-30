@@ -2,7 +2,14 @@ import axios from "axios";
 
 export const getProfileInformationRequest = (userId) => axios.post('/tweeterio', {userId});
 
-export const createTweetRequest = (tweetData) => axios.post('/publicTweet', tweetData);
+export const createTweetRequest = (tweetData) => {
+    const form = new FormData()
+
+    for(let key in tweetData){
+        form.append(key, tweetData[key])
+    }
+    axios.post('/publicTweet', tweetData);               // SEGUIR DESDE ACAA --------------------------------------------------------------------------------------
+}
 
 export const respondTweetRequest = (commentData) => axios.post('/respondTweet', commentData);
 

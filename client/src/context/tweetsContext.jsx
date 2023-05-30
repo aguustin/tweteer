@@ -36,6 +36,9 @@ export const TweetsContextProvider = ({children}) => {
 
     const editProfileContext = async (editData) => {
         const res = await editProfileRequest(editData);
+        localStorage.clear();
+        localStorage.setItem("credentials", JSON.stringify(res.data));
+        setSession(JSON.parse(localStorage.getItem("credentials")));
         setTweets(res.data);
     }
 

@@ -1,5 +1,5 @@
 import './publicTweet.css';
-import prueba from "../../imgs/prueba.jpg";
+import notUser from "../../imgs/notUser.jpg";
 import hearth from "../../imgs/hearth.png";
 import { useContext } from 'react';
 import TweetsContext from '../../context/tweetsContext';
@@ -12,13 +12,12 @@ const PublicTweet = () => {
 
         const tweetData = {
             userId: session[0]._id,
-            photo:  session[0]?.photo,
+            userImg:  session[0]?.userImg,
             userName:  session[0].userName,
             publication: e.target.elements.publication.value,
-            tweetImg: e.target.elements.tweetImg.value,
+            tweetImg: e.target.elements.tweetImg.files[0],
             tweetPrivacy: e.target.elements.privacy.value
         }
-
         await createTweetContext(tweetData);
       
     }
@@ -29,8 +28,8 @@ const PublicTweet = () => {
                     <p>Tweet something</p>
                 </div>
                 <div className="d-flex">
-                    <img id="public-img" src={prueba} alt=""></img>
-                    <form onSubmit={(e) => createTweet(e)} className='public-form-size align-items-center'>
+                    {session[0]?.userImg ? <img id="public-img" src={session[0]?.userImg} alt=""></img> : <img id="public-img" src={notUser} alt=""></img>}
+                    <form onSubmit={(e) => createTweet(e)} className='public-form-size align-items-center' encType='multipart/form-data'>
                         <textarea type="text" placeholder="What's happening?" name="publication"></textarea>
                         <div className="d-flex">
                         <img src={hearth} alt=""></img>
@@ -38,7 +37,7 @@ const PublicTweet = () => {
                                 <option value="everyone">Everyone</option>
                                 <img src={hearth} alt=""></img><option value="only">Only people who follows me</option>
                             </select>
-                            <input type="file" name="tweetImg"></input>
+                            <input type="file" name="tweetImg" accept='image/*'></input>
                             <button type="submit">Tweet</button>
                         </div>
                     </form>
