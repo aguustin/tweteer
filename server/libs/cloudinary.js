@@ -7,10 +7,18 @@ cloudinary.config({
 })
 
 
-export const imageUploader = async filePath => {
+export const tweetsUploader = async filePath => {
 
     return await cloudinary.uploader.upload(filePath, {
         folder: 'tweeter'
+    })
+
+}
+
+export const profileUploader = async filePath => {
+
+    return await cloudinary.uploader.upload(filePath, {
+        folder: 'profiles'
     })
 
 }

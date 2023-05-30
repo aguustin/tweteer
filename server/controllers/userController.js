@@ -1,6 +1,6 @@
 import tweets from "../models/tweeterModel.js";
 import bcrypt from "bcrypt";
-import { imageUploader } from "../libs/cloudinary.js";
+import { profileUploader } from "../libs/cloudinary.js";
 import fs from 'fs-extra';
 
 export const getUsersController = async (req, res) => {
@@ -64,7 +64,21 @@ export const authenticateUserController = async (req, res) => {
 }
 
 export const editProfileController = async (req, res) => {
-    const {sessionId, userPortada, userImg, userName, userDesc} = req.body;
+    const {sessionId, userName, userDesc} = req.body;
+
+    let userPortada;
+    let userImg;
+
+    if(req.files.userPortada){
+         const result = await profileUploader(req.files.userPortada.tempFilePath);  
+         userPortada = result.secure_url; 
+         fs.remove(req.files.userPortada.tempFilePath);   
+    }
+    if(req.files.userImg){
+         const result = await profileUploader(req.files.userImg.tempFilePath);
+         userImg = result.secure_url;
+         fs.remove(req.files.userImg.tempFilePath);
+    }
 
     await tweets.updateOne(
         {_id: sessionId},
@@ -215,14 +229,14 @@ export const unFollowController = async (req, res) => {
     res.sendStatus(200);
 }
 
-export const checkFollowController = async (req, res) => {
+export const checkFollowController = async (req, res) => {  //revisar esto, es el problema de que no aparezca "unfollow" cuando ya se esta siguiendo a un usuario
     const {followingId} = req.params;
     const findFollow = await tweets.find({"following.followingId": followingId});
 
-    if(findFollow.length <= 0){
+    if(findFollow){
         res.sendStatus(200);
     }else{
-        res.sendStatus(201);
+        res.sendStatus(400);
     }
 
 }

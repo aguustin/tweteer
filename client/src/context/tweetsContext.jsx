@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { authenticateUserRequest, createUserRequest, editPasswordRequest, editProfileRequest, followRequest, checkFollowRequest, unFollowRequest, getAllUsersRequest } from "../api/userRequests";
-import { createTweetRequest, respondTweetRequest, searchRequest, getProfileInformationRequest  } from "../api/tweetsRequests";
+import { createTweetRequest, respondTweetRequest, searchRequest, answerRequest, increaseLikesRequest, getProfileInformationRequest  } from "../api/tweetsRequests";
 
 const TweetsContext = createContext();
 
@@ -58,7 +58,7 @@ export const TweetsContextProvider = ({children}) => {
         console.log(check.status);
         setChangeHomeLayout(false);
         setTweets(res.data);
-        if(check.status == 200){
+        if(check.status === 200){
             console.log("asd");
             setCheckF(1);
         }else{
@@ -86,13 +86,19 @@ export const TweetsContextProvider = ({children}) => {
         setTweets(res.data);
     }
 
-    const deepRespondContext = async () => {
-
+    const answerContext = async (answerData) => {
+        const res = await answerRequest(answerData);
+        setTweets(res.data);
     }
 
     const searchContext = async (searchData) => {
         const res = await searchRequest(searchData);
         setSearchUser(res.data);
+    }
+
+    const likeContext = async (likeData) => {
+        const res = await increaseLikesRequest(likeData);
+        setTweets(res.data);
     }
 
     const tendenciesContext = async () => {
@@ -119,8 +125,9 @@ export const TweetsContextProvider = ({children}) => {
             unFollowContext,
             createTweetContext,
             respondTweetContext,
-            deepRespondContext,
+            answerContext,
             searchContext,
+            likeContext,
             tendenciesContext,
             increaseRetweetsContext,
             getPeopleByHobbiesContext,

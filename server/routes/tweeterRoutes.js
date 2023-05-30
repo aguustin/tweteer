@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createTweetController, deepRespondController, getProfileInformationController, increaseLikesController, increaseRetweetsController, respondTweetController, searchController, tendenciesController, getPeopleByHobbiesController } from "../controllers/tweetsController.js";
+import { createTweetController, answerController , getProfileInformationController, increaseLikesController, increaseRetweetsController, respondTweetController, searchController, tendenciesController, getPeopleByHobbiesController } from "../controllers/tweetsController.js";
 
 const router = Router();
 
@@ -9,13 +9,13 @@ router.post('/publicTweet', createTweetController);
 
 router.post('/respondTweet', respondTweetController);
 
-router.post('/responseDeepTw', deepRespondController);
+router.post('/answerTw', answerController);
 
 router.post('/search', searchController);
 
 router.get('/tendencies', tendenciesController);
 
-router.put('/like/:tweetId', increaseLikesController);
+router.post('/like', increaseLikesController);
 
 router.put('/retweets/:tweetId', increaseRetweetsController);
 

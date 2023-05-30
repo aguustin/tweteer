@@ -1,4 +1,5 @@
 import tweets from "../models/tweeterModel.js";
+import { tweetsUploader } from "../libs/cloudinary.js";
 
 export const getProfileInformationController = async (req, res) => {
    const {userId} = req.body;
@@ -77,17 +78,17 @@ export const respondTweetController = async (req, res) => {
         res.send(actualice);
 }
 
-export const deepRespondController = async (req, res) => {
-    const {tweetId, commentId, deepUsername, deepProfilesImg, deepPublication} = req.body;
-
+export const answerController = async (req, res) => {
+    const {profileId, tweetId, commentId, answerUsername, answerProfilesImg, answerPublication} = req.body;
+    console.log(profileId, " ", tweetId, " ", commentId, " ", answerUsername);
     await tweets.updateOne(
         {"tweets._id": tweetId},
         {
             $addToSet:{
-                "tweets.$[t].comments.$[c].deepComments":{
-                    deepArroba: deepUsername,
-                    deepProfilesImg: deepProfilesImg,
-                    deepDesc: deepPublication
+                "tweets.$[t].comments.$[c].answerComments":{
+                    answerArroba: answerUsername,
+                    answerProfilesImg: answerProfilesImg,
+                    answerDesc: answerPublication
                 }
             }
         },
@@ -96,7 +97,9 @@ export const deepRespondController = async (req, res) => {
             {"c._id": commentId}
         ]}
         )
-        res.sendStatus(200);
+    const updateTweets = await tweets.find({_id: profileId});
+
+    res.send(updateTweets);
 }
 
 export const searchController = async (req, res) => {
@@ -114,17 +117,28 @@ export const tendenciesController = async (req, res) => {
 }
 
 export const increaseLikesController = async (req, res) => {
-    const {tweetId} = req.params;
+    const { profileId, tweetId, profileImgLikes, userNameLikes } = req.body;
 
-    await tweets.updateOne(
-        {"tweets._id": tweetId},
-        {
-           $inc:{
-            "tweets.$.tweetLikes": 1
-           }
-        }
+    const findLike = await tweets.find(
+        {"tweets.tweetLikes": {userNameLikes: userNameLikes}}
     )
-    res.sendStatus(200);
+        await tweets.updateOne(
+            {"tweets._id": tweetId},
+            {
+                $addToSet:{
+                    "tweets.$[i].tweetLikess":{
+                       profileImgLikes:  profileImgLikes,
+                       userNameLikes: userNameLikes
+                   }
+                }
+            },
+            {arrayFilters:[
+                {"i._id": tweetId}
+            ]}
+        )
+
+        const updateLikes = await tweets.find({_id: profileId});
+        res.send(updateLikes);
 }
 
 export const increaseRetweetsController = async (req, res) => {

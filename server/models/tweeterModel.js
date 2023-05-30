@@ -32,7 +32,10 @@ const tweeterSchema = new mongoose.Schema({
         tweetPublication:{ type:String },
         tweetImg:{ type:String },
         tweetPrivacy:{ type:String },
-        tweetLikes:{ type:Number },
+        tweetLikess:[{ 
+            profileImgLikes:{type:String},
+            userNameLikes:{type:String} 
+        }],
         tweetComments:{ type:Number },
         retweets:{ type:Number },
         comments:[{
@@ -40,10 +43,17 @@ const tweeterSchema = new mongoose.Schema({
             commentsProfilesImg:{ type:String },
             commentsPublication:{ type:String },
             commentsDate:{ type: Date},
-            deepComments:[{
-                    deepArroba:{ type:String },
-                    deepProfilesImg:{ type:String },
-                    deepDesc:{ type:String }
+            commentLikes:[{
+                commentImgLikes:{type:String},
+                commentUserNameLikes:{type:String} 
+            }],
+            answerComments:[{
+                    answerArroba:{ type:String },
+                    answerProfilesImg:{ type:String },
+                    answerDesc:{ type:String },
+                    answerLikes:[{
+                        userNameLike:{ type: String }
+                    }]
             }]
         }]
     }]

@@ -6,11 +6,11 @@ export const createTweetRequest = (tweetData) => axios.post('/publicTweet', twee
 
 export const respondTweetRequest = (commentData) => axios.post('/respondTweet', commentData);
 
-export const deepRespondRequest = (deepRespondData) => axios.post('/responseDeepTw', deepRespondData);
+export const answerRequest = (answerData) => axios.post('/answerTw', answerData);
 
 export const searchRequest = (searchData) => axios.post('/search', searchData, console.log(searchData));
 
-export const increaseLikesRequest = (tweetId) => axios.put(`/like/${tweetId}`);
+export const increaseLikesRequest = (likeData) => axios.post('/like', likeData);
 
 export const increaseRetweetsRequest = (tweetId) => axios.put(`/retweets/${tweetId}`);
 

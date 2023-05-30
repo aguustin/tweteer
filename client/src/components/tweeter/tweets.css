@@ -149,6 +149,30 @@
     transition: all .5s;
 }
 
+.answer-form{
+    width: 80%;
+    margin-top: 1rem;
+    margin-left: 4.5rem;
+
+    && textarea{
+        position: relative;
+        width: 100%;
+        padding: .5rem;
+        outline: none;
+    }
+
+    && button{
+        position: relative;
+        margin-right: 0;
+        padding: .5rem .8rem;
+        background-color: rgb(65, 65, 248);
+        color: white;
+        font-weight: 600;
+        outline: none;
+        border-radius: 5px;
+    }
+}
+
 .comments-form{
     margin-top: .5rem;
 
@@ -190,13 +214,14 @@
 }
 
 #comment-image-profile{
+    margin-left: 4rem;
     width: 66px;
     height: 66px;
 }
 
 .comment{
-    margin-left: 1rem;
     border-radius: 8px;
+    margin-left: 1rem;
 }
 
 .comment-width{
@@ -204,6 +229,30 @@
     padding: .5rem .5rem;
     width: 45vw;
 }
+
+.answer-comment{
+
+    margin-top: 1rem;
+    padding-left: 4rem;
+
+   .answer-img{
+    width: 60px;
+    object-fit: cover;
+   }
+    && .answer-width{
+        width: 40vw;
+        margin-top: .3rem;
+        background-color: rgb(250, 248, 248);
+        padding: .1rem .5rem;
+        border-radius: 4px;
+
+        && img{
+            width: 15px;
+            object-fit: cover;
+        }
+    }
+}
+
 
 #like-comment img{
     width: 24px;

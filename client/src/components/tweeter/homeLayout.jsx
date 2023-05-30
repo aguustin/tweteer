@@ -12,8 +12,8 @@ const HomeLayout = () => {
         e.preventDefault();
         const editData = {
             sessionId: session[0]._id,
-            userPortada: e.target.elements.userPortada.value,
-            userImg: e.target.elements.userImg.value,
+            userPortada: e.target.elements.userPortada.files[0],
+            userImg: e.target.elements.userImg.files[0],
             userName: e.target.elements.userName.value,
             userDesc: e.target.elements.userDesc.value
         }
@@ -36,13 +36,13 @@ const HomeLayout = () => {
     const EditProfile = () => {
         return(
             <div className='editProfile'>
-                <form onSubmit={(e) => editProfile(e)}>
+                <form onSubmit={(e) => editProfile(e)} encType='multipart/form-data'>
                     <div className='form-group'>
-                        <input type="file" name="userPortada"></input>
+                        <input type="file" name="userPortada" accept='image/*'></input>
                         <label>Profile portada</label>
                     </div>
                     <div className='form-group'>
-                        <input type="file" name="userImg"></input>
+                        <input type="file" name="userImg" accept='image/*'></input>
                         <label>Profile photo</label>
                     </div>
                     <div className='form-group'>
@@ -82,7 +82,7 @@ const HomeLayout = () => {
                             <p>{profile.userDesc}</p>
                         </div>
                     </div>
-                    {changeHomeLayout ? <button onClick={() => setEditLayout(!editLayout)}>Edit Description</button> : checkF === 1 ? <button onClick={(e) => unFollowUser(e, profile._id)}>Unfollow</button> : <button onClick={(e) => followUser(e, profile._id)}>Follow</button>}
+                    {changeHomeLayout ? <button onClick={() => setEditLayout(!editLayout)}>Edit Profile</button> : checkF === 1 ? <button onClick={(e) => unFollowUser(e, profile._id)}>Unfollow</button> : <button onClick={(e) => followUser(e, profile._id)}>Follow</button>}
                 </div>
                 {editLayout ? <EditProfile/> : ''}
             </div>)}
