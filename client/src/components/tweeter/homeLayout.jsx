@@ -66,11 +66,11 @@ const HomeLayout = () => {
         <div>
             {tweets.map((profile) => <div key={profile._id} className='profileInfo'>
                 <div className='portadaProfile'>
-                    {profile.userPortada ? <img src={notUser} alt=""></img> : <img src={prueba} alt=""></img>}
+                    {profile.userPortada ? <img src={profile.userPortada} alt=""></img> : <img src={prueba} alt=""></img>}
                 </div>
                 <div className='profileDesc d-flex mx-auto'>
                     <div className='photoUser'>
-                    {profile.userImg ? <img src={notUser} alt=""></img> : <img src={prueba} alt=""></img>}
+                    {profile.userImg ? <img src={profile.userImg} alt=""></img> : <img src={prueba} alt=""></img>}
                     </div>
                     <div className='userDesc'>
                         <div className='d-flex align-items-center'>

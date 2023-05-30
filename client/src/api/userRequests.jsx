@@ -8,7 +8,19 @@ export const authenticateUserRequest = async (authenticateData) => axios.post('/
 
 export const editPasswordRequest = async (userName, password, confirmPassword) => axios.put(`/editPassword/${userName}/${password}/${confirmPassword}`);
 
-export const editProfileRequest = async (editData) => axios.post('/editProfile', editData);
+export const editProfileRequest = async (editData) => {
+    const form = new FormData();
+
+    for(let key in editData){
+        form.append(key, editData[key]);
+    }
+
+    return await axios.post('/editProfile', form, {
+        headers:{
+            "Content-Type": "multipart/form-data",
+        },
+    });
+}
 
 export const followRequest = async (followingId, sessionId) => axios.put(`/following/${followingId}/${sessionId}`);
 
