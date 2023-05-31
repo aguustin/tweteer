@@ -56,13 +56,14 @@ export const TweetsContextProvider = ({children}) => {
     }
 
     const seeProfileContext = async (userId) => {
-        const res = await getProfileInformationRequest(userId);
+        const res = await getProfileInformationRequest(userId); //intentar hacer el controlador de privacidad dentro de este
         const check = await checkFollowRequest(userId);
         console.log(check.status);
         setChangeHomeLayout(false);
         setTweets(res.data);
+
         if(check.status === 200){
-            console.log("asd");
+            console.log("asd");  //posibilidad haciendo otro controlador que tenga la funcion de ver si el usuario sigue al otro usuario y  traer todos los tweets o solo los publicos
             setCheckF(1);
         }else{
             setCheckF(0);

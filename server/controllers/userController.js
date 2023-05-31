@@ -233,10 +233,10 @@ export const checkFollowController = async (req, res) => {  //revisar esto, es e
     const {followingId} = req.params;
     const findFollow = await tweets.find({"following.followingId": followingId});
 
-    if(findFollow){
+    if(findFollow.length !== 0){
         res.sendStatus(200);
     }else{
-        res.sendStatus(400);
+        res.sendStatus(201);
     }
 
 }

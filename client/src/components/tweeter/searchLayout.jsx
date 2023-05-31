@@ -6,7 +6,7 @@ import LayoutContext from '../../context/layoutsContext';
 
 const SearchLayout = (users) => {
     const { layoutHomeContext } = useContext(LayoutContext);
-    const { seeProfileContext } = useContext(TweetsContext);
+    const { session, seeProfileContext } = useContext(TweetsContext);
 
     const seeProfile = async (e, userId) => {
         e.preventDefault();
