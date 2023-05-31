@@ -37,10 +37,23 @@
     transform: translateX(-.6vw);
 }
 
+
 .publications{
     height: 1700px;
     background-color: rgb(247, 247, 247);
     overflow-y: scroll;
+    position: relative;
+    width: 64vw;
+    top: 1rem;
+    margin-bottom: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    margin-left: 3rem;
+    text-align: left;
+    padding: 1rem;
+    box-shadow: 0px 0px 12px -10px rgba(128,128,128,0.75);
+    -webkit-box-shadow: 0px 0px 12px -10px rgba(128,128,128,0.75);
+    -moz-box-shadow: 0px 0px 12px -10px rgba(128,128,128,0.75);
 }
 
 .publications::-webkit-scrollbar{
@@ -88,19 +101,12 @@
     }
 }
 
-.publications{
-    position: relative;
-    width: 64vw;
-    top: 1rem;
-    margin-bottom: 2rem;
-    background-color: white;
-    border-radius: 8px;
-    margin-left: 3rem;
-    text-align: left;
-    padding: 1rem;
-    box-shadow: 0px 0px 12px -10px rgba(128,128,128,0.75);
-    -webkit-box-shadow: 0px 0px 12px -10px rgba(128,128,128,0.75);
-    -moz-box-shadow: 0px 0px 12px -10px rgba(128,128,128,0.75);
+.tweetProfileData{
+    display: flex;
+
+    && p, label{
+        margin-left: .9rem;
+    }
 }
 
 .imgProfile img{
@@ -117,8 +123,14 @@
     color: rgb(182, 182, 182);
 }
 
-.tweetDesc-img p{
-    margin-top: 1rem;
+#tweetProfileImg{
+    width: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+#tweetPublication{
+    margin-top: -30px;
 }
 
 .tweetDesc-img img{
@@ -182,14 +194,26 @@
         border-radius: 8px;
     };
 
-    && input{
-        background-color: rgb(241, 240, 240);
-        margin-left: .3rem;
+    && .comments-form > div{
         padding: 0rem 1rem;
         border: none;
         outline: none;
         width: 100%;
         border-radius: 8px;
+    }
+
+    #respondTweet{
+        width: 100%;
+    }
+
+    && button{
+        padding: 0rem .8rem;
+        background-color: rgb(65, 65, 248);
+        height: 55px;
+        color: white;
+        font-weight: 600;
+        outline: none;
+        border-radius: 5px;
     }
 }
 
@@ -251,9 +275,22 @@
             object-fit: cover;
         }
     }
-}
 
+    && .answer-width > div{
+        text-align: center;
+    }
+
+    #answer-img{
+        width: 200px;
+        object-fit: cover;
+        margin:0 auto;
+    }
+}
 
 #like-comment img{
     width: 24px;
+}
+
+.answerLike{
+    display: flex;
 }

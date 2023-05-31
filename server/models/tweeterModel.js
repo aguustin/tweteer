@@ -43,16 +43,18 @@ const tweeterSchema = new mongoose.Schema({
             commentsProfilesImg:{ type:String },
             commentsPublication:{ type:String },
             commentsDate:{ type: Date},
+            commentsImg:{ type: String},
             commentLikes:[{
-                commentImgLikes:{type:String},
+                commentProfileLikes:{type:String},
                 commentUserNameLikes:{type:String} 
             }],
             answerComments:[{
                     answerArroba:{ type:String },
                     answerProfilesImg:{ type:String },
                     answerDesc:{ type:String },
+                    answerTweetImg: {type: String},
                     answerLikes:[{
-                        userNameLike:{ type: String }
+                        answerUserNameLikes:{ type: String }
                     }]
             }]
         }]

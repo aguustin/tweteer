@@ -2,22 +2,54 @@ import axios from "axios";
 
 export const getProfileInformationRequest = (userId) => axios.post('/tweeterio', {userId});
 
-export const createTweetRequest = (tweetData) => {
+export const createTweetRequest = async (tweetData) => {
     const form = new FormData()
 
     for(let key in tweetData){
         form.append(key, tweetData[key])
     }
-    axios.post('/publicTweet', tweetData);               // SEGUIR DESDE ACAA --------------------------------------------------------------------------------------
+    return await axios.post('/publicTweet', form, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
 }
 
-export const respondTweetRequest = (commentData) => axios.post('/respondTweet', commentData);
+export const respondTweetRequest = async (commentData) => {
+    const form = new FormData();
 
-export const answerRequest = (answerData) => axios.post('/answerTw', answerData);
+    for(let key in commentData){
+        form.append(key, commentData[key])
+    }
+    return await axios.post('/respondTweet', form, {
+        headers:{
+            "Content-Type": "multipart/form-data",
+        },
+    });
+} 
+    
+
+export const answerRequest = async (answerData) => {
+    const form = new FormData();
+
+    for(let key in answerData){
+        form.append(key, answerData[key]);
+    }
+
+    return await axios.post('/answerTw', form, {
+        headers:{
+            "Content-Type": "multipart/form-data",
+        },
+    });
+} 
 
 export const searchRequest = (searchData) => axios.post('/search', searchData, console.log(searchData));
 
 export const increaseLikesRequest = (likeData) => axios.post('/like', likeData);
+
+export const increaseCommentLikesRequest = (commentLikeData) => axios.post('/likeComment', commentLikeData);
+
+export const increaseAnswerLikesRequest = (answerLike) => axios.post('/likeAnswer', answerLike);
 
 export const increaseRetweetsRequest = (tweetId) => axios.put(`/retweets/${tweetId}`);
 

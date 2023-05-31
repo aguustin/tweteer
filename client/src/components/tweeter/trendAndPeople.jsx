@@ -1,5 +1,5 @@
 import './trendAndPeople.css';
-import prueba from "../../imgs/prueba.jpg";
+import notUser from "../../imgs/notUser.jpg";
 import hearth from "../../imgs/hearth.png";
 import { useContext } from 'react';
 import TweetsContext from '../../context/tweetsContext';
@@ -47,7 +47,7 @@ const TrendAndPeople = () => {
                         <label>Who to follow</label>
                     </div>
                     <div className="people-body d-flex">
-                        <img id="peopleImg" src={allU?.userImg} alt=""></img>
+                        {allU.userImg ? <img id="peopleImg" src={allU?.userImg} alt=""></img> : <img id="peopleImg" src={notUser} alt=""></img> }
                         <div className='user-followers'>
                             <p>{allU.userName}</p>
                             <label>{allU.followers.length} Followers</label>
@@ -59,7 +59,7 @@ const TrendAndPeople = () => {
                         {allU.userHobbies.map((ho) => <label>{ho}</label>)}
                     </div>
                     <div className='peoplePortada text-center'>
-                        <img src={allU.userPortada} alt=""></img>
+                        {allU.userPortada ? <img src={allU?.userPortada} alt=""></img> : <img src={notUser} alt=""></img> }
                     </div>
                 </div>
             </div>)}

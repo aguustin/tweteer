@@ -1,5 +1,6 @@
 import tweets from "../models/tweeterModel.js";
 import { tweetsUploader } from "../libs/cloudinary.js";
+import fs from 'fs-extra';
 
 export const getProfileInformationController = async (req, res) => {
    const {userId} = req.body;
@@ -9,10 +10,16 @@ export const getProfileInformationController = async (req, res) => {
 }
 
 export const createTweetController = async (req, res) => {
-    const {userId, userImg, userName, publication, tweetImg, tweetPrivacy} = req.body;
+    const {userId, userImg, userName, publication, tweetPrivacy} = req.body;
     const firstTweet = await tweets.find({_id: userId});
+    let tweetImg;
 
     if(firstTweet.length > 0){
+        if(req.files.tweetImg){
+            const result = await tweetsUploader(req.files.tweetImg.tempFilePath);
+            tweetImg = result.secure_url;
+            await fs.remove(req.files.tweetImg.tempFilePath);
+        }
         await tweets.updateOne(
             {_id: userId},
             {
@@ -32,7 +39,7 @@ export const createTweetController = async (req, res) => {
             )
         const updateState = await tweets.find({_id: userId});
         res.send(updateState);
-       
+        
     }else{
         const saveTweet = new tweets({
             _id: userId,
@@ -56,6 +63,13 @@ export const createTweetController = async (req, res) => {
 
 export const respondTweetController = async (req, res) => {
     const {tweetId, commentsUsers, commentsProfilesImg, commentsPublication} = req.body;
+    let commentsImg;
+
+    if(req.files.commentsImg){
+        const result = await tweetsUploader(req.files.commentsImg.tempFilePath);
+        commentsImg = result.secure_url;
+        await fs.remove(req.files.tweetsUploader.tempFilePath);
+    }
    
     await tweets.updateOne(
         {"tweets._id" : tweetId},
@@ -64,7 +78,8 @@ export const respondTweetController = async (req, res) => {
                 "tweets.$[a].comments":{
                     commentsUsers: commentsUsers,
                     commentsProfilesImg: commentsProfilesImg,
-                    commentsPublication: commentsPublication
+                    commentsPublication: commentsPublication,
+                    commentsImg: commentsImg
                 }
             }
         },
@@ -80,7 +95,14 @@ export const respondTweetController = async (req, res) => {
 
 export const answerController = async (req, res) => {
     const {profileId, tweetId, commentId, answerUsername, answerProfilesImg, answerPublication} = req.body;
-    console.log(profileId, " ", tweetId, " ", commentId, " ", answerUsername);
+    let answerTweetImg;
+    
+    if(req.files.answerTweetImg){
+        const result = await tweetsUploader(req.files.answerTweetImg.tempFilePath);
+        answerTweetImg = result.secure_url;
+        fs.remove(req.files.answerTweetImg.tempFilePath);
+    }
+
     await tweets.updateOne(
         {"tweets._id": tweetId},
         {
@@ -88,7 +110,8 @@ export const answerController = async (req, res) => {
                 "tweets.$[t].comments.$[c].answerComments":{
                     answerArroba: answerUsername,
                     answerProfilesImg: answerProfilesImg,
-                    answerDesc: answerPublication
+                    answerDesc: answerPublication,
+                    answerTweetImg: answerTweetImg
                 }
             }
         },
@@ -109,9 +132,7 @@ export const searchController = async (req, res) => {
 }
 
 export const tendenciesController = async (req, res) => { 
-    const findTendencies = await tweets.find(
-        {}
-    );  //.sort({"tweets.retweets":1}).limit(5)
+    const findTendencies = await tweets.find().sort({"tweets.retweets":1}).limit(4);
 
     res.send(findTendencies);
 }
@@ -120,7 +141,12 @@ export const increaseLikesController = async (req, res) => {
     const { profileId, tweetId, profileImgLikes, userNameLikes } = req.body;
 
     const findLike = await tweets.find(
-        {"tweets.tweetLikes": {userNameLikes: userNameLikes}}
+        {"tweets.$[i].tweetLikes": {userNameLikes: userNameLikes}},  //revisar como encontrar si el usuario esta en los likes para no sumarlo nuevamente
+        {
+            arrayFilters:[
+                {"i._id": tweetId}
+            ]
+        }
     )
         await tweets.updateOne(
             {"tweets._id": tweetId},
@@ -132,13 +158,70 @@ export const increaseLikesController = async (req, res) => {
                    }
                 }
             },
-            {arrayFilters:[
+            {
+                arrayFilters:[
                 {"i._id": tweetId}
-            ]}
+                ]
+            }
         )
-
         const updateLikes = await tweets.find({_id: profileId});
         res.send(updateLikes);
+}
+
+export const increaseCommentLikesController = async (req, res) => {
+    const {profileId, tweetId, commentId, commentProfileLikes, commentUserNameLikes} = req.body;
+
+    /*const findLike = await tweets.find(                             //revisar como encontrar si el usuario esta en los likes para no sumarlo nuevamente
+        {"tweets.tweetLikes": {userNameLikes: userNameLikes}}
+    )*/
+
+    await tweets.updateOne(
+        {"tweets._id": tweetId},
+        {
+            $addToSet:
+            {
+                "tweets.$[t].comments.$[i].commentLikes":{
+                    commentProfileLikes: commentProfileLikes,
+                    commentUserNameLikes: commentUserNameLikes
+                }
+            }
+        },
+        {
+            arrayFilters:[
+                {"t._id": tweetId},
+                {"i._id": commentId}
+            ]
+        }
+    )
+    const updateCommentLike = await tweets.find({_id: profileId});
+    res.send(updateCommentLike);
+
+}
+
+export const increaseAnswerLikesController = async (req, res) => {
+    const {profileId, tweetId, commentId, answerId, answerUserNameLikes} = req.body;
+
+    await tweets.updateOne(
+        {"tweets._id": tweetId},
+        {
+            $addToSet:
+            {
+                "tweets.$[t].comments.$[c].answerComments.$[a].answerLikes":{
+                    answerUserNameLikes: answerUserNameLikes
+                }
+            }
+        },
+        {
+            arrayFilters:[
+                {"t._id": tweetId},
+                {"c._id": commentId},
+                {"a._id": answerId}
+            ]
+        }
+    )
+
+    const updateAnswerLike = await tweets.find({_id: profileId});
+    res.send(updateAnswerLike);
 }
 
 export const increaseRetweetsController = async (req, res) => {

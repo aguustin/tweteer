@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { authenticateUserRequest, createUserRequest, editPasswordRequest, editProfileRequest, followRequest, checkFollowRequest, unFollowRequest, getAllUsersRequest } from "../api/userRequests";
-import { createTweetRequest, respondTweetRequest, searchRequest, answerRequest, increaseLikesRequest, getProfileInformationRequest  } from "../api/tweetsRequests";
+import { createTweetRequest, respondTweetRequest, searchRequest, answerRequest, increaseLikesRequest, increaseCommentLikesRequest, increaseAnswerLikesRequest, getProfileInformationRequest  } from "../api/tweetsRequests";
 
 const TweetsContext = createContext();
 
@@ -104,6 +104,16 @@ export const TweetsContextProvider = ({children}) => {
         setTweets(res.data);
     }
 
+    const likeCommentContext = async (commentLikeData) => {
+        const res = await increaseCommentLikesRequest(commentLikeData);
+        setTweets(res.data);
+    }
+
+    const answerLikeContext = async (answerLike) => {
+        const res = await increaseAnswerLikesRequest(answerLike);
+        setTweets(res.data);
+    }
+
     const tendenciesContext = async () => {
 
     }
@@ -131,6 +141,8 @@ export const TweetsContextProvider = ({children}) => {
             answerContext,
             searchContext,
             likeContext,
+            likeCommentContext,
+            answerLikeContext,
             tendenciesContext,
             increaseRetweetsContext,
             getPeopleByHobbiesContext,
