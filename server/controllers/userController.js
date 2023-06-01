@@ -65,7 +65,6 @@ export const authenticateUserController = async (req, res) => {
 
 export const editProfileController = async (req, res) => {
     const {sessionId, userName, userDesc} = req.body;
-
     let userPortada;
     let userImg;
 
@@ -91,7 +90,6 @@ export const editProfileController = async (req, res) => {
             }
         }
     )
-
     const updateProfile = await tweets.find({_id: sessionId});
 
     res.send(updateProfile);
@@ -127,11 +125,9 @@ export const editPasswordController = async (req, res) => {
 export const setImageProfileController = async (req, res) => {
 
     const {userId} = req.params;
-
     let photo;
 
     if(req.files){
-
     const result = await imageUploader(req.files.photo.tempFilePath);
     await fs.remove(req.files.photo.tempFilePath);
     
@@ -206,8 +202,7 @@ export const unFollowController = async (req, res) => {
                 followers:
                 {
                   followerId: sessionId  
-                }
-                
+                }     
             }
         }
     )

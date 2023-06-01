@@ -6,7 +6,7 @@ import LayoutContext from '../../context/layoutsContext';
 
 const SearchLayout = (users) => {
     const { layoutHomeContext } = useContext(LayoutContext);
-    const { session, seeProfileContext } = useContext(TweetsContext);
+    const { seeProfileContext } = useContext(TweetsContext);
 
     const seeProfile = async (e, userId) => {
         e.preventDefault();
@@ -14,7 +14,6 @@ const SearchLayout = (users) => {
         layoutHomeContext(e);
     }
 
-    console.log("users:", users);
     return(
         <div className="searchedPeople">
             {users.users.map((all) => <div className="peopleData">

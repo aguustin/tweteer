@@ -9,7 +9,8 @@ import { createTweetController,
      respondTweetController, 
      searchController, 
      tendenciesController, 
-     getPeopleByHobbiesController } from "../controllers/tweetsController.js";
+     getPeopleByHobbiesController, 
+     } from "../controllers/tweetsController.js";
 
 const router = Router();
 
@@ -22,6 +23,8 @@ router.post('/respondTweet', respondTweetController);
 router.post('/answerTw', answerController);
 
 router.post('/search', searchController);
+
+//router.get('/latestTweets', getLatestTweetsController);
 
 router.get('/tendencies', tendenciesController);
 

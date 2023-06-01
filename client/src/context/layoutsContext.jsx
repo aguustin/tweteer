@@ -4,7 +4,7 @@ import TweetsContext from "./tweetsContext";
 const LayoutContext = createContext();
 
 export const LayoutContextProvider = ({children}) => {
-    const {session, getProfileInformationContext} = useContext(TweetsContext);
+    const {setTweets} = useContext(TweetsContext);
     const [homeLayout, setHomeLayout] = useState(true);
     const [listsLayout, setListLayout] = useState(false);
     const [searching, setSearching] = useState(false);
@@ -21,7 +21,7 @@ export const LayoutContextProvider = ({children}) => {
         setSearching(false);
         setListLayout(true);
     }
-    const layoutSearchContext = (e) => {
+    const layoutSearchContext = async (e) => {
         e.preventDefault();
         setHomeLayout(false);
         setListLayout(false);

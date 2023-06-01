@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { authenticateUserRequest, createUserRequest, editPasswordRequest, editProfileRequest, followRequest, checkFollowRequest, unFollowRequest, getAllUsersRequest } from "../api/userRequests";
-import { createTweetRequest, respondTweetRequest, searchRequest, answerRequest, increaseLikesRequest, increaseCommentLikesRequest, increaseAnswerLikesRequest, getProfileInformationRequest  } from "../api/tweetsRequests";
+import { createTweetRequest, respondTweetRequest, searchRequest, answerRequest, increaseLikesRequest, increaseCommentLikesRequest, increaseAnswerLikesRequest, getProfileInformationRequest } from "../api/tweetsRequests";
 
 const TweetsContext = createContext();
 
@@ -11,6 +11,7 @@ export const TweetsContextProvider = ({children}) => {
     const [tweets, setTweets] = useState([]);
     const [searchUser, setSearchUser] = useState([]);
     const [checkF, setCheckF] = useState(0);
+    const [publicT, setPublicT] = useState(true);
 
     const [changeHomeLayout, setChangeHomeLayout] = useState(false);
 
@@ -51,12 +52,15 @@ export const TweetsContextProvider = ({children}) => {
 
     const getProfileInformationContext = async (se) => {
         const ownTweets = await getProfileInformationRequest(se);
+        setPublicT(true);
+        console.log(publicT);
         setChangeHomeLayout(true);
         setTweets(ownTweets.data);
     }
 
     const seeProfileContext = async (userId) => {
-        const res = await getProfileInformationRequest(userId); //intentar hacer el controlador de privacidad dentro de este
+        setPublicT(false);
+        const res = await getProfileInformationRequest(userId, session[0]._id); //intentar hacer el controlador de privacidad dentro de este
         const check = await checkFollowRequest(userId);
         console.log(check.status);
         setChangeHomeLayout(false);
@@ -133,6 +137,7 @@ export const TweetsContextProvider = ({children}) => {
             setTweets,
             searchUser, 
             setSearchUser,
+            publicT,
             changeHomeLayout, 
             setChangeHomeLayout,
             followContext,

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const getProfileInformationRequest = (userId) => axios.post('/tweeterio', {userId});
+export const getProfileInformationRequest = (userId, sessionId) => axios.post('/tweeterio', {userId, sessionId});
 
 export const createTweetRequest = async (tweetData) => {
     const form = new FormData()
@@ -44,6 +44,8 @@ export const answerRequest = async (answerData) => {
 } 
 
 export const searchRequest = (searchData) => axios.post('/search', searchData, console.log(searchData));
+
+//export const getLatestTweetsRequest = () => axios.get('/latestTweets');
 
 export const increaseLikesRequest = (likeData) => axios.post('/like', likeData);
 

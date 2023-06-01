@@ -3,10 +3,47 @@ import { tweetsUploader } from "../libs/cloudinary.js";
 import fs from 'fs-extra';
 
 export const getProfileInformationController = async (req, res) => {
-   const {userId} = req.body;
-   const getProfile = await tweets.find({_id: userId});
+   const {userId, sessionId} = req.body;
+   
+   if(sessionId){
+        const userFollows = await tweets.find({followers: {_id: sessionId}});                                                          
+      
+        if(userFollows !== 0){  //arreglar esto tambien
+            console.log("follows");
+            const getProfile = await tweets.find({_id: userId}).sort({"tweets._id": -1});
+            res.send(getProfile);
+        }else{
+          
+            console.log("no follow");
+            const getEveryoneTweets = await tweets.aggregate([{
+                $unwind: "$tweets"
+            },
+            {
+                $match: {
+                    "tweets.tweetUserId": userId,
+                    "tweets.tweetPrivacy": "everyone"
+                },
+                
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    tweets: {
+                        $push: "$tweets"
+                    }
+                }
+            },
+            { 
+                $sort : { "tweets._id" : -1}
+            }]);
+            //console.log(getEveryoneTweets);
+            res.send(getEveryoneTweets);
+        }
 
-   res.send(getProfile);
+   }else{
+       const getProfile = await tweets.find({_id: userId});
+       res.send(getProfile);
+   }
 }
 
 export const createTweetController = async (req, res) => {
@@ -15,7 +52,7 @@ export const createTweetController = async (req, res) => {
     let tweetImg;
 
     if(firstTweet.length > 0){
-        if(req.files.tweetImg){
+        if(req.files?.tweetImg){
             const result = await tweetsUploader(req.files.tweetImg.tempFilePath);
             tweetImg = result.secure_url;
             await fs.remove(req.files.tweetImg.tempFilePath);
@@ -25,6 +62,7 @@ export const createTweetController = async (req, res) => {
             {
                 $addToSet:{
                     tweets:{
+                        tweetUserId: userId,
                         tweetProfileImg: userImg,
                         tweetUsername: userName,
                         tweetPublication: publication,
@@ -65,7 +103,7 @@ export const respondTweetController = async (req, res) => {
     const {tweetId, commentsUsers, commentsProfilesImg, commentsPublication} = req.body;
     let commentsImg;
 
-    if(req.files.commentsImg){
+    if(req.files?.commentsImg){
         const result = await tweetsUploader(req.files.commentsImg.tempFilePath);
         commentsImg = result.secure_url;
         await fs.remove(req.files.tweetsUploader.tempFilePath);
@@ -97,7 +135,7 @@ export const answerController = async (req, res) => {
     const {profileId, tweetId, commentId, answerUsername, answerProfilesImg, answerPublication} = req.body;
     let answerTweetImg;
     
-    if(req.files.answerTweetImg){
+    if(req.files?.answerTweetImg){
         const result = await tweetsUploader(req.files.answerTweetImg.tempFilePath);
         answerTweetImg = result.secure_url;
         fs.remove(req.files.answerTweetImg.tempFilePath);
@@ -130,6 +168,30 @@ export const searchController = async (req, res) => {
     const findUsers = await tweets.find({userName:{$regex : search, $options: 'i'}});
     res.send(findUsers);
 }
+
+/*export const getLatestTweetsController = async (req, res) => {
+    const lastestTweets = await tweets.aggregate(
+        [ 
+            { "$unwind": "$tweets" }, 
+            { "$sample": { "size": 20 } } 
+        ]
+    )
+       
+    res.send(lastestTweets);
+    /*const lastestTweets = await tweets.aggregate([
+        {$addFields:{"tweets.tweets":{$map:{
+        input:"$tweets.tweets",
+        in: {$mergeObjects:[ 
+            "$$this",
+            { allTweets: {$reduce: {
+                    input:{$slice:["$$this.allTweets", 1, {$size:"$$this.allTweets"}]},
+                    initialValue: {$arrayElemAt:["$$this.allTweets",0]},
+                    in: {$concat: ["$$value", ",", "$$this"]}
+            }}}
+        ]}
+    }}}}])
+
+}*/
 
 export const tendenciesController = async (req, res) => { 
     const findTendencies = await tweets.find().sort({"tweets.retweets":1}).limit(4);

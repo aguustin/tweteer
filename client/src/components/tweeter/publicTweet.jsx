@@ -5,7 +5,7 @@ import { useContext } from "react";
 import TweetsContext from "../../context/tweetsContext";
 
 const PublicTweet = () => {
-  const { session, createTweetContext } = useContext(TweetsContext);
+  const { session, publicT, createTweetContext } = useContext(TweetsContext);
 
   const createTweet = async (e) => {
     e.preventDefault();
@@ -22,26 +22,28 @@ const PublicTweet = () => {
   };
 
   return (
-    <div className="publicTweet">
-      <div className="publicTweet-header">
-        <p>Tweet something</p>
-      </div>
-      <div className="d-flex">
-        {session[0]?.userImg ? <img id="public-img" src={session[0]?.userImg} alt=""></img> :  <img id="public-img" src={notUser} alt=""></img>}
-        <form onSubmit={(e) => createTweet(e)} className="public-form-size align-items-center" encType="multipart/form-data">
-          <textarea type="text" placeholder="What's happening?" name="publication"></textarea>
-          <div className="d-flex">
-            <img src={hearth} alt=""></img>
-            <select className="selectPrivacyPublication" name="privacy">
-              <option value="everyone">Everyone</option>
+    <div>
+      {publicT ? <div className="publicTweet">
+        <div className="publicTweet-header">
+          <p>Tweet something</p>
+        </div>
+        <div className="d-flex">
+          {session[0]?.userImg ? <img id="public-img" src={session[0]?.userImg} alt=""></img> :  <img id="public-img" src={notUser} alt=""></img>}
+          <form onSubmit={(e) => createTweet(e)} className="public-form-size align-items-center" encType="multipart/form-data">
+            <textarea type="text" placeholder="What's happening?" name="publication"></textarea>
+            <div className="d-flex">
               <img src={hearth} alt=""></img>
-              <option value="only">Only people who follows me</option>
-            </select>
-            <input type="file" name="tweetImg" accept="image/*"></input>
-            <button type="submit">Tweet</button>
-          </div>
-        </form>
-      </div>
+              <select className="selectPrivacyPublication" name="privacy">
+                <option value="everyone">Everyone</option>
+                <img src={hearth} alt=""></img>
+                <option value="only">Only people who follows me</option>
+              </select>
+              <input type="file" name="tweetImg" accept="image/*"></input>
+              <button type="submit">Tweet</button>
+            </div>
+          </form>
+        </div>
+      </div> : ''}
     </div>
   );
 };

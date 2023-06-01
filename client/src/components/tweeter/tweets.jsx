@@ -141,7 +141,7 @@ const Tweets = () => {
                                     <div key={tc._id} className='tweetDesc-img'>
                                         <div className='tweetProfileData'>
                                             <div>
-                      {tc.tweetProfileImg ? <img id='tweetProfileImg' src={tc.tweetProfileImg} alt=""></img> : <img src={notUser} alt=""></img>}
+                      {tc.tweetProfileImg ? <img id='tweetProfileImg' src={tc.tweetProfileImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
                                             </div>
                                             <div>
                                                 <p>{tc.tweetUsername}</p>

@@ -19,7 +19,6 @@ const HomeLayout = () => {
         await editProfileContext(editData);
         setEditLayout(false);
     }
-    console.log(checkF);
     
     const followUser = async (e, followingId) => {
         e.preventDefault();
@@ -74,8 +73,8 @@ const HomeLayout = () => {
                     <div className='userDesc'>
                         <div className='d-flex align-items-center'>
                             <h1>{profile.userName}</h1>
-                            <label>Followers: {profile.followers.length}</label>
-                            <label>Following: {profile.following.length}</label>
+                            <label>Followers: {profile.followers?.length}</label>
+                            <label>Following: {profile.following?.length}</label>
                         </div>
                         <div className='description'>
                             <p>{profile.userDesc}</p>
