@@ -43,6 +43,10 @@ export const answerRequest = async (answerData) => {
     });
 } 
 
+export const retweetRequest = async (tweetId) => axios.post('/retweet', {tweetId});
+
+export const saveRetweetRequest = async (retweetedData) => axios.post('/saveRetweet', retweetedData);
+
 export const searchRequest = (searchData) => axios.post('/search', searchData, console.log(searchData));
 
 //export const getLatestTweetsRequest = () => axios.get('/latestTweets');

@@ -1,0 +1,11 @@
+.retweetLayout{
+    position: absolute;
+    z-index: 2;
+    top: 30%;
+    left: 50%;
+    background-color: white;
+    transform: translateY(-30%);
+    transform: translateX(-50%);
+    border-radius: 10px;
+    padding: 0rem 2rem;
+}

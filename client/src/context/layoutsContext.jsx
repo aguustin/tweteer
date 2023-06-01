@@ -1,10 +1,8 @@
-import { createContext, useContext, useState } from "react";
-import TweetsContext from "./tweetsContext";
+import { createContext, useState } from "react";
 
 const LayoutContext = createContext();
 
 export const LayoutContextProvider = ({children}) => {
-    const {setTweets} = useContext(TweetsContext);
     const [homeLayout, setHomeLayout] = useState(true);
     const [listsLayout, setListLayout] = useState(false);
     const [searching, setSearching] = useState(false);

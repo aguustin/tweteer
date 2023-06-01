@@ -38,6 +38,10 @@ const tweeterSchema = new mongoose.Schema({
             userNameLikes:{type:String} 
         }],
         tweetComments:{ type:Number },
+        retweetedComment: {type: String},
+        retweetedUserName: {type: String},
+        retweetedPublication: {type: String},
+        retweetedImg: {type: String},
         retweets:{ type:Number },
         comments:[{
             commentsUsers:{ type:String },

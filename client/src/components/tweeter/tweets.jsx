@@ -2,6 +2,7 @@ import './tweets.css';
 import HomeLayout from './homeLayout';
 import ListLayout from './listsLayout';
 import SearchLayout from './searchLayout';
+import RetweetLayout from '../form/retweetForm';
 import PublicTweet from './publicTweet';
 import TrendAndPeople from './trendAndPeople';
 import hearth from "../../imgs/hearth.png";
@@ -18,7 +19,7 @@ const Tweets = () => {
     const [ tweetId, setTweetId ] = useState();
     const [ commentId, setCommentId ] = useState();
     const {homeLayout, listsLayout, searching} = useContext(LayoutContext);
-    const {session, allUsers, tweets, respondTweetContext, answerContext, likeContext, likeCommentContext, answerLikeContext, getProfileInformationContext} = useContext(TweetsContext);
+    const {session, allUsers, tweets, retweetLayout, respondTweetContext, answerContext, likeContext, likeCommentContext, answerLikeContext, retweetContext, getProfileInformationContext} = useContext(TweetsContext);
     
     useEffect(() => {
         (async() => {
@@ -117,6 +118,11 @@ const Tweets = () => {
         )
     }
 
+    const retweet = async (e, tweetId) => {
+        e.preventDefault();
+        await retweetContext(tweetId);
+    }
+
     return(
         <div>
             <Nav/>
@@ -131,6 +137,7 @@ const Tweets = () => {
             : ''}
                 {homeLayout ? <HomeLayout/> : ''}
                 <div className='lists-publications-container d-flex mx-auto'>
+                    {retweetLayout ? <RetweetLayout/> : ''}
                     {listsLayout ? <ListLayout/> : '' }
                     <div className='publications'>
                         {homeLayout ? <PublicTweet/> : ''}
@@ -156,6 +163,7 @@ const Tweets = () => {
                                                 <button><img src={hearth} alt=""></img>Retweets {tc.retweets}</button>
                                                 <button onClick={(e) => like(e, t._id, tc._id)}><img src={hearth} alt=""></img>Likes {tc.tweetLikess.length}</button>
                                                 <button><img src={hearth} alt=""></img>Save</button>
+                                                <button onClick={(e) => retweet(e, tc._id)}><img src={hearth} alt=""></img>Retweet</button>
                                             </form>
                                         </li>
                                     </div>

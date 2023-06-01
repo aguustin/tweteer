@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { createTweetController,
-     answerController, 
+     answerController,
+     retweetController,
+     saveRetweetController, 
      getProfileInformationController, 
      increaseLikesController, 
      increaseCommentLikesController,
@@ -21,6 +23,10 @@ router.post('/publicTweet', createTweetController);
 router.post('/respondTweet', respondTweetController);
 
 router.post('/answerTw', answerController);
+
+router.post('/retweet', retweetController);
+
+router.post('/saveRetweet', saveRetweetController);
 
 router.post('/search', searchController);
 

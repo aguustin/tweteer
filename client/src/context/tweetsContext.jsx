@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { authenticateUserRequest, createUserRequest, editPasswordRequest, editProfileRequest, followRequest, checkFollowRequest, unFollowRequest, getAllUsersRequest } from "../api/userRequests";
-import { createTweetRequest, respondTweetRequest, searchRequest, answerRequest, increaseLikesRequest, increaseCommentLikesRequest, increaseAnswerLikesRequest, getProfileInformationRequest } from "../api/tweetsRequests";
+import { createTweetRequest, respondTweetRequest, searchRequest, answerRequest, retweetRequest, saveRetweetRequest, increaseLikesRequest, increaseCommentLikesRequest, increaseAnswerLikesRequest, getProfileInformationRequest } from "../api/tweetsRequests";
 
 const TweetsContext = createContext();
 
@@ -9,6 +9,8 @@ export const TweetsContextProvider = ({children}) => {
     const [session, setSession] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
     const [tweets, setTweets] = useState([]);
+    const [retweet, setRetweet] = useState([]);
+    const [retweetLayout, setRetweetLayout] = useState(false);
     const [searchUser, setSearchUser] = useState([]);
     const [checkF, setCheckF] = useState(0);
     const [publicT, setPublicT] = useState(true);
@@ -119,11 +121,18 @@ export const TweetsContextProvider = ({children}) => {
         setTweets(res.data);
     }
 
-    const tendenciesContext = async () => {
-
+    const retweetContext = async (tweetId) => {
+        const res = await retweetRequest(tweetId);
+        setRetweet(res.data);
+        setRetweetLayout(true);
     }
 
-    const increaseRetweetsContext = async () => {
+    const saveRetweetContext = async (retweetedData) => {
+        const res = await saveRetweetRequest(retweetedData);
+        setTweets(res.data);
+    }
+
+    const tendenciesContext = async () => {
 
     }
 
@@ -137,6 +146,8 @@ export const TweetsContextProvider = ({children}) => {
             setTweets,
             searchUser, 
             setSearchUser,
+            retweet,
+            retweetLayout,
             publicT,
             changeHomeLayout, 
             setChangeHomeLayout,
@@ -149,8 +160,9 @@ export const TweetsContextProvider = ({children}) => {
             likeContext,
             likeCommentContext,
             answerLikeContext,
+            retweetContext,
+            saveRetweetContext,
             tendenciesContext,
-            increaseRetweetsContext,
             getPeopleByHobbiesContext,
             session,
             setSession,

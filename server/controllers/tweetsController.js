@@ -1,6 +1,7 @@
 import tweets from "../models/tweeterModel.js";
 import { tweetsUploader } from "../libs/cloudinary.js";
 import fs from 'fs-extra';
+import mongoose from "mongoose";
 
 export const getProfileInformationController = async (req, res) => {
    const {userId, sessionId} = req.body;
@@ -36,7 +37,7 @@ export const getProfileInformationController = async (req, res) => {
             { 
                 $sort : { "tweets._id" : -1}
             }]);
-            //console.log(getEveryoneTweets);
+        
             res.send(getEveryoneTweets);
         }
 
@@ -161,6 +162,36 @@ export const answerController = async (req, res) => {
     const updateTweets = await tweets.find({_id: profileId});
 
     res.send(updateTweets);
+}
+
+export const retweetController = async (req, res) => {
+    const {tweetId} = req.body;
+
+    let i = new mongoose.Types.ObjectId(tweetId);
+
+    const getTweet = await tweets.aggregate([{
+        $unwind: "$tweets"
+    },
+    {
+        $match: {
+            "tweets._id": i 
+        },
+        
+    },
+    {
+        $group: {
+            _id: "$_id",
+            tweets: {
+                $push: "$tweets"
+            }
+        }
+    }]);
+
+    res.send(getTweet);
+}
+
+export const saveRetweetController = async (req, res) => {  //esto es lo ultimo hechoooooooooooo ------------------------------------------------------------------
+
 }
 
 export const searchController = async (req, res) => {
