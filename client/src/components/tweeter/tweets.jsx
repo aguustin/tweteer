@@ -27,7 +27,7 @@ const Tweets = () => {
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
-
+    console.log(retweetLayout);
     const searchs = (e) => {
         e.preventDefault();
         setSe(e.target.value);
@@ -108,6 +108,12 @@ const Tweets = () => {
         await answerContext(answerData);
     }
 
+
+    const retweeted = async (e, tweetId) => {
+        e.preventDefault();
+        await retweetContext(tweetId);
+    }
+
     const Answer = () => {
         return (
             <form className='answer-form' onSubmit={(e) => answer(e)}>
@@ -118,10 +124,8 @@ const Tweets = () => {
         )
     }
 
-    const retweet = async (e, tweetId) => {
-        e.preventDefault();
-        await retweetContext(tweetId);
-    }
+
+    
 
     return(
         <div>
@@ -135,9 +139,9 @@ const Tweets = () => {
                 <SearchLayout users={a}/>
         </div>
             : ''}
+            {retweetLayout ? <RetweetLayout/> : ''}
                 {homeLayout ? <HomeLayout/> : ''}
                 <div className='lists-publications-container d-flex mx-auto'>
-                    {retweetLayout ? <RetweetLayout/> : ''}
                     {listsLayout ? <ListLayout/> : '' }
                     <div className='publications'>
                         {homeLayout ? <PublicTweet/> : ''}
@@ -145,28 +149,66 @@ const Tweets = () => {
                             <div key={t._id}>
                                 {t.tweets.map((tc) => 
                                 <div className='mt-4'>
-                                    <div key={tc._id} className='tweetDesc-img'>
-                                        <div className='tweetProfileData'>
-                                            <div>
-                      {tc.tweetProfileImg ? <img id='tweetProfileImg' src={tc.tweetProfileImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
+                        {tc.retweeted === 1 ?  
+                        <div className='retweets'>
+                        <div className='retweets-info d-flex'>
+                            { tc.tweetProfileImg ? <img src={tc.tweetProfileImg} alt=""></img> : <img src={notUser} alt=""></img> }
+                            <div>
+                                <div className='d-flex'>
+                                    <p>{tc.tweetUsername}</p>
+                                    <label>retweeted</label>
+                                </div>
+                                <p>{tc.tweetPublication}</p>
+                            </div>
+                            <label>{tc.tweetDate}</label>
+                        </div>
+                        <div key={tc._id} className='tweetDesc-img border border-info p-4 mt-2' >
+                            <div className='tweetProfileData'>
+                                <div>
+                                {tc.profileRetweetedImg ? <img id='tweetProfileImg' src={tc.profileRetweetedImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
+                                </div>
+                                <div>
+                                    <p>{tc.retweetedUserName}</p>
+                                    <p>{tc.retweetedPublication}</p>
+                                </div>
+                            </div>
+                            {tc.retweetedImg ? <img className='tweetImg' src={tc.retweetedImg} alt=""></img> : ''}
+                        </div>
+                        <li className='tweet-actions d-flex'>         
+                            <button><img src={hearth} alt=""></img>Comments {tc.comments?.length}</button>
+                            <button onClick={(e) => retweeted(e, tc._id)}><img src={hearth} alt="" ></img>Retweets {tc.retweets}</button>
+                            <button onClick={(e) => like(e, t._id, tc._id)}><img src={hearth} alt=""></img>Likes {tc.tweetLikess?.length}</button>
+                            <button><img src={hearth} alt=""></img>Save</button>
+                        </li>
+                    </div> 
+                    
+                    
+                    : 
+                                    
+                                    <div className='tweet'>
+                                        <div key={tc._id} className='tweetDesc-img'>
+                                            <div className='tweetProfileData'>
+                                                <div>
+                        {tc.tweetProfileImg ? <img id='tweetProfileImg' src={tc.tweetProfileImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
+                                                </div>
+                                                <div>
+                                                    <p>{tc.tweetUsername}</p>
+                                                    <label>{tc.tweetDate}</label>
+                                                    <p id="tweetPublication">{tc.tweetPublication}</p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <p>{tc.tweetUsername}</p>
-                                                <label>{tc.tweetDate}</label>
-                                                <p id="tweetPublication">{tc.tweetPublication}</p>
-                                            </div>
+                                            {tc.tweetImg ? <img className='tweetImg' src={tc.tweetImg} alt=""></img> : ''}
+                                            <li className='tweet-actions d-flex'>
+    {/**cantidad de com,ret,likes */}           
+                                                    <button><img src={hearth} alt=""></img>Comments {tc.comments.length}</button>
+                                                    <button onClick={(e) => retweeted(e, tc._id)}><img src={hearth} alt="" ></img>Retweets {tc.retweets}</button>
+                                                    <button onClick={(e) => like(e, t._id, tc._id)}><img src={hearth} alt=""></img>Likes {tc.tweetLikess.length}</button>
+                                                    <button><img src={hearth} alt=""></img>Save</button>
+                                                
+                                            </li>
                                         </div>
-                                        {tc.tweetImg ? <img className='tweetImg' src={tc.tweetImg} alt=""></img> : ''}
-                                        <li className='d-flex'>
-{/**cantidad de com,ret,likes */}           <form>
-                                                <button><img src={hearth} alt=""></img>Comments {tc.comments.length}</button>
-                                                <button><img src={hearth} alt=""></img>Retweets {tc.retweets}</button>
-                                                <button onClick={(e) => like(e, t._id, tc._id)}><img src={hearth} alt=""></img>Likes {tc.tweetLikess.length}</button>
-                                                <button><img src={hearth} alt=""></img>Save</button>
-                                                <button onClick={(e) => retweet(e, tc._id)}><img src={hearth} alt=""></img>Retweet</button>
-                                            </form>
-                                        </li>
                                     </div>
+                                }
                                     <div>
  {/**formulario de comentarios */}      <form className='comments-form d-flex mt-2' encType='multipart/form-data' onSubmit={(e) => respondTweet(e, tc._id)}>
                                             {session[0].profilePhoto ? <img src={session[0].profilePhoto} alt=""></img> : <img src={notUser} alt=""></img>}

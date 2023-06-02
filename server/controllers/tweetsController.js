@@ -107,7 +107,7 @@ export const respondTweetController = async (req, res) => {
     if(req.files?.commentsImg){
         const result = await tweetsUploader(req.files.commentsImg.tempFilePath);
         commentsImg = result.secure_url;
-        await fs.remove(req.files.tweetsUploader.tempFilePath);
+        await fs.remove(req.files.commentsImg.tempFilePath);
     }
    
     await tweets.updateOne(
@@ -167,8 +167,8 @@ export const answerController = async (req, res) => {
 export const retweetController = async (req, res) => {
     const {tweetId} = req.body;
 
-    let i = new mongoose.Types.ObjectId(tweetId);
-
+    const i = new mongoose.Types.ObjectId(tweetId);
+    console.log(i);
     const getTweet = await tweets.aggregate([{
         $unwind: "$tweets"
     },
@@ -186,12 +186,35 @@ export const retweetController = async (req, res) => {
             }
         }
     }]);
-
     res.send(getTweet);
 }
 
 export const saveRetweetController = async (req, res) => {  //esto es lo ultimo hechoooooooooooo ------------------------------------------------------------------
+    const {userId, tweetPublication, tweetProfileImg, retweetedUserName, retweetedPublication, retweetedImg} = req.body;
+    const getSessionInfo = await tweets.find({_id: userId});
+    console.log("eooo:" , getSessionInfo[0].userImg);
+    await tweets.updateOne(
+        {_id: userId},
+        {
+            $addToSet:
+            {
+                tweets: {
+                    tweetProfileImg: getSessionInfo[0].userImg,
+                    tweetUsername: getSessionInfo[0].userName,
+                    tweetPublication: tweetPublication,
+                    tweetPrivacy: "everyone",
+                    retweetedAdvice: "Retweeted",
+                    profileRetweetedImg: tweetProfileImg,
+                    retweetedUserName: retweetedUserName,
+                    retweetedPublication: retweetedPublication,
+                    retweetedImg: retweetedImg,
+                    retweeted: 1
+                }
+            }
+        }
+    )
 
+    res.sendStatus(200);
 }
 
 export const searchController = async (req, res) => {
@@ -233,14 +256,14 @@ export const tendenciesController = async (req, res) => {
 export const increaseLikesController = async (req, res) => {
     const { profileId, tweetId, profileImgLikes, userNameLikes } = req.body;
 
-    const findLike = await tweets.find(
+    /*await tweets.find(
         {"tweets.$[i].tweetLikes": {userNameLikes: userNameLikes}},  //revisar como encontrar si el usuario esta en los likes para no sumarlo nuevamente
         {
             arrayFilters:[
                 {"i._id": tweetId}
             ]
         }
-    )
+    )*/
         await tweets.updateOne(
             {"tweets._id": tweetId},
             {

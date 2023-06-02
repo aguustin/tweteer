@@ -1,40 +1,52 @@
+import notUser from "../../imgs/notUser.jpg";
 import { useContext } from 'react';
 import './retweetForm.css';
 import TweetsContext from '../../context/tweetsContext';
 
+
 const RetweetLayout = () => {
-    const {session, retweet, saveRetweetContext} = useContext(TweetsContext);
+    const {session, retweet, setRetweetLayout, saveRetweetContext} = useContext(TweetsContext);
  
-    const saveRetweet = async (e, userId, retweetedUserName, retweetedPublication, retweetedImg) => {
+    const saveRetweet = async (e, userId, tweetProfileImg, retweetedUserName, retweetedPublication, retweetedImg) => {
         e.preventDefault();
-        const retweetedComment = e.target.elements.retweetedComment.value;
+        const tweetPublication = e.target.elements.retweetedComment.value;
 
         const retweetedData = {
             userId: userId,
-            retweetedComment: retweetedComment,
+            tweetPublication:  tweetPublication,
+            profileRetweetedImg: tweetProfileImg,
             retweetedUserName: retweetedUserName,
             retweetedPublication: retweetedPublication,
             retweetedImg: retweetedImg
         }
 
         await saveRetweetContext(retweetedData);
+
     }
 
     return(
         <div>
-            {retweet.map((re) => 
-            <div key={re._id}>
-                <form onSubmit={(e) => saveRetweet(session[0]._id, re.tweetUsername, re.tweetPublication, re.tweetImg)} className="retweetLayout">
+            {retweet[0].tweets.map((re) => 
+            <div key={re._id}  className="retweetLayout">
+                <form onSubmit={(e) => saveRetweet(e, session[0]._id, re.tweetProfileImg, re.tweetUsername, re.tweetPublication, re.tweetImg)}>
                     <div className='form-group-retweet'>
-                        <input name="retweetedComment" placeholder='Comment retweet'/>
+                            <textarea name="retweetedComment" placeholder='Comment retweet'/>
                     </div>
                     <div>
-                        <div className='form-group-retweet'>
-                            <p>{re.tweetPublication}</p>
+                        <div className='retweet-info'>
+                            { re.tweetProfileImg ? <img src={re.tweetProfileImg} alt=""></img> : <img src={notUser} alt=""></img> }
+                            <div className='form-group-retweet'>
+                                <p>{re.tweetUsername}</p>
+                                <p>{re.tweetPublication}</p>
+                            </div>
                         </div>
                             {re.tweetImg ? <div className='form-group-retweet-img'>
                             <img src={re.tweetImg} alt=""></img>
                         </div> : ''}
+                    </div>
+                    <div>
+                    <button onClick={() => setRetweetLayout(false)}>Cancel</button>
+                    <button type="submit">Public retweet</button>
                     </div>
                 </form>
             </div>)}

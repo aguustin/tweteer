@@ -60,3 +60,4 @@ export const increaseAnswerLikesRequest = (answerLike) => axios.post('/likeAnswe
 export const increaseRetweetsRequest = (tweetId) => axios.put(`/retweets/${tweetId}`);
 
 export const getPeopleHobbiesRequest = (userId) => axios.get(`/hobbies/${userId}`);
+

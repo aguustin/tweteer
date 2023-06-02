@@ -27,9 +27,9 @@ const tweeterSchema = new mongoose.Schema({
     }],
     tweets:[{
         tweetUserId: { type: String },
+        tweetProfileImg:{ type:String },
         tweetUsername:{ type:String },
         tweetDate:{ type: Date },
-        tweetProfileImg:{ type:String },
         tweetPublication:{ type:String },
         tweetImg:{ type:String },
         tweetPrivacy:{ type:String },
@@ -37,11 +37,12 @@ const tweeterSchema = new mongoose.Schema({
             profileImgLikes:{type:String},
             userNameLikes:{type:String} 
         }],
-        tweetComments:{ type:Number },
-        retweetedComment: {type: String},
+        retweetedAdvice: {type: String},
+        profileRetweetedImg: {type: String},
         retweetedUserName: {type: String},
         retweetedPublication: {type: String},
         retweetedImg: {type: String},
+        retweeted: {type: Number},
         retweets:{ type:Number },
         comments:[{
             commentsUsers:{ type:String },

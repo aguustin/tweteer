@@ -128,8 +128,9 @@ export const TweetsContextProvider = ({children}) => {
     }
 
     const saveRetweetContext = async (retweetedData) => {
-        const res = await saveRetweetRequest(retweetedData);
-        setTweets(res.data);
+        await saveRetweetRequest(retweetedData);
+       // setTweets(res.data);
+        setRetweetLayout(false);
     }
 
     const tendenciesContext = async () => {

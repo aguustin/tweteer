@@ -53,19 +53,19 @@ const Form = () => {
           </div>
           <div>
             <div className="form-group">
-              <input type="text" name="userMail" placeholder="..." />
+              <input type="text" name="userMail" placeholder="..."  required/>
               <label>Mail</label>
             </div>
             <div className="form-group">
-              <input type="text" name="userName" placeholder="..." />
+              <input type="text" name="userName" placeholder="..."  required/>
               <label>UserName</label>
             </div>
             <div className="form-group">
-              <input type="password" name="password" placeholder="..." />
+              <input type="password" name="password" placeholder="..." required/>
               <label>Password</label>
             </div>
             <div className="form-group">
-              <input type="password" name="repitePassword" placeholder="..." />
+              <input type="password" name="repitePassword" placeholder="..." required/>
               <label>Repite password</label>
             </div>
           </div>
@@ -89,11 +89,11 @@ const Form = () => {
           </div>
           <div>
             <div className="form-group">
-              <input type="text" name="userMail" placeholder="..." />
+              <input type="text" name="userMail" placeholder="..." required/>
               <label>Mail</label>
             </div>
             <div className="form-group">
-              <input type="password" name="password" placeholder="..." />
+              <input type="password" name="password" placeholder="..." required/>
               <label>Password</label>
             </div>
           </div>
