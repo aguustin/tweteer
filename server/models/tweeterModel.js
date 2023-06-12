@@ -18,18 +18,20 @@ const tweeterSchema = new mongoose.Schema({
     followers:[{
         followerImg: {type: String},
         followerName:{ type: String },
-        followerId: { type: String }
+        followerId: { type: String },
+        followerQuantity: {type: Number}
     }],
     following:[{
         followingImg: {type: String},
         followingName:{ type: String },
-        followingId: { type: String }
+        followingId: { type: String },
+        followingQuantity: {type: Number}
     }],
     tweets:[{
         tweetUserId: { type: String },
         tweetProfileImg:{ type:String },
         tweetUsername:{ type:String },
-        tweetDate:{ type: Date },
+        tweetDate:{ type: String },
         tweetPublication:{ type:String },
         tweetImg:{ type:String },
         tweetPrivacy:{ type:String },
@@ -48,7 +50,7 @@ const tweeterSchema = new mongoose.Schema({
             commentsUsers:{ type:String },
             commentsProfilesImg:{ type:String },
             commentsPublication:{ type:String },
-            commentsDate:{ type: Date},
+            commentsDate:{ type: String },
             commentsImg:{ type: String},
             commentLikes:[{
                 commentProfileLikes:{type:String},
@@ -63,6 +65,9 @@ const tweeterSchema = new mongoose.Schema({
                         answerUserNameLikes:{ type: String }
                     }]
             }]
+        }],
+        saved: [{
+            savedSession: {type:String}
         }]
     }]
 })

@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { authenticateUserRequest, createUserRequest, editPasswordRequest, editProfileRequest, followRequest, checkFollowRequest, unFollowRequest, getAllUsersRequest } from "../api/userRequests";
-import { createTweetRequest, respondTweetRequest, searchRequest, answerRequest, retweetRequest, saveRetweetRequest, increaseLikesRequest, increaseCommentLikesRequest, increaseAnswerLikesRequest, getProfileInformationRequest } from "../api/tweetsRequests";
+import { createTweetRequest, respondTweetRequest, searchRequest, answerRequest, retweetRequest, saveTweetRequest, saveRetweetRequest, increaseLikesRequest, increaseCommentLikesRequest, increaseAnswerLikesRequest, getProfileInformationRequest, exploreTweetsRequest } from "../api/tweetsRequests";
 
 const TweetsContext = createContext();
 
@@ -14,7 +14,6 @@ export const TweetsContextProvider = ({children}) => {
     const [searchUser, setSearchUser] = useState([]);
     const [checkF, setCheckF] = useState(0);
     const [publicT, setPublicT] = useState(true);
-
     const [changeHomeLayout, setChangeHomeLayout] = useState(false);
 
     useEffect(() => {
@@ -62,14 +61,13 @@ export const TweetsContextProvider = ({children}) => {
 
     const seeProfileContext = async (userId) => {
         setPublicT(false);
-        const res = await getProfileInformationRequest(userId, session[0]._id); //intentar hacer el controlador de privacidad dentro de este
+        const res = await getProfileInformationRequest(userId, session[0]._id);
         const check = await checkFollowRequest(userId);
-        console.log(check.status);
+        console.log(res.data);
         setChangeHomeLayout(false);
         setTweets(res.data);
 
         if(check.status === 200){
-            console.log("asd");  //posibilidad haciendo otro controlador que tenga la funcion de ver si el usuario sigue al otro usuario y  traer todos los tweets o solo los publicos
             setCheckF(1);
         }else{
             setCheckF(0);
@@ -127,19 +125,20 @@ export const TweetsContextProvider = ({children}) => {
         setRetweetLayout(true);
     }
 
+    const saveTweetContext = async (tweetId) => {
+        await saveTweetRequest(tweetId, session[0]._id);
+    }
+
     const saveRetweetContext = async (retweetedData) => {
         await saveRetweetRequest(retweetedData);
-       // setTweets(res.data);
         setRetweetLayout(false);
     }
 
-    const tendenciesContext = async () => {
-
+    const exploreTweetsContext = async (exploreData) => {
+        const res = await exploreTweetsRequest(exploreData);
+        setTweets(res.data);
     }
-
-    const getPeopleByHobbiesContext = async () => {
-
-    }
+    
 
     return(
         <TweetsContext.Provider value={{
@@ -162,9 +161,9 @@ export const TweetsContextProvider = ({children}) => {
             likeCommentContext,
             answerLikeContext,
             retweetContext,
+            saveTweetContext,
             saveRetweetContext,
-            tendenciesContext,
-            getPeopleByHobbiesContext,
+            exploreTweetsContext,
             session,
             setSession,
             allUsers,

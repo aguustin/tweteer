@@ -45,11 +45,15 @@ export const answerRequest = async (answerData) => {
 
 export const retweetRequest = async (tweetId) => axios.post('/retweet', {tweetId});
 
+export const saveTweetRequest = async (tweetId, sessionId) => axios.post('/saveTweet', {tweetId, sessionId});
+
+export const getSavedTweetsRequest = async (sessionId) => axios.get(`/getSavedTweets/${sessionId}`);
+
 export const saveRetweetRequest = async (retweetedData) => axios.post('/saveRetweet', retweetedData);
 
-export const searchRequest = (searchData) => axios.post('/search', searchData, console.log(searchData));
+export const exploreTweetsRequest = async (exploreData) => axios.post('/exploreTweets', exploreData);
 
-//export const getLatestTweetsRequest = () => axios.get('/latestTweets');
+export const searchRequest = (searchData) => axios.post('/search', searchData, console.log(searchData));
 
 export const increaseLikesRequest = (likeData) => axios.post('/like', likeData);
 

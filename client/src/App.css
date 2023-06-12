@@ -1,3 +1,9 @@
+@font-face {
+  font-family: 'arista';
+  src: url("./fonts/Roboto-Light.ttf") /* Safari, Android, iOS */
+
+}
+
 * img{
   object-fit: cover;
 }
@@ -10,4 +16,8 @@
 .App {
   text-align: center;
   overflow-x: hidden;
+
+  && p{
+    font-family: arista;
+  }
 }

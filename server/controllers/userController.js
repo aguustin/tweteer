@@ -4,7 +4,7 @@ import { profileUploader } from "../libs/cloudinary.js";
 import fs from 'fs-extra';
 
 export const getUsersController = async (req, res) => {
-    const getAllUsers = await tweets.find();
+    const getAllUsers = await tweets.find().sort({followers: -1}).limit(5);
     res.send(getAllUsers);
 }
 
@@ -224,7 +224,7 @@ export const unFollowController = async (req, res) => {
     res.sendStatus(200);
 }
 
-export const checkFollowController = async (req, res) => {  //revisar esto, es el problema de que no aparezca "unfollow" cuando ya se esta siguiendo a un usuario
+export const checkFollowController = async (req, res) => {  
     const {followingId} = req.params;
     const findFollow = await tweets.find({"following.followingId": followingId});
 

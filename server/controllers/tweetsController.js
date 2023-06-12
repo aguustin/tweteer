@@ -5,13 +5,13 @@ import mongoose from "mongoose";
 
 export const getProfileInformationController = async (req, res) => {
    const {userId, sessionId} = req.body;
-   
+ 
    if(sessionId){
         const userFollows = await tweets.find({followers: {_id: sessionId}});                                                          
       
-        if(userFollows !== 0){  //arreglar esto tambien
+        if(userFollows !== 0){ 
             console.log("follows");
-            const getProfile = await tweets.find({_id: userId}).sort({"tweets._id": -1});
+            const getProfile = await tweets.find({_id: userId}).sort({"tweets._id": 1});
             res.send(getProfile);
         }else{
           
@@ -48,7 +48,7 @@ export const getProfileInformationController = async (req, res) => {
 }
 
 export const createTweetController = async (req, res) => {
-    const {userId, userImg, userName, publication, tweetPrivacy} = req.body;
+    const {userId, userImg, userName, publication, tweetPrivacy, tweetDate} = req.body;
     const firstTweet = await tweets.find({_id: userId});
     let tweetImg;
 
@@ -69,6 +69,7 @@ export const createTweetController = async (req, res) => {
                         tweetPublication: publication,
                         tweetImg: tweetImg,
                         tweetPrivacy: tweetPrivacy,
+                        tweetDate: tweetDate,
                         tweetLikes: 0,
                         tweetComments: 0,
                         retweets: 0
@@ -89,6 +90,7 @@ export const createTweetController = async (req, res) => {
                 tweetPublication: publication,
                 tweetImg: tweetImg,
                 tweetPrivacy: tweetPrivacy,
+                tweetDate: tweetDate,
                 tweetLikes: 0,
                 tweetComments: 0,
                 retweets: 0
@@ -101,7 +103,7 @@ export const createTweetController = async (req, res) => {
 
 
 export const respondTweetController = async (req, res) => {
-    const {tweetId, commentsUsers, commentsProfilesImg, commentsPublication} = req.body;
+    const {tweetId, commentsUsers, commentsProfilesImg, commentsPublication, commentsDate} = req.body;
     let commentsImg;
 
     if(req.files?.commentsImg){
@@ -118,7 +120,8 @@ export const respondTweetController = async (req, res) => {
                     commentsUsers: commentsUsers,
                     commentsProfilesImg: commentsProfilesImg,
                     commentsPublication: commentsPublication,
-                    commentsImg: commentsImg
+                    commentsImg: commentsImg,
+                    commentsDate: commentsDate
                 }
             }
         },
@@ -128,7 +131,6 @@ export const respondTweetController = async (req, res) => {
     )
 
         const actualice = await tweets.find({"tweets._id": tweetId});
-        console.log(actualice);
         res.send(actualice);
 }
 
@@ -189,10 +191,56 @@ export const retweetController = async (req, res) => {
     res.send(getTweet);
 }
 
-export const saveRetweetController = async (req, res) => {  //esto es lo ultimo hechoooooooooooo ------------------------------------------------------------------
+export const saveTweetController = async (req, res) => {
+    const {tweetId, sessionId} = req.body;
+
+    await tweets.updateOne(
+        {"tweets._id": tweetId},
+        {
+            $addToSet:
+            {
+                "tweets.$[i].saved":{
+                    savedSession: sessionId
+                }
+            }
+        },
+        {arrayFilters:[
+            {"i._id": tweetId}
+        ]}
+    )
+
+    res.sendStatus(200);
+}
+
+export const getSavedTweetController = async (req, res) => { 
+    const {sessionId} = req.params;
+    console.log(sessionId);
+    const id = new mongoose.Types.ObjectId(sessionId);
+
+    const getSavedTweets = await tweets.aggregate([
+                   {
+                       $project: {
+                           tweets: {
+                           $filter: {
+                               input: "$tweets",
+                               as:"tweets",
+                               cond: {
+                                    $eq: ["$$tweets.saved.savedSession", [sessionId]]
+                               }
+                               },
+                           }
+                       }
+                   },   
+               ])
+
+    res.send(getSavedTweets);
+}
+
+
+export const saveRetweetController = async (req, res) => {  
     const {userId, tweetPublication, tweetProfileImg, retweetedUserName, retweetedPublication, retweetedImg} = req.body;
     const getSessionInfo = await tweets.find({_id: userId});
-    console.log("eooo:" , getSessionInfo[0].userImg);
+   
     await tweets.updateOne(
         {_id: userId},
         {
@@ -217,35 +265,45 @@ export const saveRetweetController = async (req, res) => {  //esto es lo ultimo 
     res.sendStatus(200);
 }
 
+export const exploreTweetsController = async (req, res) => {
+    const {explore, profileId} = req.body;
+    const id = new mongoose.Types.ObjectId(profileId);
+
+    const getTweets = await tweets.aggregate([
+                { $match: { _id: id, "tweets.tweetPublication": { $regex: explore, $options: 'i' } } },
+                {
+                $project: {
+                        userPortada: 1,
+                        userImg: 1,
+                        userName: 1,
+                        userDesc: 1,
+                        followers: 1,
+                        following: 1,
+                    tweets: {
+                      $filter: {
+                        input: "$tweets",
+                        cond: {
+                              $regexMatch: {
+                                input: "$$this.tweetPublication",
+                                regex: explore,
+                                options: "i"
+                              }
+                           
+                        }
+                      }
+                    }
+                },
+            }   
+            ])
+    
+    res.send(getTweets);
+}
+
 export const searchController = async (req, res) => {
     const {search} = req.body;
     const findUsers = await tweets.find({userName:{$regex : search, $options: 'i'}});
     res.send(findUsers);
 }
-
-/*export const getLatestTweetsController = async (req, res) => {
-    const lastestTweets = await tweets.aggregate(
-        [ 
-            { "$unwind": "$tweets" }, 
-            { "$sample": { "size": 20 } } 
-        ]
-    )
-       
-    res.send(lastestTweets);
-    /*const lastestTweets = await tweets.aggregate([
-        {$addFields:{"tweets.tweets":{$map:{
-        input:"$tweets.tweets",
-        in: {$mergeObjects:[ 
-            "$$this",
-            { allTweets: {$reduce: {
-                    input:{$slice:["$$this.allTweets", 1, {$size:"$$this.allTweets"}]},
-                    initialValue: {$arrayElemAt:["$$this.allTweets",0]},
-                    in: {$concat: ["$$value", ",", "$$this"]}
-            }}}
-        ]}
-    }}}}])
-
-}*/
 
 export const tendenciesController = async (req, res) => { 
     const findTendencies = await tweets.find().sort({"tweets.retweets":1}).limit(4);
@@ -256,14 +314,6 @@ export const tendenciesController = async (req, res) => {
 export const increaseLikesController = async (req, res) => {
     const { profileId, tweetId, profileImgLikes, userNameLikes } = req.body;
 
-    /*await tweets.find(
-        {"tweets.$[i].tweetLikes": {userNameLikes: userNameLikes}},  //revisar como encontrar si el usuario esta en los likes para no sumarlo nuevamente
-        {
-            arrayFilters:[
-                {"i._id": tweetId}
-            ]
-        }
-    )*/
         await tweets.updateOne(
             {"tweets._id": tweetId},
             {
@@ -286,10 +336,6 @@ export const increaseLikesController = async (req, res) => {
 
 export const increaseCommentLikesController = async (req, res) => {
     const {profileId, tweetId, commentId, commentProfileLikes, commentUserNameLikes} = req.body;
-
-    /*const findLike = await tweets.find(                             //revisar como encontrar si el usuario esta en los likes para no sumarlo nuevamente
-        {"tweets.tweetLikes": {userNameLikes: userNameLikes}}
-    )*/
 
     await tweets.updateOne(
         {"tweets._id": tweetId},
@@ -355,32 +401,3 @@ export const increaseRetweetsController = async (req, res) => {
     res.sendStatus(200);
 }
 
-export const getPeopleByHobbiesController = async (req, res) => {
-    const {userId} = req.params;
-
-    const findUserId = await tweets.find({_id: userId});
-
-    const getPeople = await tweets.find({
-        $expr: {
-          $gt: [
-            {
-              $arrayElemAt: [ { $arrayElemAt: [ "userHobbies", 0, 1, 2, 3, 4 ] }, findUserId[0].hobbieA ]
-            },
-            {
-              $arrayElemAt: [ { $arrayElemAt: [ "userHobbies", 0, 1, 2, 3, 4  ] }, findUserId[0].hobbieB ]
-            },
-            {
-                $arrayElemAt: [ { $arrayElemAt: [ "userHobbies", 0, 1, 2, 3, 4 ] }, findUserId[0].hobbieC ]
-            },
-            {
-                $arrayElemAt: [ { $arrayElemAt: [ "userHobbies", 0, 1, 2, 3, 4 ] }, findUserId[0].hobbieD ]
-            },
-            {
-                $arrayElemAt: [ { $arrayElemAt: [ "userHobbies", 0, 1, 2, 3, 4 ] }, findUserId[0].hobbieE ]
-            },
-          ]
-        }
-      })
-
-    res.send(getPeople);
-}

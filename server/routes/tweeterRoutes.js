@@ -9,9 +9,11 @@ import { createTweetController,
      increaseAnswerLikesController, 
      increaseRetweetsController, 
      respondTweetController, 
-     searchController, 
+     exploreTweetsController,
+     searchController,
+     saveTweetController,
+     getSavedTweetController, 
      tendenciesController, 
-     getPeopleByHobbiesController, 
      } from "../controllers/tweetsController.js";
 
 const router = Router();
@@ -26,11 +28,15 @@ router.post('/answerTw', answerController);
 
 router.post('/retweet', retweetController);
 
+router.post('/saveTweet', saveTweetController);
+
+router.get('/getSavedTweets/:sessionId', getSavedTweetController);
+
 router.post('/saveRetweet', saveRetweetController);
 
-router.post('/search', searchController);
+router.post('/exploreTweets', exploreTweetsController);
 
-//router.get('/latestTweets', getLatestTweetsController);
+router.post('/search', searchController);
 
 router.get('/tendencies', tendenciesController);
 
@@ -41,7 +47,5 @@ router.post('/likeComment', increaseCommentLikesController);
 router.post('/likeAnswer', increaseAnswerLikesController);
 
 router.put('/retweets/:tweetId', increaseRetweetsController);
-
-router.get('/hobbies/:userId', getPeopleByHobbiesController);
 
 export default router;

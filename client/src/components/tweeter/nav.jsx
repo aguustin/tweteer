@@ -11,7 +11,7 @@ const Nav = () => {
   const myProfile = async (e) => {
     e.preventDefault();
     await getProfileInformationContext(session);
-    layoutHomeContext(e);
+    await layoutHomeContext(e);
   };
 
   return (

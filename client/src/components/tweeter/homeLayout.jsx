@@ -6,9 +6,10 @@ import LayoutContext from '../../context/layoutsContext';
 
 const HomeLayout = () => {
     const [editLayout, setEditLayout] = useState(false);
-    const [openFollows, setOpenFollows] = useState(false);
+    const [openFollowings, setOpenFollowings] = useState(false);
+    const [openFollowers, setOpenFollowers] = useState(false);
     const {layoutHomeContext} = useContext(LayoutContext);
-    const {tweets, session, checkF, changeHomeLayout, editProfileContext, followContext, unFollowContext, seeProfileContext} = useContext(TweetsContext);
+    const {tweets, session, checkF, changeHomeLayout, editProfileContext, followContext, unFollowContext, seeProfileContext, exploreTweetsContext} = useContext(TweetsContext);
 
     const editProfile = async (e) => {
         e.preventDefault();
@@ -35,35 +36,76 @@ const HomeLayout = () => {
 
     const seeProfile = async (e, userId) => {
         e.preventDefault();
+        console.log(userId);
         await seeProfileContext(userId);
         layoutHomeContext(e);
     }
 
-    const followLay = async (e, userId) => { //traer los seguidores del usuario con su id y mapearlos en FollowLayout
+    const followLay = async (e) => { 
         e.preventDefault();
-        await getFollowers(userId);
-        setOpenFollows(true);
+        setOpenFollowings(false);
+        setOpenFollowers(true);
     }
 
-    const followingLay = async (e, userId) => { //traer los seguidores del usuario con su id y mapearlos en FollowLayout
+    const followingLay = async (e) => { 
         e.preventDefault();
-        await getFollowings(userId);
-        setOpenFollows(true);
+        setOpenFollowers(false);
+        setOpenFollowings(true);
     }
-   
-    const FollowsLayout = () => {
+
+    const exploreTweets = async (e, profileId) => {
+        e.preventDefault();
+        const explore = e.target.elements.explore.value;
+        const exploreData = {
+            explore: explore,
+            profileId: profileId
+        }
+        await exploreTweetsContext(exploreData);
+    }
+    const FollowersLayout = () => {
+      
         return(
             <div className='followsLayout'>
-                <div className='people d-flex'>
-                    <button onClick={(e) => seeProfile(e)}><img src={notUser} alt=""></img></button>
+                <div className='people-header d-flex'>
+                    <p>Followers</p>
+                    <button onClick={() => setOpenFollowers(false)}>X</button>
+                </div>
+               {tweets.map((follows) => <div key={follows._id}>
+               {follows.followers.map((followers) => <div key={followers._id} className='people d-flex'>
+                    <button id="followsButton" onClick={(e) => seeProfile(e, followers.followerId)}>{followers?.followerImg ? <img src={followers?.followerImg} alt=""></img> : <img src={notUser} alt=""></img>}</button>
                     <div>
-                        <p>Username lastname</p>
+                        <p>{followers.followerName}</p>
                         <div className='d-flex'>
                             <label>Followers: 6</label>
                             <label>Following: 12</label>
                         </div>
                     </div>
+                </div>)}
+               </div>)}  
+            </div>
+        )
+    }
+
+    const FollowingsLayout = () => {
+
+        return(
+            <div className='followsLayout'>
+                <div className='people-header d-flex'>
+                    <p>Followings</p>
+                    <button onClick={() => setOpenFollowings(false)}>X</button>
                 </div>
+               {tweets.map((follows) => <div key={follows._id}>
+               {follows.following.map((followings) => <div key={followings._id} className='people d-flex'>
+                    <button id="followsButton" onClick={(e) => seeProfile(e, followings.followingId)}>{followings?.followingImg ? <img src={followings?.followingImg} alt=""></img> : <img src={notUser} alt=""></img>}</button>
+                    <div>
+                        <p>{followings.followingName}</p>
+                        <div className='d-flex'>
+                            <label>Followers: 6</label>
+                            <label>Following: 12</label>
+                        </div>
+                    </div>
+               </div>)}
+               </div>)} 
             </div>
         )
     }
@@ -103,12 +145,12 @@ const HomeLayout = () => {
                 <div className='portadaProfile'>
                     {profile.userPortada ? <img src={profile.userPortada} alt=""></img> : <img src={notUser} alt=""></img>}
                 </div>
-                <div className='profileDesc d-flex mx-auto'>
+                <div className='profileDesc mx-auto'>
                     <div className='photoUser'>
                     {profile.userImg ? <img src={profile.userImg} alt=""></img> : <img src={notUser} alt=""></img>}
                     </div>
                     <div className='userDesc'>
-                        <div className='d-flex align-items-center'>
+                        <div className='userDesc-cont align-items-center'>
                             <h1>{profile.userName}</h1>
                             <button onClick={(e) => followLay(e, profile._id)}><label>Followers: {profile.followers?.length}</label></button>
                             <button onClick={(e) => followingLay(e, profile._id)}><label>Following: {profile.following?.length}</label></button>
@@ -117,11 +159,16 @@ const HomeLayout = () => {
                             <p>{profile.userDesc}</p>
                         </div>
                     </div>
-                    {changeHomeLayout ? <button onClick={() => setEditLayout(!editLayout)}>Edit Profile</button> : checkF === 1 ? <button onClick={(e) => unFollowUser(e, profile._id)}>Unfollow</button> : <button onClick={(e) => followUser(e, profile._id)}>Follow</button>}
+                    {changeHomeLayout ? <button id="editLayout" onClick={() => setEditLayout(!editLayout)}>Edit Profile</button> : checkF === 1 ? <button id="editLayout" onClick={(e) => unFollowUser(e, profile._id)}>Unfollow</button> : <button id="editLayout" onClick={(e) => followUser(e, profile._id)}>Follow</button>}
+                    <form className='explore' onSubmit={(e) => exploreTweets(e, profile._id)}>
+                        <input name="explore" placeholder="explore tweets"></input>
+                        <button type="submit"></button>
+                    </form>
                 </div>
                 { editLayout ? <EditProfile/> : '' }
+                {openFollowers ? <FollowersLayout t={profile}/> : '' }
+                {openFollowings ? <FollowingsLayout t={profile}/> : ''} 
             </div>)}
-            { openFollows ? <FollowsLayout/> : '' }
         </div>
     )
 }

@@ -6,6 +6,10 @@ import RetweetLayout from '../form/retweetForm';
 import PublicTweet from './publicTweet';
 import TrendAndPeople from './trendAndPeople';
 import hearth from "../../imgs/hearth.png";
+import twImg from "../../imgs/photo.png";
+import chat from "../../imgs/chat.png";
+import retweet from "../../imgs/retweet.png";
+import save from "../../imgs/save.png";
 import { useContext, useEffect, useState } from 'react';
 import LayoutContext from '../../context/layoutsContext';
 import Nav from './nav';
@@ -18,8 +22,12 @@ const Tweets = () => {
     const [ profileId, setProfileId ] = useState();
     const [ tweetId, setTweetId ] = useState();
     const [ commentId, setCommentId ] = useState();
+    let fecha = new Date();
+    let day = ["Sunday", "Saturday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    let month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const commentsDate = `${day[fecha.getDay()]}, ${fecha.getDate()} ${month[fecha.getMonth()]} - ${fecha.getHours()}:${fecha.getMinutes()}`;
     const {homeLayout, listsLayout, searching} = useContext(LayoutContext);
-    const {session, allUsers, tweets, retweetLayout, respondTweetContext, answerContext, likeContext, likeCommentContext, answerLikeContext, retweetContext, getProfileInformationContext} = useContext(TweetsContext);
+    const {session, allUsers, tweets, retweetLayout, respondTweetContext, answerContext, likeContext, likeCommentContext, answerLikeContext, retweetContext, saveTweetContext, getProfileInformationContext} = useContext(TweetsContext);
     
     useEffect(() => {
         (async() => {
@@ -27,7 +35,7 @@ const Tweets = () => {
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
-    console.log(retweetLayout);
+
     const searchs = (e) => {
         e.preventDefault();
         setSe(e.target.value);
@@ -41,12 +49,13 @@ const Tweets = () => {
             commentsUsers: session[0]?.userName,
             commentsProfilesImg: session[0]?.profilePhoto,
             commentsImg: e.target.elements.respondTweetImg.files[0],
-            commentsPublication: e.target.elements.respondTweet.value
+            commentsPublication: e.target.elements.respondTweet.value,
+            commentsDate: commentsDate
         }
 
         await respondTweetContext(commentData);
     }
-
+    
     const openAnswerLayout = (profileId, tweetId, commentId) => {
         setProfileId(profileId);
         setTweetId(tweetId);
@@ -108,10 +117,14 @@ const Tweets = () => {
         await answerContext(answerData);
     }
 
-
     const retweeted = async (e, tweetId) => {
         e.preventDefault();
         await retweetContext(tweetId);
+    }
+
+    const saveTweet = async (e, tweetId) => {
+        e.preventDefault();
+        await saveTweetContext(tweetId);
     }
 
     const Answer = () => {
@@ -123,9 +136,6 @@ const Tweets = () => {
             </form>
         )
     }
-
-
-    
 
     return(
         <div>
@@ -141,13 +151,13 @@ const Tweets = () => {
             : ''}
             {retweetLayout ? <RetweetLayout/> : ''}
                 {homeLayout ? <HomeLayout/> : ''}
-                <div className='lists-publications-container d-flex mx-auto'>
+                <div className='lists-publications-container mx-auto'>
                     {listsLayout ? <ListLayout/> : '' }
                     <div className='publications'>
                         {homeLayout ? <PublicTweet/> : ''}
-                            {tweets.map((t) =>
+                        {tweets.map((t) =>
                             <div key={t._id}>
-                                {t.tweets.map((tc) => 
+                        {t.tweets.map((tc) => 
                                 <div className='mt-4'>
                         {tc.retweeted === 1 ?  
                         <div className='retweets'>
@@ -176,12 +186,10 @@ const Tweets = () => {
                         </div>
                         <li className='tweet-actions d-flex'>         
                             <button><img src={hearth} alt=""></img>Comments {tc.comments?.length}</button>
-                            <button onClick={(e) => retweeted(e, tc._id)}><img src={hearth} alt="" ></img>Retweets {tc.retweets}</button>
+                            <button onClick={(e) => retweeted(e, tc._id)}><img src={retweet} alt="" ></img>Retweets {tc.retweets}</button>
                             <button onClick={(e) => like(e, t._id, tc._id)}><img src={hearth} alt=""></img>Likes {tc.tweetLikess?.length}</button>
-                            <button><img src={hearth} alt=""></img>Save</button>
                         </li>
                     </div> 
-                    
                     
                     : 
                                     
@@ -200,30 +208,33 @@ const Tweets = () => {
                                             {tc.tweetImg ? <img className='tweetImg' src={tc.tweetImg} alt=""></img> : ''}
                                             <li className='tweet-actions d-flex'>
     {/**cantidad de com,ret,likes */}           
-                                                    <button><img src={hearth} alt=""></img>Comments {tc.comments.length}</button>
-                                                    <button onClick={(e) => retweeted(e, tc._id)}><img src={hearth} alt="" ></img>Retweets {tc.retweets}</button>
-                                                    <button onClick={(e) => like(e, t._id, tc._id)}><img src={hearth} alt=""></img>Likes {tc.tweetLikess.length}</button>
-                                                    <button><img src={hearth} alt=""></img>Save</button>
+                                                    <button><img src={chat} alt=""></img>Comments {tc.comments?.length}</button>
+                                                    <button onClick={(e) => retweeted(e, tc._id)}><img src={retweet} alt="" ></img>Retweets {tc.retweets}</button>
+                                                    <button onClick={(e) => like(e, t._id, tc._id)}><img src={hearth} alt=""></img>Likes {tc.tweetLikess?.length}</button>
+                                                    <button onClick={(e) => saveTweet(e, tc._id)}><img src={save} alt=""></img>Save</button>
                                                 
                                             </li>
                                         </div>
                                     </div>
                                 }
                                     <div>
- {/**formulario de comentarios */}      <form className='comments-form d-flex mt-2' encType='multipart/form-data' onSubmit={(e) => respondTweet(e, tc._id)}>
-                                            {session[0].profilePhoto ? <img src={session[0].profilePhoto} alt=""></img> : <img src={notUser} alt=""></img>}
-                                            <div>
+ {/**formulario de comentarios */}      <form className='comments-form mt-2' encType='multipart/form-data' onSubmit={(e) => respondTweet(e, tc._id)}>
+                                            <div className='d-flex'>
+                                                {session[0].profilePhoto ? <img src={session[0].profilePhoto} alt=""></img> : <img src={notUser} alt=""></img>}
                                                <textarea id="respondTweet" type="text" name="respondTweet" placeholder='Tweet your reply'></textarea>
-                                               <input type="file" name="respondTweetImg"></input>
+                                            </div>
+                                            <div className='cImgComment'>
+                                                <input id="respondTweetImg" type="file" name="respondTweetImg"></input>
+                                                <label for="respondTweetImg"><img id="labelImg" src={twImg} alt=""></img></label>
+                                                <button id="commButton" type="submit">Comment</button>
                                             </div> 
-                                            <button type="submit">Comment</button>
                                         </form>
 {/**for respuestas a comentarios */}{answerLayout ? <Answer/> : ''}
                                     </div>
                                     {tc.comments.map((c) => 
                                     <div key={c._id} className='comments-container d-flex mt-3 '>
                                         <img id="comment-image-profile" src={notUser} alt=""></img>
-                                        <div>
+                                        <div className='w-100'>
  {/**vista de los comentarios */}           <div className='comment'>
                                                 <div className='d-flex'>
                                                     <p>{c.commentsUsers}</p>
@@ -236,8 +247,8 @@ const Tweets = () => {
                                             </div>
                                             <div className='mt-2'>
                                                     <button id="like-comment" onClick={() => commentLike(t._id, tc._id, c._id)}><img src={hearth} alt=""></img>Like</button>
-                                                    <label>{c.commentLikes.length} Likes</label>
-                                                    <label>{c.answerComments.length} Answers</label>
+                                                    <label>{c.commentLikes?.length} Likes</label>
+                                                    <label>{c.answerComments?.length} Answers</label>
                                                     <button className="deep-comment" onClick={() => openAnswerLayout(t._id, tc._id, c._id)}>Comment</button>
                                             </div>
                                             {c.answerComments.map((ans) => 
@@ -255,7 +266,7 @@ const Tweets = () => {
                                                     </div>
                                                     <div className='answerLike'>
                                                         <button onClick={() => answerLike(t._id, tc._id, c._id, ans._id)}><img src={hearth} alt=""></img><label>Like</label></button>
-                                                        <label>{ans.answerLikes.length} likes</label>
+                                                        <label>{ans.answerLikes?.length} likes</label>
                                                     </div>
                                                 </div>
                                             </div>)}

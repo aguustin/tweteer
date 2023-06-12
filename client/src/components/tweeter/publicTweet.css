@@ -18,6 +18,12 @@
         color:rgb(65, 65, 248);
         outline: none;
     }
+
+    && label{
+        cursor: pointer;
+        margin-left: 2rem;
+    }
+
     box-shadow: 0px 0px 12px -7px rgba(128,128,128,0.75);
     -webkit-box-shadow: 0px 0px 12px -7px rgba(128,128,128,0.75);
     -moz-box-shadow: 0px 0px 12px -7px rgba(128,128,128,0.75);
@@ -39,6 +45,10 @@
         padding: .5rem 2rem;
         border-radius: 4px;
     }
+}
+
+.tweetImgIn{
+    display: none;
 }
 
 #public-img{

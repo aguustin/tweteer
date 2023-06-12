@@ -34,13 +34,17 @@
 
 .lists-publications-container{
     width: 86vw;
+    display: flex;
     transform: translateX(-.6vw);
 }
 
 
 .publications{
+    position: relative;
     height: 1700px;
+    min-width: 570px;
     background-color: rgb(247, 247, 247);
+    overflow-x: hidden;
     overflow-y: scroll;
     position: relative;
     width: 64vw;
@@ -138,7 +142,7 @@
 }
 
 .tweetDesc-img li button img{
-    width: 24px;
+    width: 15px;
 }
 
 .tweetDesc-img li{
@@ -181,12 +185,18 @@
 }
 
 .tweet-actions{
-    width: 100%;
+    width: 80%;
+    margin-left: 5rem;
 
     && button{
         padding: .5rem 0rem;
         background-color: transparent;
+        color: rgb(156, 156, 156);
         width: 25%;
+    }
+
+    && button img{
+        margin-right: .5rem;
     }
 }
 
@@ -239,11 +249,50 @@
     && button{
         padding: 0rem .8rem;
         background-color: rgb(65, 65, 248);
-        height: 55px;
+        height: 45px;
         color: white;
         font-weight: 600;
         outline: none;
         border-radius: 5px;
+    }
+
+    && textarea{
+        width: 90%;
+        border: 1px solid rgb(190, 190, 190);
+        margin-left: 1rem;
+    }
+
+    && .cImgComment{
+        position: relative;
+        width: 88%;
+        left: 82px;
+        
+        && label{
+            position: absolute;
+            top: 1vh;
+            right: 13vw;
+        }
+
+        && button{
+            position: absolute;
+            right: 5vw;
+        
+        }
+    }
+
+    #respondTweetImg{
+        display: none;
+    }
+
+    #labelImg{
+        height: 24px;
+        width: 24px;
+    }
+
+    #commButton{
+        padding: 0rem;
+        background-color: transparent;
+        color:rgb(156, 156, 156);
     }
 }
 
@@ -268,33 +317,34 @@
 }
 
 #comment-image-profile{
-    margin-left: 4rem;
     width: 66px;
     height: 66px;
+    margin-top: 3rem;
 }
 
 .comment{
     border-radius: 8px;
+    margin-top: 3rem;
     margin-left: 1rem;
 }
 
 .comment-width{
     background-color: rgb(245, 245, 245);
     padding: .5rem .5rem;
-    width: 45vw;
+    width: 90%;
 }
 
 .answer-comment{
 
     margin-top: 1rem;
-    padding-left: 4rem;
+    padding-left: 1rem;
 
    .answer-img{
     width: 60px;
     object-fit: cover;
    }
     && .answer-width{
-        width: 40vw;
+        width: 80%;
         margin-top: .3rem;
         background-color: rgb(250, 248, 248);
         padding: .1rem .5rem;
@@ -318,9 +368,31 @@
 }
 
 #like-comment img{
-    width: 24px;
+    border-radius: 0px;
+    width: 20px;
 }
 
 .answerLike{
     display: flex;
+}
+
+@media  screen and (max-width: 1120px) {
+
+    .search{
+        left: 5.5vw;      
+    }
+
+    
+    .lists-publications-container{
+        display: block;
+
+        && .publications{
+            width: 100%;
+            margin: 0 auto;
+        }
+    }
+
+    .trends{
+        margin-top: 3rem;
+    }
 }
