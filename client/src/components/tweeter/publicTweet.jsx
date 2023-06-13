@@ -2,14 +2,35 @@ import "./publicTweet.css";
 import notUser from "../../imgs/notUser.jpg";
 import hearth from "../../imgs/hearth.png";
 import twImg from "../../imgs/photo.png";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import TweetsContext from "../../context/tweetsContext";
 
 const PublicTweet = () => {
   const { session, publicT, createTweetContext } = useContext(TweetsContext);
+  const [hashtag, setHashtag] = useState("");
+  let saveHashtag = [];
   let fecha = new Date();
   let day = ["Sunday", "Saturday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
   let month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  const hashtagTweet = async (e) => {
+    e.preventDefault();
+    console.log("rrr: ", e.target.value);
+    if(e.target.value === '#'){
+      setHashtag(e.target.value);
+      console.log("funciona la primera condicion");
+    }else if(hashtag.length <= 0){
+      saveHashtag = null;
+    }else if(hashtag.charAt[0] === "#"){
+      setHashtag(e.target.value);
+      console.log("funciona la segunda condicion");
+    }else if(saveHashtag.length > 0){
+      console.log("hashtag hecho");
+    }else if(e.target.value.includes(" ") && hashtag.length > 0){
+      saveHashtag = e.target.value;
+    }
+    
+  }
 
   const createTweet = async (e) => {
     e.preventDefault();
@@ -22,11 +43,12 @@ const PublicTweet = () => {
       publication: e.target.elements.publication.value,
       tweetImg: e.target.elements.tweetImg.files[0],
       tweetPrivacy: e.target.elements.privacy.value,
-      tweetDate: tweetDate
+      tweetDate: tweetDate,
+      hashtag: saveHashtag
     };
     await createTweetContext(tweetData);
   };
-
+ // onChange={hashtagTweet}
   return (
     <div>
       {publicT ? <div className="publicTweet">
@@ -36,7 +58,7 @@ const PublicTweet = () => {
         <div className="d-flex">
           {session[0]?.userImg ? <img id="public-img" src={session[0]?.userImg} alt=""></img> :  <img id="public-img" src={notUser} alt=""></img>}
           <form onSubmit={(e) => createTweet(e)} className="public-form-size align-items-center" encType="multipart/form-data">
-            <textarea type="text" placeholder="What's happening?" name="publication"></textarea>
+            <textarea type="text" placeholder="What's happening?" name="publication" onChange={hashtagTweet}></textarea>
             <div className="d-flex">
               <img id="like" src={hearth} alt=""></img>
               <select className="selectPrivacyPublication" name="privacy">

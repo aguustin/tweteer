@@ -7,7 +7,7 @@ import TweetsContext from '../../context/tweetsContext';
 const TrendAndPeople = () => {
 
     const {allUsers} = useContext(TweetsContext);
-    console.log(allUsers);
+   
     return(
         <div className="trendAndPeople">
             <div className="trends">

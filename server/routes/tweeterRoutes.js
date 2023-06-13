@@ -13,7 +13,8 @@ import { createTweetController,
      searchController,
      saveTweetController,
      getSavedTweetController, 
-     tendenciesController, 
+     tendenciesController,
+     getTendenciesController 
      } from "../controllers/tweetsController.js";
 
 const router = Router();
@@ -47,5 +48,7 @@ router.post('/likeComment', increaseCommentLikesController);
 router.post('/likeAnswer', increaseAnswerLikesController);
 
 router.put('/retweets/:tweetId', increaseRetweetsController);
+
+router.get('/getTendencies', getTendenciesController);
 
 export default router;

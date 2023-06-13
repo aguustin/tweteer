@@ -8,13 +8,6 @@ const tweeterSchema = new mongoose.Schema({
     userDesc:{ type:String },
     password:{ type:String },
     alias:{ type:String },
-    userHobbies:[{
-        hobbieA:{ type:String },
-        hobbieB:{ type:String },
-        hobbieC:{ type:String },
-        hobbieD:{ type:String },
-        hobbieE:{ type:String },
-    }],
     followers:[{
         followerImg: {type: String},
         followerName:{ type: String },
@@ -67,8 +60,10 @@ const tweeterSchema = new mongoose.Schema({
             }]
         }],
         saved: [{
-            savedSession: {type:String}
-        }]
+            savedSession: { type:String }
+        }],
+        hashtag: { type: String }
+
     }]
 })
 
