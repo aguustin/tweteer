@@ -147,7 +147,7 @@ const HomeLayout = () => {
                 </div>
                 <div className='profileDesc mx-auto'>
                     <div className='photoUser'>
-                    {profile.userImg ? <img src={profile.userImg} alt=""></img> : <img src={notUser} alt=""></img>}
+                        {profile.userImg ? <img src={profile.userImg} alt=""></img> : <img src={notUser} alt=""></img>}
                     </div>
                     <div className='userDesc'>
                         <div className='userDesc-cont align-items-center'>

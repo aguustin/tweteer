@@ -11,7 +11,7 @@ export const getProfileInformationController = async (req, res) => {
       
         if(userFollows !== 0){ 
             console.log("follows");
-            const getProfile = await tweets.find({_id: userId}).sort({"tweets._id": 1});
+            const getProfile = await tweets.find({_id: userId}).sort({ tweets: { _id: -1 } });
             res.send(getProfile);
         }else{
           
@@ -51,75 +51,35 @@ export const createTweetController = async (req, res) => {
     const {userId, userImg, userName, publication, tweetPrivacy, tweetDate, hashtag} = req.body;
     const firstTweet = await tweets.find({_id: userId});
     let tweetImg;
-
+    
     if(firstTweet.length > 0){
         if(req.files?.tweetImg){
             const result = await tweetsUploader(req.files.tweetImg.tempFilePath);
             tweetImg = result.secure_url;
             await fs.remove(req.files.tweetImg.tempFilePath);
         }
-        if(hashtag.length > 0){
-            await tweets.updateOne(
-                {_id: userId},
-                {
-                    $addToSet:{
-                        tweets:{
-                            tweetUserId: userId,
-                            tweetProfileImg: userImg,
-                            tweetUsername: userName,
-                            tweetPublication: publication,
-                            tweetImg: tweetImg,
-                            tweetPrivacy: tweetPrivacy,
-                            tweetDate: tweetDate,
-                            tweetLikess: 0,
-                            retweets: 0,
-                        }
+        await tweets.updateOne(
+            {_id: userId},
+            {
+                $addToSet:{
+                    tweets:{
+                        tweetUserId: userId,
+                        tweetProfileImg: userImg,
+                        tweetUsername: userName,
+                        tweetPublication: publication,
+                        tweetImg: tweetImg,
+                        tweetPrivacy: tweetPrivacy,
+                        tweetDate: tweetDate,
+                        tweetLikess: 0,
+                        retweets: 0,
+                        hashtags:[{ word: hashtag }]
                     }
                 }
-                )
-        }else{
-
-            await tweets.updateOne(
-                {_id: userId},
-                {
-                    $addToSet:{
-                        tweets:{
-                            tweetUserId: userId,
-                            tweetProfileImg: userImg,
-                            tweetUsername: userName,
-                            tweetPublication: publication,
-                            tweetImg: tweetImg,
-                            tweetPrivacy: tweetPrivacy,
-                            tweetDate: tweetDate,
-                            tweetLikess: 0,
-                            retweets: 0,
-                            hashtag: hashtag
-                        }
-                    }
-                }
-                )
-            const updateState = await tweets.find({_id: userId});
-            res.send(updateState);
-            
-        }
-    }else{
-
-        if(hashtag.length > 0){
-        const saveTweet = new tweets({
-            _id: userId,
-            userName: userName,
-            tweets:[{
-                tweetProfileImg: userImg,
-                tweetUsername: userName,
-                tweetPublication: publication,
-                tweetImg: tweetImg,
-                tweetPrivacy: tweetPrivacy,
-                tweetDate: tweetDate,
-                retweets: 0,
-            }]
-        })
-        await saveTweet.save();
-        res.send(saveTweet);
+            }
+            )
+        const updateState = await tweets.find({_id: userId});
+        res.send(updateState);
+        
     }else{
         const saveTweet = new tweets({
             _id: userId,
@@ -132,12 +92,14 @@ export const createTweetController = async (req, res) => {
                 tweetPrivacy: tweetPrivacy,
                 tweetDate: tweetDate,
                 retweets: 0,
-                hashtag: hashtag
+                hashtags:[{
+                    word: hashtag
+                }] 
+                    
             }]
         })
         await saveTweet.save();
         res.send(saveTweet);
-    }
     }
 }
 
@@ -150,6 +112,7 @@ export const respondTweetController = async (req, res) => {
         const result = await tweetsUploader(req.files.commentsImg.tempFilePath);
         commentsImg = result.secure_url;
         await fs.remove(req.files.commentsImg.tempFilePath);
+        
     }
    
     await tweets.updateOne(
@@ -438,7 +401,15 @@ export const increaseRetweetsController = async (req, res) => {
     res.sendStatus(200);
 }
 
+export const getAllTendController = async (req, res) => {
+
+
+
+    res.send(200);
+}
+
 export const getTendenciesController = async (req, res) => {
+    const {tendencie} = req.params;
 
     const getTendencies = await tweets.aggregate([{
         $project: {
@@ -447,12 +418,17 @@ export const getTendenciesController = async (req, res) => {
                 input: "$tweets",
                 as:"tweets",
                 cond: {
-                     $eq: ["$$tweets.hashtag", ]
+                     $eq: ["$$tweets.hashtags.word", [tendencie]]
                 }
-                },
+                }
             }
         }
-    },   
+    }
 ])
     res.send(getTendencies);
+}
+
+export const deleteAllController = async (req, res) => {
+    await tweets.deleteMany();
+    res.sendStatus(200);
 }

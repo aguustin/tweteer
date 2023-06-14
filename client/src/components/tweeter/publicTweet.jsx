@@ -25,17 +25,19 @@ const PublicTweet = () => {
       setHashtag(e.target.value);
       console.log("funciona la segunda condicion");
     }else if(saveHashtag.length > 0){
-      console.log("hashtag hecho");
+      console.log("hashtag hecho", saveHashtag);
     }else if(e.target.value.includes(" ") && hashtag.length > 0){
-      saveHashtag = e.target.value;
+      saveHashtag = e.target.value.trim();
+      saveHashtag = saveHashtag.substring(1);
     }
     
   }
 
+
   const createTweet = async (e) => {
     e.preventDefault();
     const tweetDate = `${day[fecha.getDay()]}, ${fecha.getDate()} ${month[fecha.getMonth()]} - ${fecha.getHours()}:${fecha.getMinutes()}`;
-
+    saveHashtag.slice(1, -1);
     const tweetData = {
       userId: session[0]._id,
       userImg: session[0]?.userImg,
@@ -46,9 +48,11 @@ const PublicTweet = () => {
       tweetDate: tweetDate,
       hashtag: saveHashtag
     };
+
+    saveHashtag = [];
     await createTweetContext(tweetData);
   };
- // onChange={hashtagTweet}
+ 
   return (
     <div>
       {publicT ? <div className="publicTweet">
@@ -67,7 +71,7 @@ const PublicTweet = () => {
                 <option value="only">Only people who follows me</option>
               </select>
               <input id="tweetImg" className="tweetImgIn" type="file" name="tweetImg" accept="image/*"></input>
-              <label for="tweetImgIn"><img src={twImg} alt=""></img></label>
+              <label for="tweetImg"><img src={twImg} alt=""></img></label>
               <button type="submit">Tweet</button>
             </div>
           </form>

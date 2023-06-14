@@ -65,5 +65,7 @@ export const increaseRetweetsRequest = (tweetId) => axios.put(`/retweets/${tweet
 
 export const getPeopleHobbiesRequest = (userId) => axios.get(`/hobbies/${userId}`);
 
-export const  getTendenciesRequest = () => axios.get('/getTendencies');
+export const getAllTendRequest = () => axios.get('/getAllTend');
+
+export const  getTendenciesRequest = (tendencie) => axios.get(`/getTendencies/${tendencie}`);
 

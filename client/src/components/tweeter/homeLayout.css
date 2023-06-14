@@ -48,7 +48,8 @@
 .photoUser img{
     position: relative;
     bottom: 6vh;
-    width: 18vw;
+    width: 16vw;
+    height: 16vh;
 }
 
 .userDesc{
@@ -225,6 +226,7 @@
         width: 100%;
         && img{
             width: 180px;
+            height: 180px;
             margin: 0 auto;
         }
         margin-left: 0rem;

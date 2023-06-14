@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { authenticateUserRequest, createUserRequest, editPasswordRequest, editProfileRequest, followRequest, checkFollowRequest, unFollowRequest, getAllUsersRequest } from "../api/userRequests";
-import { createTweetRequest, respondTweetRequest, searchRequest, answerRequest, retweetRequest, saveTweetRequest, saveRetweetRequest, increaseLikesRequest, increaseCommentLikesRequest, increaseAnswerLikesRequest, getProfileInformationRequest, exploreTweetsRequest, getTendenciesRequest } from "../api/tweetsRequests";
+import { createTweetRequest, respondTweetRequest, searchRequest, answerRequest, retweetRequest, saveTweetRequest, saveRetweetRequest, increaseLikesRequest, increaseCommentLikesRequest, increaseAnswerLikesRequest, getProfileInformationRequest, exploreTweetsRequest, getTendenciesRequest, getAllTendRequest } from "../api/tweetsRequests";
 
 const TweetsContext = createContext();
 
@@ -10,6 +10,7 @@ export const TweetsContextProvider = ({children}) => {
     const [allUsers, setAllUsers] = useState([]);
     const [tweets, setTweets] = useState([]);
     const [retweet, setRetweet] = useState([]);
+    const [tendencies, setTendencies] = useState([]);
     const [retweetLayout, setRetweetLayout] = useState(false);
     const [searchUser, setSearchUser] = useState([]);
     const [checkF, setCheckF] = useState(0);
@@ -139,8 +140,14 @@ export const TweetsContextProvider = ({children}) => {
         setTweets(res.data);
     }
 
+    const getAllTendContext = async () => {
+        const res = await getAllTendRequest();
+
+    }
+
     const getTendenciesContext = async () => {
         const res = await getTendenciesRequest();
+        setTweets(res.data);
     }
     
 
@@ -151,6 +158,7 @@ export const TweetsContextProvider = ({children}) => {
             searchUser, 
             setSearchUser,
             retweet,
+            tendencies,
             retweetLayout,
             publicT,
             changeHomeLayout, 
@@ -177,7 +185,8 @@ export const TweetsContextProvider = ({children}) => {
             editProfileContext,
             editPasswordContext,
             getProfileInformationContext,
-            seeProfileContext
+            seeProfileContext,
+            getTendenciesContext
         }}>{children}</TweetsContext.Provider>
     )
 }

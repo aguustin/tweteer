@@ -6,7 +6,7 @@ import TweetsContext from '../../context/tweetsContext';
 
 const TrendAndPeople = () => {
 
-    const {allUsers} = useContext(TweetsContext);
+    const {allUsers, tendencies} = useContext(TweetsContext);
    
     return(
         <div className="trendAndPeople">
@@ -54,9 +54,6 @@ const TrendAndPeople = () => {
                             <label>{allU.following.length} Following</label>
                         </div>
                         <button><img src={hearth} alt=""></img>Follow</button>
-                    </div>
-                    <div className='peopleHobbies'>
-                        {allU.userHobbies.map((ho) => <label>{ho}</label>)}
                     </div>
                     <div className='peoplePortada text-center'>
                         {allU.userPortada ? <img src={allU?.userPortada} alt=""></img> : <img src={notUser} alt=""></img> }

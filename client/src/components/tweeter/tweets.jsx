@@ -200,9 +200,13 @@ const Tweets = () => {
                         {tc.tweetProfileImg ? <img id='tweetProfileImg' src={tc.tweetProfileImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
                                                 </div>
                                                 <div>
-                                                    <p>{tc.tweetUsername}</p>
-                                                    <label>{tc.tweetDate}</label>
-                                                    <p id="tweetPublication">{tc.tweetPublication}</p>
+                                                    <div className='d-flex'>
+                                                        <p>{tc.tweetUsername}</p>
+                                                        <label>{tc.tweetDate}</label>
+                                                    </div>
+                                                   
+                                                        <p id="tweetPublication">{tc.tweetPublication}</p>
+                                                
                                                 </div>
                                             </div>
                                             {tc.tweetImg ? <img className='tweetImg' src={tc.tweetImg} alt=""></img> : ''}
@@ -224,7 +228,7 @@ const Tweets = () => {
                                                <textarea id="respondTweet" type="text" name="respondTweet" placeholder='Tweet your reply'></textarea>
                                             </div>
                                             <div className='cImgComment'>
-                                                <input id="respondTweetImg" type="file" name="respondTweetImg"></input>
+                                                <input id="respondTweetImg" type="file" name="respondTweetImg" accept="image/*"></input>
                                                 <label for="respondTweetImg"><img id="labelImg" src={twImg} alt=""></img></label>
                                                 <button id="commButton" type="submit">Comment</button>
                                             </div> 

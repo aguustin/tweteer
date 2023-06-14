@@ -62,8 +62,10 @@ const tweeterSchema = new mongoose.Schema({
         saved: [{
             savedSession: { type:String }
         }],
-        hashtag: { type: String }
-
+        hashtags:[{
+            word: { type: String },
+            countH: { type: Number }
+        }]
     }]
 })
 
