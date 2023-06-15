@@ -51,6 +51,95 @@ export const createTweetController = async (req, res) => {
     const {userId, userImg, userName, publication, tweetPrivacy, tweetDate, hashtag} = req.body;
     const firstTweet = await tweets.find({_id: userId});
     let tweetImg;
+    let sumTendencie;
+
+    if(hashtag.length > 0){
+       sumTendencie = await tweets.aggregate([
+        {
+            $project: {
+                tweets: {
+                $filter: {
+                    input: "$tweets",
+                    as:"tweets",
+                    cond: {
+                         $eq: ["$$tweets.hashtags.word", [hashtag]]
+                    }
+                    },
+                }
+            }
+        },   
+    ])
+
+        if(sumTendencie.length > 0){
+            console.log(sumTendencie);
+            const tweetId = sumTendencie[0].tweets[0]?._id.toString();
+           const hashtagId = sumTendencie[0].tweets[0]?.hashtags[0]._id.toString();
+           console.log(hashtagId);
+           console.log("asdasddddddddd");
+            await tweets.updateOne(
+                {_id: sumTendencie[0]._id},
+                {
+                        $inc:{
+                            "tweets.$[t].hashtags.$[i].countH": 1
+                        }
+                },
+                {
+                    arrayFilters:[
+                       { "t._id": tweetId },
+                       { "i._id": hashtagId }
+                    ]
+                }
+            )
+
+            if(firstTweet.length > 0){
+                if(req.files?.tweetImg){
+                    const result = await tweetsUploader(req.files.tweetImg.tempFilePath);
+                    tweetImg = result.secure_url;
+                    await fs.remove(req.files.tweetImg.tempFilePath);
+                }
+                await tweets.updateOne(
+                    {_id: userId},
+                    {
+                        $addToSet:{
+                            tweets:{
+                                tweetUserId: userId,
+                                tweetProfileImg: userImg,
+                                tweetUsername: userName,
+                                tweetPublication: publication,
+                                tweetImg: tweetImg,
+                                tweetPrivacy: tweetPrivacy,
+                                tweetDate: tweetDate,
+                                tweetLikess: 0,
+                                retweets: 0,
+                                hashtags:[{ word: hashtag }]
+                            }
+                        }
+                    }
+                    )
+                const updateState = await tweets.find({_id: userId});
+                res.send(updateState);
+                
+            }else{
+                const saveTweet = new tweets({
+                    _id: userId,
+                    userName: userName,
+                    tweets:[{
+                        tweetProfileImg: userImg,
+                        tweetUsername: userName,
+                        tweetPublication: publication,
+                        tweetImg: tweetImg,
+                        tweetPrivacy: tweetPrivacy,
+                        tweetDate: tweetDate,
+                        retweets: 0,
+                        hashtags:[{ word: hashtag }] 
+                    }]
+                })
+                await saveTweet.save();
+                res.send(saveTweet);
+            }
+        
+
+    }else{
     
     if(firstTweet.length > 0){
         if(req.files?.tweetImg){
@@ -71,8 +160,7 @@ export const createTweetController = async (req, res) => {
                         tweetPrivacy: tweetPrivacy,
                         tweetDate: tweetDate,
                         tweetLikess: 0,
-                        retweets: 0,
-                        hashtags:[{ word: hashtag }]
+                        retweets: 0
                     }
                 }
             }
@@ -91,16 +179,14 @@ export const createTweetController = async (req, res) => {
                 tweetImg: tweetImg,
                 tweetPrivacy: tweetPrivacy,
                 tweetDate: tweetDate,
-                retweets: 0,
-                hashtags:[{
-                    word: hashtag
-                }] 
-                    
+                retweets: 0
             }]
         })
         await saveTweet.save();
         res.send(saveTweet);
     }
+}
+}
 }
 
 
