@@ -54,7 +54,53 @@ export const createTweetController = async (req, res) => {
     let sumTendencie;
 
     if(hashtag.length > 0){
-       sumTendencie = await tweets.aggregate([
+        if(firstTweet.length > 0){
+            if(req.files?.tweetImg){
+                const result = await tweetsUploader(req.files.tweetImg.tempFilePath);
+                tweetImg = result.secure_url;
+                await fs.remove(req.files.tweetImg.tempFilePath);
+            }
+            await tweets.updateOne(
+                {_id: userId},
+                {
+                    $addToSet:{
+                        tweets:{
+                            tweetUserId: userId,
+                            tweetProfileImg: userImg,
+                            tweetUsername: userName,
+                            tweetPublication: publication,
+                            tweetImg: tweetImg,
+                            tweetPrivacy: tweetPrivacy,
+                            tweetDate: tweetDate,
+                            tweetLikess: 0,
+                            retweets: 0,
+                            hashtags:[{ word: hashtag }]
+                        }
+                    }
+                }
+                )
+            const updateState = await tweets.find({_id: userId});
+            res.send(updateState);
+            
+        }else{
+            const saveTweet = new tweets({
+                _id: userId,
+                userName: userName,
+                tweets:[{
+                    tweetProfileImg: userImg,
+                    tweetUsername: userName,
+                    tweetPublication: publication,
+                    tweetImg: tweetImg,
+                    tweetPrivacy: tweetPrivacy,
+                    tweetDate: tweetDate,
+                    retweets: 0,
+                    hashtags:[{ word: hashtag }] 
+                }]
+            })
+            await saveTweet.save();
+            res.send(saveTweet);
+        }
+        sumTendencie = await tweets.aggregate([
         {
             $project: {
                 tweets: {
@@ -68,14 +114,12 @@ export const createTweetController = async (req, res) => {
                 }
             }
         },   
-    ])
+        ])
 
         if(sumTendencie.length > 0){
-            console.log(sumTendencie);
-            const tweetId = sumTendencie[0].tweets[0]?._id.toString();
+           const tweetId = sumTendencie[0].tweets[0]?._id.toString();
            const hashtagId = sumTendencie[0].tweets[0]?.hashtags[0]._id.toString();
-           console.log(hashtagId);
-           console.log("asdasddddddddd");
+           
             await tweets.updateOne(
                 {_id: sumTendencie[0]._id},
                 {
@@ -90,54 +134,7 @@ export const createTweetController = async (req, res) => {
                     ]
                 }
             )
-
-            if(firstTweet.length > 0){
-                if(req.files?.tweetImg){
-                    const result = await tweetsUploader(req.files.tweetImg.tempFilePath);
-                    tweetImg = result.secure_url;
-                    await fs.remove(req.files.tweetImg.tempFilePath);
-                }
-                await tweets.updateOne(
-                    {_id: userId},
-                    {
-                        $addToSet:{
-                            tweets:{
-                                tweetUserId: userId,
-                                tweetProfileImg: userImg,
-                                tweetUsername: userName,
-                                tweetPublication: publication,
-                                tweetImg: tweetImg,
-                                tweetPrivacy: tweetPrivacy,
-                                tweetDate: tweetDate,
-                                tweetLikess: 0,
-                                retweets: 0,
-                                hashtags:[{ word: hashtag }]
-                            }
-                        }
-                    }
-                    )
-                const updateState = await tweets.find({_id: userId});
-                res.send(updateState);
-                
-            }else{
-                const saveTweet = new tweets({
-                    _id: userId,
-                    userName: userName,
-                    tweets:[{
-                        tweetProfileImg: userImg,
-                        tweetUsername: userName,
-                        tweetPublication: publication,
-                        tweetImg: tweetImg,
-                        tweetPrivacy: tweetPrivacy,
-                        tweetDate: tweetDate,
-                        retweets: 0,
-                        hashtags:[{ word: hashtag }] 
-                    }]
-                })
-                await saveTweet.save();
-                res.send(saveTweet);
-            }
-        
+        }
 
     }else{
     
@@ -185,7 +182,6 @@ export const createTweetController = async (req, res) => {
         await saveTweet.save();
         res.send(saveTweet);
     }
-}
 }
 }
 
@@ -489,9 +485,37 @@ export const increaseRetweetsController = async (req, res) => {
 
 export const getAllTendController = async (req, res) => {
 
-
-
-    res.send(200);
+    const tendencies = await tweets.aggregate([
+        /*{
+            $sort: { "tweets.hashtags.countH": 1 }
+        },*/
+        {
+            $project:{
+                tweets:{
+                    $filter:{
+                        input:"$tweets",
+                        as:"tweets",
+                        cond:{
+                            $ne: ["$$tweets.hashtags.countH", []]
+                        },
+                    },
+                },
+            }
+        },
+        /*{
+            $match: {
+                $nor: [
+                    { tweets: { $exists: false } },
+                    { tweets: { $size: 0 } }
+                ]
+            }
+        },*/
+        {
+            $limit: 6
+        }
+    ]).sort({ tweets: { hashtags: { countH: -1 } } });
+    //const sortingTendencies = await tendencies.sort()
+    res.send(tendencies);
 }
 
 export const getTendenciesController = async (req, res) => {
