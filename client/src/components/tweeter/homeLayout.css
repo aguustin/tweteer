@@ -63,9 +63,11 @@
         color: rgb(182, 182, 182);
     }
 
-    && .userDesc-cont{
-        display: flex;
-    }
+}
+
+.userDesc-cont{
+    text-align: center;
+    display: flex;
 }
 
 .followsLayout{
@@ -243,6 +245,8 @@
     }
 
     .userDesc-cont{
+        margin-top: 1.5rem;
+        text-align: center;
         display: block;
     }
 
@@ -253,7 +257,7 @@
     .explore{
         position: relative;
         margin-top: 3rem;
-        right: 0rem;
+        left: .4rem;
         bottom: 0rem;
     }
 

@@ -7,6 +7,7 @@ import TweetsContext from '../../context/tweetsContext';
 const TrendAndPeople = () => {
 
     const {allUsers, tendencies} = useContext(TweetsContext);
+    console.log("ten: ", tendencies);
    
     return(
         <div className="trendAndPeople">
@@ -15,7 +16,7 @@ const TrendAndPeople = () => {
                     <p>Trends for you</p>
                 </div>
                 <div>
-                    <li>
+                <li>
                         <p>#programming</p>
                         <label>231k Tweets</label>
                     </li>

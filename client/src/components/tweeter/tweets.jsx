@@ -13,7 +13,7 @@ import save from "../../imgs/save.png";
 import { useContext, useEffect, useState } from 'react';
 import LayoutContext from '../../context/layoutsContext';
 import Nav from './nav';
-import notUser from '../../imgs/notUser.jpg';
+import notUser from  '../../imgs/notUser.jpg';
 import TweetsContext from '../../context/tweetsContext';
 
 const Tweets = () => {
@@ -27,11 +27,12 @@ const Tweets = () => {
     let month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const commentsDate = `${day[fecha.getDay()]}, ${fecha.getDate()} ${month[fecha.getMonth()]} - ${fecha.getHours()}:${fecha.getMinutes()}`;
     const {homeLayout, listsLayout, searching} = useContext(LayoutContext);
-    const {session, allUsers, tweets, retweetLayout, respondTweetContext, answerContext, likeContext, likeCommentContext, answerLikeContext, retweetContext, saveTweetContext, getProfileInformationContext} = useContext(TweetsContext);
+    const {session, allUsers, tweets, retweetLayout, respondTweetContext, answerContext, likeContext, likeCommentContext, answerLikeContext, retweetContext, saveTweetContext, getProfileInformationContext, getAllTendContext} = useContext(TweetsContext);
     
     useEffect(() => {
         (async() => {
             await getProfileInformationContext(session[0]?._id);
+            await getAllTendContext();
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
@@ -70,7 +71,8 @@ const Tweets = () => {
             profileId: profileId,
             tweetId: tweetId,
             profileImgLikes: session[0]?.userImg,
-            userNameLikes: session[0].userName
+            userNameLikes: session[0].userName,
+            profileIdLikes: session[0]._id
         }
 
         await likeContext(likeData);
@@ -197,7 +199,7 @@ const Tweets = () => {
                                         <div key={tc._id} className='tweetDesc-img'>
                                             <div className='tweetProfileData'>
                                                 <div>
-                        {tc.tweetProfileImg ? <img id='tweetProfileImg' src={tc.tweetProfileImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
+                                                {tc.tweetProfileImg ? <img id='tweetProfileImg' src={tc.tweetProfileImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
                                                 </div>
                                                 <div>
                                                     <div className='d-flex'>
@@ -249,7 +251,7 @@ const Tweets = () => {
                                                     {c.commentsImg ? <img src={c.commentsImg} alt=""></img> : ''}
                                                 </div>
                                             </div>
-                                            <div className='mt-2'>
+                                            <div className='like-comment-container mt-2'>
                                                     <button id="like-comment" onClick={() => commentLike(t._id, tc._id, c._id)}><img src={hearth} alt=""></img>Like</button>
                                                     <label>{c.commentLikes?.length} Likes</label>
                                                     <label>{c.answerComments?.length} Answers</label>

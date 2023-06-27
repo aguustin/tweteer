@@ -30,7 +30,8 @@ const tweeterSchema = new mongoose.Schema({
         tweetPrivacy:{ type:String },
         tweetLikess:[{ 
             profileImgLikes:{type:String},
-            userNameLikes:{type:String} 
+            userNameLikes:{type:String} ,
+            profileIdLikes:{type: String}
         }],
         retweetedAdvice: {type: String},
         profileRetweetedImg: {type: String},

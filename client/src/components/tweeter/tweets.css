@@ -129,6 +129,7 @@
 
 #tweetProfileImg{
     width: 70px;
+    height: 70px;
     object-fit: cover;
     border-radius: 8px;
 }
@@ -197,17 +198,22 @@
     }
 }
 
-
 .answer-form{
-    width: 80%;
-    margin-top: 1rem;
-    margin-left: 4.5rem;
+    position: fixed;
+    width: 70%;
+    z-index: 2;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    padding: 1rem;
 
     && textarea{
         position: relative;
         width: 100%;
+        background-color: rgb(238, 238, 238);
         padding: .5rem;
         outline: none;
+        border: none;
     }
 
     && button{
@@ -366,11 +372,19 @@
 
 #like-comment img{
     border-radius: 0px;
-    width: 20px;
+    width: 14px;
+    margin-left: 10px;
+    margin-right: 3px;
+    margin-bottom: 2px;
 }
 
 .answerLike{
     display: flex;
+
+    && img{
+        border-radius: 0px;
+        width: 14px;
+    }
 }
 
 @media  screen and (max-width: 1120px) {
@@ -389,7 +403,32 @@
         }
     }
 
+    .tweet-actions{
+        && img{
+            width: 13px;
+            margin-bottom: 4px;
+        }
+    }
+
     .trends{
         margin-top: 3rem;
+    }
+
+    #labelImg{
+        margin-right: 1rem;
+    }
+}
+
+@media screen and (max-width: 785px) {
+
+    .tweet-actions{
+        font-size: 13px;
+    }
+    .like-comment-container{
+        font-size: 13px;
+    }
+   
+    #labelImg{
+        margin-right: 2rem;
     }
 }

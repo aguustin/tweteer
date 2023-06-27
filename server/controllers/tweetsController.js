@@ -11,7 +11,7 @@ export const getProfileInformationController = async (req, res) => {
       
         if(userFollows !== 0){ 
             console.log("follows");
-            const getProfile = await tweets.find({_id: userId}).sort({ tweets: { _id: -1 } });
+            const getProfile = await tweets.find({_id: userId});
             res.send(getProfile);
         }else{
           
@@ -72,7 +72,6 @@ export const createTweetController = async (req, res) => {
                             tweetImg: tweetImg,
                             tweetPrivacy: tweetPrivacy,
                             tweetDate: tweetDate,
-                            tweetLikess: 0,
                             retweets: 0,
                             hashtags:[{ word: hashtag }]
                         }
@@ -156,7 +155,6 @@ export const createTweetController = async (req, res) => {
                         tweetImg: tweetImg,
                         tweetPrivacy: tweetPrivacy,
                         tweetDate: tweetDate,
-                        tweetLikess: 0,
                         retweets: 0
                     }
                 }
@@ -394,15 +392,69 @@ export const tendenciesController = async (req, res) => {
 }
 
 export const increaseLikesController = async (req, res) => {
-    const { profileId, tweetId, profileImgLikes, userNameLikes } = req.body;
+    const { profileId, tweetId, profileImgLikes, userNameLikes, profileIdLikes } = req.body;
+    console.log(profileIdLikes);
+    const findLike = await tweets.aggregate([{
+        $project: {
+            tweets: {
+            $filter: {
+                input: "$tweets",
+                as:"tweets",
+                cond: {
+                     $eq: ["$$tweets.tweetLikess.profileIdLikes", [profileIdLikes]]
+                }
+                }
+            }
+        }
+    }
+    ])
+   
 
+    if(findLike.length > 0){
+        const id = new mongoose.Types.ObjectId(profileIdLikes);
+        const idt = new mongoose.Types.ObjectId(tweetId);
+        const a = await tweets.updateOne(
+            { tweets: tweetId },
+            { $pull: {"tweets.$[a].tweetLikess.$[b].profileIdLikes": { profileIdLikes: profileIdLikes } }  },
+            { arrayFilters: [ { "a._id": idt},
+                              { "b.profileIdLikes": id}  ] }
+        )
+    
+        
+        /*await tweets.updateOne({
+            $pull: {
+              tweets: {
+                tweetLikess: {
+                  $elemMatch: {
+                    profileIdLikes: {
+                      $eq: profileIdLikes
+                    }
+                  }
+                }
+              }
+            }
+          }) /*await tweets.updateOne(  
+            { "tweets.tweetLikess.profileIdLikes": profileIdLikes },
+            {
+                $pull:
+                    {
+                        "tweets.$.tweetsLikess": {
+                            profileIdLikes: profileIdLikes
+                   }      
+                }   
+            })*/
+console.log(a);
+    const getProfile = await tweets.find({_id: profileId});
+    res.send(getProfile);
+    }else{
         await tweets.updateOne(
             {"tweets._id": tweetId},
             {
                 $addToSet:{
                     "tweets.$[i].tweetLikess":{
                        profileImgLikes:  profileImgLikes,
-                       userNameLikes: userNameLikes
+                       userNameLikes: userNameLikes,
+                       profileIdLikes: profileIdLikes
                    }
                 }
             },
@@ -414,6 +466,8 @@ export const increaseLikesController = async (req, res) => {
         )
         const updateLikes = await tweets.find({_id: profileId});
         res.send(updateLikes);
+    }
+
 }
 
 export const increaseCommentLikesController = async (req, res) => {

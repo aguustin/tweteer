@@ -142,14 +142,13 @@ export const TweetsContextProvider = ({children}) => {
 
     const getAllTendContext = async () => {
         const res = await getAllTendRequest();
-
+        setTendencies(res.data);
     }
 
     const getTendenciesContext = async () => {
         const res = await getTendenciesRequest();
         setTweets(res.data);
     }
-    
 
     return(
         <TweetsContext.Provider value={{
@@ -186,6 +185,7 @@ export const TweetsContextProvider = ({children}) => {
             editPasswordContext,
             getProfileInformationContext,
             seeProfileContext,
+            getAllTendContext,
             getTendenciesContext
         }}>{children}</TweetsContext.Provider>
     )

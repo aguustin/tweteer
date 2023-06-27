@@ -151,9 +151,13 @@ const HomeLayout = () => {
                     </div>
                     <div className='userDesc'>
                         <div className='userDesc-cont align-items-center'>
-                            <h1>{profile.userName}</h1>
-                            <button onClick={(e) => followLay(e, profile._id)}><label>Followers: {profile.followers?.length}</label></button>
-                            <button onClick={(e) => followingLay(e, profile._id)}><label>Following: {profile.following?.length}</label></button>
+                            <div>
+                                <h1>{profile.userName}</h1>
+                            </div>
+                            <div> 
+                                <button onClick={(e) => followLay(e, profile._id)}><label>Followers: {profile.followers?.length}</label></button>
+                                <button onClick={(e) => followingLay(e, profile._id)}><label>Following: {profile.following?.length}</label></button>
+                            </div>
                         </div>
                         <div className='description'>
                             <p>{profile.userDesc}</p>
