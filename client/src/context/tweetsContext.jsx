@@ -55,7 +55,6 @@ export const TweetsContextProvider = ({children}) => {
     const getProfileInformationContext = async (se) => {
         const ownTweets = await getProfileInformationRequest(se);
         setPublicT(true);
-        console.log(publicT);
         setChangeHomeLayout(true);
         setTweets(ownTweets.data);
     }

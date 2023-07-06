@@ -35,7 +35,7 @@ const Tweets = () => {
             await getAllTendContext();
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[]);
+    },[session[0]?._id]);
 
     const searchs = (e) => {
         e.preventDefault();
