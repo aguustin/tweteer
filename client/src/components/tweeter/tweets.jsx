@@ -23,8 +23,9 @@ const Tweets = () => {
     const [ tweetId, setTweetId ] = useState();
     const [ commentId, setCommentId ] = useState();
     let fecha = new Date();
-    let day = ["Sunday", "Saturday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    let day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     let month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    console.log(day[fecha.getDay()]);
     const commentsDate = `${day[fecha.getDay()]}, ${fecha.getDate()} ${month[fecha.getMonth()]} - ${fecha.getHours()}:${fecha.getMinutes()}`;
     const {homeLayout, listsLayout, searching} = useContext(LayoutContext);
     const {session, allUsers, tweets, retweetLayout, respondTweetContext, answerContext, likeContext, likeCommentContext, answerLikeContext, retweetContext, saveTweetContext, getProfileInformationContext, getAllTendContext} = useContext(TweetsContext);
@@ -34,7 +35,7 @@ const Tweets = () => {
             await getProfileInformationContext(session[0]?._id);
             await getAllTendContext();
         })();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line
     },[session[0]?._id]);
 
     const searchs = (e) => {
@@ -160,7 +161,7 @@ const Tweets = () => {
                         {tweets.map((t) =>
                             <div key={t._id}>
                         {t.tweets.map((tc) => 
-                                <div className='mt-4'>
+                                <div className='t-backg mt-4'>
                         {tc.retweeted === 1 ?  
                         <div className='retweets'>
                         <div className='retweets-info d-flex'>
@@ -231,7 +232,7 @@ const Tweets = () => {
                                             </div>
                                             <div className='cImgComment'>
                                                 <input id="respondTweetImg" type="file" name="respondTweetImg" accept="image/*"></input>
-                                                <label for="respondTweetImg"><img id="labelImg" src={twImg} alt=""></img></label>
+                                                <label htmlFor="respondTweetImg"><img id="labelImg" src={twImg} alt=""></img></label>
                                                 <button id="commButton" type="submit">Comment</button>
                                             </div> 
                                         </form>

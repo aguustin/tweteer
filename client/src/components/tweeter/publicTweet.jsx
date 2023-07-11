@@ -72,7 +72,7 @@ const PublicTweet = () => {
                 <option value="only">Only people who follows me</option>
               </select>
               <input id="tweetImg" className="tweetImgIn" type="file" name="tweetImg" accept="image/*"></input>
-              <label for="tweetImg"><img src={twImg} alt=""></img></label>
+              <label htmlFor="tweetImg"><img src={twImg} alt=""></img></label>
               <button type="submit">Tweet</button>
             </div>
           </form>

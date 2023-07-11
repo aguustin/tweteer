@@ -127,6 +127,13 @@
     color: rgb(182, 182, 182);
 }
 
+.t-backg{
+    background-color: rgb(250, 250, 250);
+    margin-top: rem;
+    padding: 1rem;
+    border-radius: 5px;
+}
+
 #tweetProfileImg{
     width: 70px;
     height: 70px;
@@ -283,9 +290,9 @@
         }
     }
 
-    #respondTweetImg{
+   /* #respondTweetImg{
         display: none;
-    }
+    }*/
 
     #labelImg{
         height: 24px;
