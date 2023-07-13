@@ -398,7 +398,9 @@ export const tendenciesController = async (req, res) => {
 export const increaseLikesController = async (req, res) => {
     const { profileId, tweetId, profileImgLikes, userNameLikes, profileIdLikes } = req.body;
 
-    console.log(tweetId);
+    console.log(tweetId, " ", profileIdLikes);
+
+    const c = new mongoose.Types.ObjectId(profileIdLikes);
 
     const findLike = await tweets.find({
         tweets: {
@@ -424,28 +426,33 @@ export const increaseLikesController = async (req, res) => {
         }
     }
     ])*/
-   
-console.log(findLike[0].tweets);
+   console.log("pro:", profileId)
+    //console.log(findLike[0].tweets);
     if(findLike.length > 0){
-
-        await tweets.updateOne(
-            {"tweets._id": tweetId },
+        console.log("aca a");
+       const a = await tweets.updateOne(
+            {_id: profileId, tweets:{ $elemMatch: { _id: tweetId } } },
             { 
                 $pull: {
-                   tweets: {"tweetLikess.$[i].profileIdLikes": profileIdLikes }
+                   "tweets.$[o].tweetLikess.$[i]": profileIdLikes
                 } 
             },
             {
                 arrayFilters:[
+                    {"o._id": tweetId},
                     {"i._id": profileIdLikes}
                 ]
-            }
+            },
+            {multi: true}
         )
+
+        console.log("b: ", a);
 
     const getProfile = await tweets.find({_id: profileId});
     res.send(getProfile);
 
     }else{
+        console.log("aca b");
         await tweets.updateOne(
             {"tweets._id": tweetId},
             {
