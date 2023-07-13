@@ -47,8 +47,9 @@ const tweeterSchema = new mongoose.Schema({
             commentsDate:{ type: String },
             commentsImg:{ type: String},
             commentLikes:[{
+                commentProfileId:{type:String}, 
                 commentProfileLikes:{type:String},
-                commentUserNameLikes:{type:String} 
+                commentUserNameLikes:{type:String}
             }],
             answerComments:[{
                     answerArroba:{ type:String },
