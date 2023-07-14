@@ -493,21 +493,22 @@ export const increaseLikesController = async (req, res) => { //deberia encontrar
 
 export const increaseCommentLikesController = async (req, res) => {
     const {profileId, tweetId, commentId, commentProfileLikes, commentUserNameLikes} = req.body;
-    console.log("aa", profileId);
-    const findCommentLike = await tweets.updateOne({
+    
+    const findCommentLike = await tweets.find({
         tweets:{
             $elemMatch:{
                 _id: tweetId,
-                    comments:{
+                    "comments.commentLikes":{
                         $elemMatch:{
-                            _id: commentId
+                            commentProfileId: profileId
                         }
                     }
             }
         }
     })
+    console.log(findCommentLike);
 
-    if(findCommentLike.length < 0){
+    if(findCommentLike.length > 0){
         await tweets.updateOne(
             {_id: profileId},
             {
@@ -519,19 +520,6 @@ export const increaseCommentLikesController = async (req, res) => {
                 arrayFilters:[
                     {"i._id": tweetId},
                     {"x._id": commentId}
-                ]
-            }
-        )
-        await tweets.updateOne(
-            {_id: profileId },
-            { 
-                $pull: {
-                   "tweets.$[o].tweetLikess": {profileIdLikes: profileIdLikes}
-                }
-            },
-            {
-                arrayFilters:[
-                    {"o._id": tweetId},
                 ]
             }
         )
