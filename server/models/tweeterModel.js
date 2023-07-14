@@ -52,11 +52,12 @@ const tweeterSchema = new mongoose.Schema({
                 commentUserNameLikes:{type:String}
             }],
             answerComments:[{
-                    answerArroba:{ type:String },
-                    answerProfilesImg:{ type:String },
-                    answerDesc:{ type:String },
-                    answerTweetImg: {type: String},
-                    answerLikes:[{
+                answerArroba:{ type:String },
+                answerProfilesImg:{ type:String },
+                answerDesc:{ type:String },
+                answerTweetImg: {type: String},
+                answerLikes:[{
+                        answerProfileId:{ type:String },
                         answerUserNameLikes:{ type: String }
                     }]
             }]
