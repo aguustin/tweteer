@@ -1,6 +1,5 @@
 import './tweets.css';
 import HomeLayout from './homeLayout';
-import ListLayout from './listsLayout';
 import SearchLayout from './searchLayout';
 import RetweetLayout from '../form/retweetForm';
 import PublicTweet from './publicTweet';
@@ -155,13 +154,13 @@ const Tweets = () => {
             {retweetLayout ? <RetweetLayout/> : ''}
                 {homeLayout ? <HomeLayout/> : ''}
                 <div className='lists-publications-container mx-auto'>
-                    {listsLayout ? <ListLayout/> : '' }
+                    
                     <div className='publications'>
                         {homeLayout ? <PublicTweet/> : ''}
                         {tweets.map((t) =>
                             <div key={t._id}>
                         {t.tweets.map((tc) => 
-                                <div className='t-backg mt-4'>
+                                <div key={tc._id} className='t-backg mt-4'>
                         {tc.retweeted === 1 ?  
                         <div className='retweets'>
                         <div className='retweets-info d-flex'>
@@ -225,7 +224,8 @@ const Tweets = () => {
                                     </div>
                                 }
                                     <div>
- {/**formulario de comentarios */}      <form className='comments-form mt-2' encType='multipart/form-data' onSubmit={(e) => respondTweet(e, tc._id)}>
+ {/**formulario de comentarios */}  {listsLayout ? '' :  
+                                        <form className='comments-form mt-2' encType='multipart/form-data' onSubmit={(e) => respondTweet(e, tc._id)}>
                                             <div className='d-flex'>
                                                 {session[0].profilePhoto ? <img src={session[0].profilePhoto} alt=""></img> : <img src={notUser} alt=""></img>}
                                                <textarea id="respondTweet" type="text" name="respondTweet" placeholder='Tweet your reply'></textarea>
@@ -235,11 +235,11 @@ const Tweets = () => {
                                                 <label htmlFor="respondTweetImg"><img id="labelImg" src={twImg} alt=""></img></label>
                                                 <button id="commButton" type="submit">Comment</button>
                                             </div> 
-                                        </form>
+                                        </form> }
 {/**for respuestas a comentarios */}{answerLayout ? <Answer/> : ''}
                                     </div>
                                     {tc.comments.map((c) => 
-                                    <div key={c._id} className='comments-container d-flex mt-3 '>
+                                    <div key={c._id} className='comments-container d-flex mt-3'>
                                         <img id="comment-image-profile" src={notUser} alt=""></img>
                                         <div className='w-100'>
  {/**vista de los comentarios */}           <div className='comment'>
@@ -285,7 +285,7 @@ const Tweets = () => {
                             </div> 
                             )}
                     </div>
-                        {listsLayout ? '' : <TrendAndPeople/>}
+                        <TrendAndPeople/>
                 </div>
             </div>
             </div>

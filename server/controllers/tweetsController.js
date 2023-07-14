@@ -10,12 +10,11 @@ export const getProfileInformationController = async (req, res) => {
         const userFollows = await tweets.find({followers: {_id: sessionId }});                                                          
       
         if(userFollows.length > 0){ 
-            console.log("follows");
             const getProfile = await tweets.find({_id: userId}).sort({"tweets.tweetPublication": -1});
             res.send(getProfile);
+
         }else{
           
-            console.log("no follow");
             const getEveryoneTweets = await tweets.aggregate([{
                 $unwind: "$tweets"
             },
@@ -432,8 +431,6 @@ export const tendenciesController = async (req, res) => {
 export const increaseLikesController = async (req, res) => { //deberia encontrar el 648b04e0d0a79f89cd120d65 dentro de los tweetsLikess
     const { profileId, tweetId, profileImgLikes, userNameLikes, profileIdLikes } = req.body;
 
-    console.log(tweetId, " ", profileIdLikes);
-
     const findLike = await tweets.find({
         tweets: { 
             $elemMatch: {
@@ -448,7 +445,7 @@ export const increaseLikesController = async (req, res) => { //deberia encontrar
       })
   
     if(findLike.length > 0){
-        console.log("aca a");
+        
        await tweets.updateOne(
             {_id: profileId },
             { 
@@ -560,7 +557,7 @@ export const increaseCommentLikesController = async (req, res) => {
 
 export const increaseAnswerLikesController = async (req, res) => {
     const {profileId, tweetId, commentId, answerId, answerUserNameLikes} = req.body;
-    console.log(answerId);
+  
     const findAnswerLike = await tweets.find({
         tweets:{
             $elemMatch:{

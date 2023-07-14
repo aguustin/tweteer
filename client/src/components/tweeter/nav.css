@@ -4,10 +4,12 @@
     align-items: center;
     justify-content: center;
     padding: 1rem;
+    border-bottom: .1px solid rgba(128,128,128,0.75);
 }
 
-.navTweeter img{
-    width: 70px;
+.navTweeter > img{
+    width: 40px;
+    margin-left: 1rem;
     object-fit: contain;
 }
 
@@ -34,6 +36,13 @@
 .navUser{
     margin-right: 1rem;
     right: 1rem;
+
+    && img{
+        height: 60px;
+        width: 70px;
+        margin-left: 1rem;
+        object-fit: contain;
+    }
 }
 
 @media screen and (max-width: 785px) {

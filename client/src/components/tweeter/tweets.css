@@ -128,7 +128,7 @@
 }
 
 .t-backg{
-    background-color: rgb(250, 250, 250);
+    background-color: rgb(247, 247, 247);
     margin-top: rem;
     padding: 1rem;
     border-radius: 5px;
@@ -308,7 +308,7 @@
 
 .comments-container{
     text-align: left;
-
+    margin-left: 5rem;
     && img{
         border-radius: 8px;
     };
@@ -327,8 +327,8 @@
 }
 
 #comment-image-profile{
-    width: 66px;
-    height: 66px;
+    width: 46px;
+    height: 46px;
     margin-top: 3rem;
 }
 
@@ -339,13 +339,13 @@
 }
 
 .comment-width{
-    background-color: rgb(245, 245, 245);
+    background-color: rgb(240, 240, 240);
     padding: .5rem .5rem;
     width: 90%;
+    font-weight: 500;
 }
 
 .answer-comment{
-
     margin-top: 1rem;
     padding-left: 1rem;
 
@@ -354,9 +354,10 @@
     object-fit: cover;
    }
     && .answer-width{
+        display: flex;
         width: 80%;
-        margin-top: .3rem;
-        background-color: rgb(250, 248, 248);
+        margin-top: .9rem;
+        background-color: rgb(240, 240, 240);
         padding: .1rem .5rem;
         border-radius: 4px;
 

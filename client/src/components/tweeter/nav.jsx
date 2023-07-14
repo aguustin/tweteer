@@ -1,6 +1,6 @@
 import "./nav.css";
-import prueba from "../../imgs/prueba.jpg";
-import test from "../../imgs/test.png";
+import notUser from  '../../imgs/notUser.jpg';
+import icono from "../../imgs/icono.png";
 import { useContext } from "react";
 import LayoutContext from "../../context/layoutsContext";
 import TweetsContext from "../../context/tweetsContext";
@@ -17,15 +17,15 @@ const Nav = () => {
   return (
     <div>
       <nav className="navTweeter">
-        <img src={test} alt=""></img>
+        <img src={icono} alt=""></img>
         <div className="navButtons">
           <button onClick={(e) => myProfile(e)}>Home</button>
           <button onClick={(e) => layoutSearchContext(e)}>Explore</button>
           <button onClick={(e) => layoutListContext(e)}>BookMarks</button>
         </div>
         <div className="navUser">
-          <img src={prueba} alt=""></img>
-          <button>Username</button>
+          {session[0]?.userImg ? <img src={session[0]?.userImg} alt=""></img> : <img src={notUser} alt=""></img>}
+          <button>{session[0]?.userName}</button>
         </div>
       </nav>
     </div>
