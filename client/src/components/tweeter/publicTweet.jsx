@@ -65,15 +65,14 @@ const PublicTweet = () => {
           <form onSubmit={(e) => createTweet(e)} className="public-form-size align-items-center" encType="multipart/form-data">
             <textarea type="text" placeholder="What's happening?" name="publication" onChange={hashtagTweet}></textarea>
             <div className="d-flex">
-              <img id="like" src={hearth} alt=""></img>
+              <img src={hearth} alt=""></img>
               <select className="selectPrivacyPublication" name="privacy">
                 <option value="everyone">Everyone</option>
-                <img src={hearth} alt=""></img>
                 <option value="only">Only people who follows me</option>
               </select>
               <input id="tweetImg" className="tweetImgIn" type="file" name="tweetImg" accept="image/*"></input>
               <label htmlFor="tweetImg"><img src={twImg} alt=""></img></label>
-              <button type="submit">Tweet</button>
+              <button id="publicTweet" type="submit">Tweet</button>
             </div>
           </form>
         </div>

@@ -44,6 +44,7 @@
         color: white;
         padding: .5rem 2rem;
         border-radius: 4px;
+        font-weight: 600;
     }
 }
 
@@ -57,3 +58,9 @@
     border-radius: 8px;
     margin-top: .5rem;
 }
+
+#publicTweet:hover{
+        background-color: rgb(99, 99, 255);
+        transform: translateY(-2px);
+        transition: all .5s;
+    }

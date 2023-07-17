@@ -254,6 +254,9 @@
 
     #respondTweet{
         width: 100%;
+        border: none;
+        padding: .5rem;
+        border-radius: 5px;
     }
 
     && button{
@@ -290,9 +293,9 @@
         }
     }
 
-   /* #respondTweetImg{
+    #respondTweetImg{
         display: none;
-    }*/
+    }
 
     #labelImg{
         height: 24px;
@@ -304,6 +307,11 @@
         background-color: transparent;
         color:rgb(156, 156, 156);
     }
+}
+
+#commButton:hover{
+    color: rgb(65, 65, 248);
+    transition: color .8s;
 }
 
 .comments-container{
@@ -378,11 +386,26 @@
     }
 }
 
+.like-comment-container{
+    && label{
+        && img{
+            width: 14px;
+            margin-right: 5px;
+            margin-bottom: 3px;
+        }
+    }
+}
+
+.answer-comment{
+    position: relative;
+    margin-right: 0px;
+}
+
 #like-comment img{
     border-radius: 0px;
     width: 14px;
-    margin-left: 10px;
-    margin-right: 3px;
+    margin-left: 12px;
+    margin-right: 5px;
     margin-bottom: 2px;
 }
 

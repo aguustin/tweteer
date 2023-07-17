@@ -38,6 +38,12 @@
     padding: .5rem 1.3rem;
 }
 
+#editLayout:hover{
+    background-color: rgb(99, 99, 255);
+    transform: translateY(-2px);
+    transition: all .5s;
+}
+
 .photoUser{
     position: relative;
     width: 18vw;
@@ -208,7 +214,8 @@
     && input{
         padding: .5rem .7rem;
         outline: none;
-        border:1px solid rgb(65, 65, 248);
+        background-color: rgb(247, 247, 247);
+        border:1px solid transparent;
         border-radius: 25px;
     }
 
