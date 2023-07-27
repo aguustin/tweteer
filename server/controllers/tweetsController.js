@@ -56,6 +56,7 @@ export const createTweetController = async (req, res) => {
     const firstTweet = await tweets.find({_id: userId});
     let tweetImg;
     let sumTendencie;
+    console.log("el hashtag: ", hashtag);
 
     if(hashtag.length > 0){
         if(firstTweet.length > 0){
@@ -648,43 +649,21 @@ export const increaseRetweetsController = async (req, res) => {
 }
 
 export const getAllTendController = async (req, res) => {
-
     const tendencies = await tweets.aggregate([
-        /*{
-            $sort: { "tweets.hashtags.countH": 1 }
-        },*/
-        {
-            $project:{
-                tweets:{
-                    $filter:{
-                        input:"$tweets",
-                        as:"tweets",
-                        cond:{
-                            $ne: ["$$tweets.hashtags.countH", []]
-                        },
-                    },
-                },
-            }
-        },
-        /*{
-            $match: {
-                $nor: [
-                    { tweets: { $exists: false } },
-                    { tweets: { $size: 0 } }
-                ]
-            }
-        },*/
-        {
-            $limit: 6
-        }
-    ]).sort({ tweets: { hashtags: { countH: -1 } } });
-    //const sortingTendencies = await tendencies.sort()
+        { $unwind: "$tweets" },
+        { $match: { "tweets.hashtags.word": { $ne: "null" } } },
+        { $group: {
+            _id: "$tweets.hashtags",
+        }},
+        { $limit: 7 }
+    ])
+  
     res.send(tendencies);
+
 }
 
 export const getTendenciesController = async (req, res) => {
     const {tendencie} = req.params;
-
     const getTendencies = await tweets.aggregate([{
         $project: {
             tweets: {
@@ -700,6 +679,11 @@ export const getTendenciesController = async (req, res) => {
     }
 ])
     res.send(getTendencies);
+}
+
+export const getAllTweetsController = async (req, res) => {
+    const getAllTweets = await tweets.find({});
+    res.send(getAllTweets);
 }
 
 export const deleteAllController = async (req, res) => {

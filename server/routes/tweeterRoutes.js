@@ -16,6 +16,7 @@ import { createTweetController,
      tendenciesController,
      getAllTendController,
      getTendenciesController,
+     getAllTweetsController,
      deleteAllController 
      } from "../controllers/tweetsController.js";
 
@@ -54,6 +55,8 @@ router.put('/retweets/:tweetId', increaseRetweetsController);
 router.get('/getAllTend', getAllTendController);
 
 router.get('/getTendencies/:tendencie', getTendenciesController);
+
+router.get('/explore', getAllTweetsController);
 
 router.delete('/deleteAll', deleteAllController);
 

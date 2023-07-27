@@ -3,12 +3,20 @@ import notUser from "../../imgs/notUser.jpg";
 import hearth from "../../imgs/hearth.png";
 import { useContext } from 'react';
 import TweetsContext from '../../context/tweetsContext';
+import LayoutContext from '../../context/layoutsContext';
 
 const TrendAndPeople = () => {
 
-    const {allUsers, tendencies} = useContext(TweetsContext);
+    const {allUsers, tendencies, getTendenciesContext} = useContext(TweetsContext);
+    const {layoutSearchContext} = useContext(LayoutContext);
+    
+    const getTendencie = async (e, tendencie) => {
+        e.preventDefault();
+        await layoutSearchContext();
+        await getTendenciesContext(tendencie);
+    }
     console.log("ten: ", tendencies);
-   
+    
     return(
         <div className="trendAndPeople">
             <div className="trends">
@@ -16,32 +24,21 @@ const TrendAndPeople = () => {
                     <p>Trends for you</p>
                 </div>
                 <div>
-                <li>
-                        <p>#programming</p>
-                        <label>231k Tweets</label>
-                    </li>
-                    <li>
-                        <p>#devChallenge</p>
-                        <label>231k Tweets</label>
-                    </li>
-                    <li>
-                        <p>#trendOne</p>
-                        <label>231k Tweets</label>
-                    </li>
-                    <li>
-                        <p>#frontend</p>
-                        <label>231k Tweets</label>
-                    </li>
-                    <li>
-                        <p>#backend</p>
-                        <label>231k Tweets</label>
-                    </li>
-                    <li>
-                        <p>#tweeterio</p>
-                        <label>231k Tweets</label>
-                    </li>
+                { 
+                tendencies?.map((tend) => <span key={tend._id}>  
+                {tend?._id.map((t) => <span key={t._id}> {
+                        <li onClick={(e) => getTendencie(e, t.word)}>
+                            <p>#{t.word}</p>
+                            <label>{t?.countH} Tweets</label>
+                        </li>
+                }
+                        </span>
+                )}
+                </span>
+                )}
                 </div>
             </div>
+
             {allUsers.map((allU) => <div key={allU._id} className="people">
                 <div className='mx-auto'>
                     <div className='trends-header'>

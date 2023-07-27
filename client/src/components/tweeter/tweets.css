@@ -1,7 +1,16 @@
 .tweets{
     background-color: rgb(247, 247, 247);
 }
-
+.i{
+    position: fixed;
+    background-color: black;
+    opacity: .6;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
 .search{
     position: relative;
     top: 1rem;
@@ -129,8 +138,8 @@
 
 .t-backg{
     background-color: rgb(247, 247, 247);
-    margin-top: rem;
-    padding: 1rem;
+    margin-top: 1rem;
+    padding: 3rem 1rem;
     border-radius: 5px;
 }
 
@@ -169,7 +178,7 @@
     transition: all .5s;
 }
 
-.retweets, .tweet{
+.retweets{
     margin-top: 4rem;
 }
 
@@ -207,8 +216,9 @@
 
 .answer-form{
     position: fixed;
+    bottom: 50%;
     width: 70%;
-    z-index: 2;
+    z-index: 3;
     left: 50%;
     transform: translateX(-50%);
     background-color: white;
@@ -362,7 +372,7 @@
     object-fit: cover;
    }
     && .answer-width{
-        display: flex;
+       
         width: 80%;
         margin-top: .9rem;
         background-color: rgb(240, 240, 240);

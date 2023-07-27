@@ -38,6 +38,7 @@ const PublicTweet = () => {
     e.preventDefault();
     const tweetDate = `${day[fecha.getDay()]}, ${fecha.getDate()} ${month[fecha.getMonth()]} - ${fecha.getHours()}:${fecha.getMinutes()}`;
     saveHashtag?.slice(1, -1);
+    
     const tweetData = {
       userId: session[0]._id,
       userImg: session[0]?.userImg,

@@ -69,3 +69,5 @@ export const getAllTendRequest = () => axios.get('/getAllTend');
 
 export const  getTendenciesRequest = (tendencie) => axios.get(`/getTendencies/${tendencie}`);
 
+export const getAllTweetsRequest = () => axios.get('/explore');
+

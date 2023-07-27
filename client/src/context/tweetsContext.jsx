@@ -5,7 +5,7 @@ import { createTweetRequest, respondTweetRequest, searchRequest, answerRequest, 
 const TweetsContext = createContext();
 
 export const TweetsContextProvider = ({children}) => {
-
+    const [ se, setSe ] = useState("");
     const [session, setSession] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
     const [tweets, setTweets] = useState([]);
@@ -42,7 +42,7 @@ export const TweetsContextProvider = ({children}) => {
         localStorage.clear();
         localStorage.setItem("credentials", JSON.stringify(res.data));
         setSession(JSON.parse(localStorage.getItem("credentials")));
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate > b.tweetDate ? 1 : -1)));
+        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
         setTweets(res.data);
     }
 
@@ -58,7 +58,7 @@ export const TweetsContextProvider = ({children}) => {
         setPublicT(true);
         console.log("own:", ownTweets.data);
         setChangeHomeLayout(true);
-        setTweets(ownTweets.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate > b.tweetDate ? 1 : -1))); //ultimo hecho
+        setTweets(ownTweets.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1))); //ultimo hecho
         setTweets(ownTweets.data);
     }
 
@@ -68,7 +68,7 @@ export const TweetsContextProvider = ({children}) => {
         const check = await checkFollowRequest(userId);
         console.log(res.data);
         setChangeHomeLayout(false);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate > b.tweetDate ? 1 : -1)));
+        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
         setTweets(res.data);
 
         if(check.status === 200){
@@ -90,19 +90,19 @@ export const TweetsContextProvider = ({children}) => {
 
     const createTweetContext = async (tweetData) => {
         const res = await createTweetRequest(tweetData);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate > b.tweetDate ? 1 : -1)));
+        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
         setTweets(res.data);
     }
 
     const respondTweetContext = async (commentData) => { 
         const res = await respondTweetRequest(commentData);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate > b.tweetDate ? 1 : -1)));
+        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
         setTweets(res.data);
     }
 
     const answerContext = async (answerData) => {
         const res = await answerRequest(answerData);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate > b.tweetDate ? 1 : -1)));
+        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
         setTweets(res.data);
     }
 
@@ -113,19 +113,19 @@ export const TweetsContextProvider = ({children}) => {
 
     const likeContext = async (likeData) => {
         const res = await increaseLikesRequest(likeData);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate > b.tweetDate ? 1 : -1)));
+        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
         setTweets(res.data);
     }
 
     const likeCommentContext = async (commentLikeData) => {
         const res = await increaseCommentLikesRequest(commentLikeData);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate > b.tweetDate ? 1 : -1)));
+        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
         setTweets(res.data);
     }
 
     const answerLikeContext = async (answerLike) => {
         const res = await increaseAnswerLikesRequest(answerLike);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate > b.tweetDate ? 1 : -1)));
+        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
         setTweets(res.data);
     }
 
@@ -146,24 +146,27 @@ export const TweetsContextProvider = ({children}) => {
 
     const exploreTweetsContext = async (exploreData) => {
         const res = await exploreTweetsRequest(exploreData);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate > b.tweetDate ? 1 : -1)));
+        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
         setTweets(res.data);
     }
 
     const getAllTendContext = async () => {
         const res = await getAllTendRequest();
         setTendencies(res.data);
+        
     }
 
-    const getTendenciesContext = async () => {
-        const res = await getTendenciesRequest();
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate > b.tweetDate ? 1 : -1)));
+    const getTendenciesContext = async (tendencie) => {
+        const res = await getTendenciesRequest(tendencie);
+        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
         setTweets(res.data);
     }
 
     return(
         <TweetsContext.Provider value={{
             tweets,
+            se,
+            setSe,
             setTweets,
             searchUser, 
             setSearchUser,

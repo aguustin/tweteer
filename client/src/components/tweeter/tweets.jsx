@@ -16,8 +16,8 @@ import notUser from  '../../imgs/notUser.jpg';
 import TweetsContext from '../../context/tweetsContext';
 
 const Tweets = () => {
-    const [ se, setSe ] = useState("");
     const [ answerLayout, setAnswerLayout ] = useState(false);
+    const [ answerForm, setAnswerForm ] = useState(false);
     const [ profileId, setProfileId ] = useState();
     const [ tweetId, setTweetId ] = useState();
     const [ commentId, setCommentId ] = useState();
@@ -27,7 +27,7 @@ const Tweets = () => {
     console.log(day[fecha.getDay()]);
     const commentsDate = `${day[fecha.getDay()]}, ${fecha.getDate()} ${month[fecha.getMonth()]} - ${fecha.getHours()}:${fecha.getMinutes()}`;
     const {homeLayout, listsLayout, searching} = useContext(LayoutContext);
-    const {session, allUsers, tweets, retweetLayout, respondTweetContext, answerContext, likeContext, likeCommentContext, answerLikeContext, retweetContext, saveTweetContext, getProfileInformationContext, getAllTendContext} = useContext(TweetsContext);
+    const {session, allUsers, tweets, se, setSe, retweetLayout, respondTweetContext, answerContext, likeContext, likeCommentContext, answerLikeContext, retweetContext, saveTweetContext, getProfileInformationContext, getAllTendContext} = useContext(TweetsContext);
     
     useEffect(() => {
         (async() => {
@@ -106,7 +106,9 @@ const Tweets = () => {
 
     const answer = async (e) => {
         e.preventDefault();
-    
+        setAnswerLayout(!answerLayout);
+        setAnswerForm(!answerForm);
+
         const answerData = {
             profileId: profileId,
             tweetId: tweetId,
@@ -129,18 +131,27 @@ const Tweets = () => {
         await saveTweetContext(tweetId);
     }
 
+    const closeAnswerLayout = () => {
+        setAnswerLayout(!answerLayout);
+        setAnswerForm(!answerForm);
+    }
+
     const Answer = () => {
+        setAnswerForm(true); 
         return (
             <form className='answer-form' onSubmit={(e) => answer(e)}>
                 <textarea type="text" placeholder='Answer comment' name="answer"></textarea>
                 <input type="file" name="answerTweetImg"></input>
                 <button type="submit">Answer</button>
+                <button type="button" onClick={() => closeAnswerLayout()}>Cancel</button>
             </form>
         )
     }
 
     return(
         <div>
+            {answerForm ? <div className='i'></div> : ''}
+            {answerLayout ? <Answer/> : ''}
             <Nav/>
          <div className='tweets'>
          {searching ? <div className='search'>
@@ -154,13 +165,12 @@ const Tweets = () => {
             {retweetLayout ? <RetweetLayout/> : ''}
                 {homeLayout ? <HomeLayout/> : ''}
                 <div className='lists-publications-container mx-auto'>
-                    
                     <div className='publications'>
                         {homeLayout ? <PublicTweet/> : ''}
                         {tweets.map((t) =>
-                            <div key={t._id}>
+                        <div key={t._id}>
                         {t.tweets.map((tc) => 
-                                <div key={tc._id} className='t-backg mt-4'>
+                        <div key={tc._id} className='t-backg'>
                         {tc.retweeted === 1 ?  
                         <div className='retweets'>
                         <div className='retweets-info d-flex'>
@@ -236,7 +246,7 @@ const Tweets = () => {
                                                 <button id="commButton" type="submit">Comment</button>
                                             </div> 
                                         </form> }
-{/**for respuestas a comentarios */}{answerLayout ? <Answer/> : ''}
+{/**for respuestas a comentarios */}{/*answerLayout ? <Answer/> : ''*/}
                                     </div>
                                     {tc.comments.map((c) => 
                                     <div key={c._id} className='comments-container d-flex mt-3'>

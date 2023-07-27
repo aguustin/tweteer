@@ -1,3 +1,14 @@
+.back{
+    position: fixed;
+    background-color: black;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: .7;
+    z-index: 3;
+}
+
 .profileInfo{
     width: 100vw;
     position: relative;
@@ -161,9 +172,9 @@
 }
 
 .editProfile{
-    position: absolute;
-    z-index: 2;
-    top: 30%;
+    position: fixed;
+    z-index: 4;
+    top: 20%;
     left: 50%;
     background-color: white;
     transform: translateY(-30%);

@@ -141,6 +141,7 @@ const HomeLayout = () => {
 
     return(
         <div>
+            {editLayout ? <div className='back'></div> : ""}
             {tweets.map((profile) => <div key={profile._id} className='profileInfo'>
                 <div className='portadaProfile'>
                     {profile.userPortada ? <img src={profile.userPortada} alt=""></img> : <img src={notUser} alt=""></img>}

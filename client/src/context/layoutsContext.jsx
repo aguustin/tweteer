@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import TweetsContext from "./tweetsContext";
-import { getSavedTweetsRequest } from "../api/tweetsRequests";
+import { getSavedTweetsRequest, getAllTweetsRequest } from "../api/tweetsRequests";
 
 const LayoutContext = createContext();
 
@@ -27,10 +27,11 @@ export const LayoutContextProvider = ({children}) => {
 
     }
     const layoutSearchContext = async (e) => {
-        e.preventDefault();
         setHomeLayout(false);
         setListLayout(false);
         setSearching(true);
+        const res = await getAllTweetsRequest();
+        setTweets(res.data);
     }
 
     return(
