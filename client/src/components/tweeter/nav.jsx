@@ -4,8 +4,10 @@ import icono from "../../imgs/icono.png";
 import { useContext } from "react";
 import LayoutContext from "../../context/layoutsContext";
 import TweetsContext from "../../context/tweetsContext";
+import Loading from "../loading/loading";
+
 const Nav = () => {
-  const { layoutHomeContext, layoutListContext, layoutSearchContext } =  useContext(LayoutContext);
+  const { layoutHomeContext, layoutListContext, layoutSearchContext, load } =  useContext(LayoutContext);
   const { session, getProfileInformationContext } = useContext(TweetsContext);
 
   const myProfile = async (e) => {
@@ -13,6 +15,12 @@ const Nav = () => {
     await getProfileInformationContext(session);
     await layoutHomeContext(e);
   };
+
+  if(load){
+    return(
+      <Loading/>
+    )
+  }
 
   return (
     <div>

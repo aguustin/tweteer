@@ -8,16 +8,25 @@ export const LayoutContextProvider = ({children}) => {
     const [homeLayout, setHomeLayout] = useState(true);
     const [listsLayout, setListLayout] = useState(false);
     const [searching, setSearching] = useState(false);
+    const [load, setLoad] = useState(false);
     const {session, setTweets} = useContext(TweetsContext);
 
     const layoutHomeContext = async (e) => {
         e.preventDefault();
+        setLoad(true);
+        setTimeout(() => {
+            setLoad(false);
+        },500);
         setSearching(false);
         setListLayout(false);
         setHomeLayout(true);
     }
     const layoutListContext = async (e) => {
         e.preventDefault();
+        setLoad(true);
+        setTimeout(() => {
+            setLoad(false);
+        },500);
         setHomeLayout(false);
         setSearching(false);
         setListLayout(true);
@@ -27,6 +36,10 @@ export const LayoutContextProvider = ({children}) => {
 
     }
     const layoutSearchContext = async (e) => {
+        setLoad(true);
+        setTimeout(() => {
+            setLoad(false);
+        },500);
         setHomeLayout(false);
         setListLayout(false);
         setSearching(true);
@@ -35,7 +48,7 @@ export const LayoutContextProvider = ({children}) => {
     }
 
     return(
-        <LayoutContext.Provider value={{homeLayout, layoutHomeContext, listsLayout, layoutListContext, searching, layoutSearchContext}}>{children}</LayoutContext.Provider>
+        <LayoutContext.Provider value={{homeLayout, layoutHomeContext, listsLayout, layoutListContext, searching, layoutSearchContext, load}}>{children}</LayoutContext.Provider>
     )
 }
 

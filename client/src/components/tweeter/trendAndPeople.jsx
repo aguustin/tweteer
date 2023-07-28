@@ -15,7 +15,8 @@ const TrendAndPeople = () => {
         await layoutSearchContext();
         await getTendenciesContext(tendencie);
     }
-    console.log("ten: ", tendencies);
+
+    let a = tendencies.slice(0, 7);
     
     return(
         <div className="trendAndPeople">
@@ -25,7 +26,7 @@ const TrendAndPeople = () => {
                 </div>
                 <div>
                 { 
-                tendencies?.map((tend) => <span key={tend._id}>  
+                a?.map((tend) => <span key={tend._id}>  
                 {tend?._id.map((t) => <span key={t._id}> {
                         <li onClick={(e) => getTendencie(e, t.word)}>
                             <p>#{t.word}</p>

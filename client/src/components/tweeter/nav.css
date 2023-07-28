@@ -56,24 +56,3 @@
         display: block;
     }
 }
-
-#abc{
-    position: absolute;
-    z-index: 3;
-}
-
-.moveIn{
-    position:fixed;
-    top:0;
-    bottom:0;
-    left: 0;
-    right: 0;
-    transform: translateX(100vw);
-    background-color: white;
-    z-index: 2;
-}
-
-#abc:checked ~ .moveIn{
-    transform: translateX(0vw);
-    transition: transform .2s;
-}
