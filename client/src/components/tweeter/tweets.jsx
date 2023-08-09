@@ -5,7 +5,6 @@ import RetweetLayout from '../form/retweetForm';
 import PublicTweet from './publicTweet';
 import TrendAndPeople from './trendAndPeople';
 import hearth from "../../imgs/hearth.png";
-import hearthL from "../../imgs/hearthL.png";
 import twImg from "../../imgs/photo.png";
 import chat from "../../imgs/chat.png";
 import retweet from "../../imgs/retweet.png";
@@ -164,7 +163,7 @@ const Tweets = () => {
             : ''}
             {retweetLayout ? <RetweetLayout/> : ''}
                 {homeLayout ? <HomeLayout/> : ''}
-                <div className='lists-publications-container mx-auto d-flex'>
+                <div className='lists-publications-container mx-auto'>
                 <TrendAndPeople/>
                     <div className='publications'>
                         {homeLayout ? <PublicTweet/> : ''}
@@ -217,9 +216,7 @@ const Tweets = () => {
                                                         <p>{tc.tweetUsername}</p>
                                                         <label>{tc.tweetDate}</label>
                                                     </div>
-                                                   
-                                                        <p id="tweetPublication">{tc.tweetPublication}</p>
-                                                
+                                                    <p id="tweetPublication">{tc.tweetPublication}</p>
                                                 </div>
                                             </div>
                                             {tc.tweetImg ? <img className='tweetImg' src={tc.tweetImg} alt=""></img> : ''}
@@ -281,7 +278,7 @@ const Tweets = () => {
                                                         </div>    
                                                     </div>
                                                     <div className='answerLike'>
-                                                        <button onClick={() => answerLike(t._id, tc._id, c._id, ans._id)}><img src={hearthL} alt=""></img></button>
+                                                        <button onClick={() => answerLike(t._id, tc._id, c._id, ans._id)}><img src={hearth} alt=""></img></button>
                                                         <label className='mt-1'>{ans.answerLikes?.length} likes</label>
                                                     </div>
                                                 </div>

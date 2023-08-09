@@ -43,6 +43,9 @@
         margin-left: 1rem;
         object-fit: contain;
     }
+    && button{
+        cursor: default;
+    }
 }
 
 @media screen and (max-width: 785px) {

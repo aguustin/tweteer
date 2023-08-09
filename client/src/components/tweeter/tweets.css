@@ -47,11 +47,10 @@
     transform: translateX(-.6vw);
 }
 
-
 .publications{
     position: relative;
     height: 1700px;
-    min-width: 570px;
+    min-width: 490px;
     background-color: rgb(247, 247, 247);
     overflow-x: hidden;
     overflow-y: scroll;
@@ -434,7 +433,6 @@
         left: 5.5vw;      
     }
 
-    
     .lists-publications-container{
         display: block;
 

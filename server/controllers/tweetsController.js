@@ -8,14 +8,12 @@ export const getProfileInformationController = async (req, res) => {
    
    if(userId && sessionId){
         const userFollows = await tweets.find({_id: userId}, {followers: { _id: sessionId }});  //buscar dentro del userId                                                        
-        console.log("asd");
+        
         if(userFollows.length > 0){ 
-            console.log("asdasdasA");
-            const getProfile = await tweets.find({_id: userId}).sort({"tweets.tweetPublication": -1});
+            const getProfile = await tweets.find({_id: userId}).sort({"tweets._id": -1});
             res.send(getProfile);
 
         }else{
-            console.log("asdasdasB");
             const getEveryoneTweets = await tweets.aggregate([
             {
                 $unwind: "$tweets"
@@ -56,17 +54,15 @@ export const getProfileInformationController = async (req, res) => {
             }, //-------------------------------------------------------------------------------------------------------
             {
                 $sort:{
-                    "tweets.tweetPublication": -1
+                    "tweets._id": -1
                 }
             }
             ]);
-        
             res.send(getEveryoneTweets);
         }
         
    }else{
-    console.log("yy");
-       const getProfile = await tweets.find({_id: userId});
+       const getProfile = await tweets.find({_id: userId}).sort({"tweets._id": -1});
        res.send(getProfile);
    }
 }
