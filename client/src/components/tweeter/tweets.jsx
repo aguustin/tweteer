@@ -17,7 +17,7 @@ import TweetsContext from '../../context/tweetsContext';
 
 const Tweets = () => {
     const [ answerLayout, setAnswerLayout ] = useState(false);
-    const [ answerForm, setAnswerForm ] = useState(false);
+    const [ black, setBlackLayout ] = useState(false); //black, setBlackLayout
     const [ profileId, setProfileId ] = useState();
     const [ tweetId, setTweetId ] = useState();
     const [ commentId, setCommentId ] = useState();
@@ -106,7 +106,7 @@ const Tweets = () => {
     const answer = async (e) => {
         e.preventDefault();
         setAnswerLayout(!answerLayout);
-        setAnswerForm(!answerForm);
+        setBlackLayout(!black); //black, setBlackLayout
 
         const answerData = {
             profileId: profileId,
@@ -132,11 +132,11 @@ const Tweets = () => {
 
     const closeAnswerLayout = () => {
         setAnswerLayout(!answerLayout);
-        setAnswerForm(!answerForm);
+        setBlackLayout(!black);
     }
 
     const Answer = () => {
-        setAnswerForm(true); 
+        setBlackLayout(true); 
         return (
             <form className='answer-form' onSubmit={(e) => answer(e)}>
                 <textarea type="text" placeholder='Answer comment' name="answer"></textarea>
@@ -149,7 +149,7 @@ const Tweets = () => {
 
     return(
         <div>
-            {answerForm ? <div className='i'></div> : ''}
+            {black ? <div className='i'></div> : ''}
             {answerLayout ? <Answer/> : ''}
             <Nav/>
          <div className='tweets'>
@@ -197,9 +197,9 @@ const Tweets = () => {
                             {tc.retweetedImg ? <img className='tweetImg' src={tc.retweetedImg} alt=""></img> : ''}
                         </div>
                         <li key={tc._id} className='tweet-actions d-flex'>         
-                            <button><img src={hearth} alt=""></img>{tc.comments?.length}</button>
-                            <button onClick={(e) => retweeted(e, tc._id)}><img src={retweet} alt="" ></img>{tc.retweets}</button>
-                            <button onClick={(e) => like(e, t._id, tc._id)}><img src={hearth} alt=""></img>{tc.tweetLikess?.length}</button>
+                            <button className='mx-auto' onClick={(e) => retweeted(e, tc._id)}><img src={retweet} alt="" ></img>{tc.retweets}</button>
+                            <button className='mx-auto' onClick={(e) => like(e, t._id, tc._id)}><img src={hearth} alt=""></img>{tc.tweetLikess?.length}</button>
+                            <button className='mx-auto' onClick={(e) => saveTweet(e, tc._id)}><img src={save} alt=""></img></button>
                         </li>
                     </div> 
                     

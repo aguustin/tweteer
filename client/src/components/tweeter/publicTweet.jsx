@@ -14,17 +14,14 @@ const PublicTweet = () => {
 
   const hashtagTweet = async (e) => {
     e.preventDefault();
-    console.log("rrr: ", e.target.value);
     if(e.target.value === '#'){
       setHashtag(e.target.value);
-      console.log("funciona la primera condicion");
     }else if(hashtag.length <= 0){
       saveHashtag = null;
     }else if(hashtag.charAt[0] === "#"){
       setHashtag(e.target.value);
-      console.log("funciona la segunda condicion");
     }else if(saveHashtag.length > 0){
-      console.log("hashtag hecho", saveHashtag);
+      console.log("");
     }else if(e.target.value.includes(" ") && hashtag.length > 0){
       saveHashtag = e.target.value.trim();
       saveHashtag = saveHashtag.substring(1);

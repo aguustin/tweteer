@@ -7,6 +7,7 @@ const LayoutContext = createContext();
 export const LayoutContextProvider = ({children}) => {
     const [homeLayout, setHomeLayout] = useState(true);
     const [listsLayout, setListLayout] = useState(false);
+    const [black, setBlackLayout] = useState(false);
     const [searching, setSearching] = useState(false);
     const [load, setLoad] = useState(false);
     const {session, setTweets} = useContext(TweetsContext);
@@ -48,7 +49,7 @@ export const LayoutContextProvider = ({children}) => {
     }
 
     return(
-        <LayoutContext.Provider value={{homeLayout, layoutHomeContext, listsLayout, layoutListContext, searching, layoutSearchContext, load}}>{children}</LayoutContext.Provider>
+        <LayoutContext.Provider value={{homeLayout, layoutHomeContext, listsLayout, layoutListContext, searching, layoutSearchContext, load, setBlackLayout, black}}>{children}</LayoutContext.Provider>
     )
 }
 

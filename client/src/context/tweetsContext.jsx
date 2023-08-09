@@ -177,6 +177,7 @@ export const TweetsContextProvider = ({children}) => {
             setChangeHomeLayout,
             followContext,
             unFollowContext,
+            setRetweetLayout,
             createTweetContext,
             respondTweetContext,
             answerContext,

@@ -1,5 +1,6 @@
 .retweetLayout{
     position: fixed;
+    width: 60vw;
     z-index: 2;
     top: 10%;
     left: 50%;
@@ -14,10 +15,10 @@
         text-align: left;
 
         && img{
-            width: 60px;
-            height: 60px;
+            max-height: 50vh;
             object-fit: cover;
             border-radius: 8px;
+            margin: auto;
         }
 
         && .form-group-retweet{
