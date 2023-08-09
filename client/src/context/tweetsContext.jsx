@@ -56,7 +56,6 @@ export const TweetsContextProvider = ({children}) => {
     const getProfileInformationContext = async (se) => {
         const ownTweets = await getProfileInformationRequest(se);
         setPublicT(true);
-        console.log("own:", ownTweets.data);
         setChangeHomeLayout(true);
         setTweets(ownTweets.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1))); //ultimo hecho
         setTweets(ownTweets.data);
@@ -66,7 +65,7 @@ export const TweetsContextProvider = ({children}) => {
         setPublicT(false);
         const res = await getProfileInformationRequest(userId, session[0]._id);
         const check = await checkFollowRequest(userId);
-        console.log(res.data);
+        console.log("data", res.data);
         setChangeHomeLayout(false);
         setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
         setTweets(res.data);

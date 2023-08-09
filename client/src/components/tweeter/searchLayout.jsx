@@ -6,13 +6,19 @@ import LayoutContext from '../../context/layoutsContext';
 
 const SearchLayout = (users) => {
     const { layoutHomeContext } = useContext(LayoutContext);
-    const { se, seeProfileContext } = useContext(TweetsContext);
+    const { session, se, seeProfileContext, getProfileInformationContext } = useContext(TweetsContext);
 
     const seeProfile = async (e, userId) => {
         e.preventDefault();
-        await seeProfileContext(userId);
+        await seeProfileContext(userId); //--
         layoutHomeContext(e);
     }
+
+    const myProfile = async (e) => {
+        e.preventDefault();
+        await getProfileInformationContext(session);
+        await layoutHomeContext(e);
+    };
 
     return(
         <div>
@@ -27,7 +33,7 @@ const SearchLayout = (users) => {
                         <label>{all.followers.length} Followers</label>
                         <label>{all.following.length} Following</label>
                     </div>
-                    <button onClick={(e) => seeProfile(e, all._id)}>See profile</button>
+                    {all._id === session[0]?._id ? <button onClick={(e) => myProfile(e)}>See profile</button> : <button onClick={(e) => seeProfile(e, all._id)}>See profile</button>}
             </div>)}
         </div>
         : ''}

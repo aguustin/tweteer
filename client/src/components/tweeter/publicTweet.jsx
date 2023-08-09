@@ -1,6 +1,5 @@
 import "./publicTweet.css";
 import notUser from "../../imgs/notUser.jpg";
-import hearth from "../../imgs/hearth.png";
 import twImg from "../../imgs/photo.png";
 import { useContext, useState } from "react";
 import TweetsContext from "../../context/tweetsContext";
@@ -66,7 +65,6 @@ const PublicTweet = () => {
           <form onSubmit={(e) => createTweet(e)} className="public-form-size align-items-center" encType="multipart/form-data">
             <textarea type="text" placeholder="What's happening?" name="publication" onChange={hashtagTweet}></textarea>
             <div className="d-flex">
-              <img src={hearth} alt=""></img>
               <select className="selectPrivacyPublication" name="privacy">
                 <option value="everyone">Everyone</option>
                 <option value="only">Only people who follows me</option>

@@ -5,6 +5,7 @@ import RetweetLayout from '../form/retweetForm';
 import PublicTweet from './publicTweet';
 import TrendAndPeople from './trendAndPeople';
 import hearth from "../../imgs/hearth.png";
+import hearthL from "../../imgs/hearthL.png";
 import twImg from "../../imgs/photo.png";
 import chat from "../../imgs/chat.png";
 import retweet from "../../imgs/retweet.png";
@@ -24,7 +25,6 @@ const Tweets = () => {
     let fecha = new Date();
     let day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     let month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    console.log(day[fecha.getDay()]);
     const commentsDate = `${day[fecha.getDay()]}, ${fecha.getDate()} ${month[fecha.getMonth()]} - ${fecha.getHours()}:${fecha.getMinutes()}`;
     const {homeLayout, listsLayout, searching} = useContext(LayoutContext);
     const {session, allUsers, tweets, se, setSe, retweetLayout, respondTweetContext, answerContext, likeContext, likeCommentContext, answerLikeContext, retweetContext, saveTweetContext, getProfileInformationContext, getAllTendContext} = useContext(TweetsContext);
@@ -164,7 +164,8 @@ const Tweets = () => {
             : ''}
             {retweetLayout ? <RetweetLayout/> : ''}
                 {homeLayout ? <HomeLayout/> : ''}
-                <div className='lists-publications-container mx-auto'>
+                <div className='lists-publications-container mx-auto d-flex'>
+                <TrendAndPeople/>
                     <div className='publications'>
                         {homeLayout ? <PublicTweet/> : ''}
                         {tweets.map((t) =>
@@ -184,7 +185,7 @@ const Tweets = () => {
                             </div>
                             <label>{tc.tweetDate}</label>
                         </div>
-                        <div key={tc._id} className='tweetDesc-img border border-info p-4 mt-2' >
+                        <div className='tweetDesc-img border border-info p-4 mt-2' >
                             <div className='tweetProfileData'>
                                 <div>
                                 {tc.profileRetweetedImg ? <img id='tweetProfileImg' src={tc.profileRetweetedImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
@@ -196,7 +197,7 @@ const Tweets = () => {
                             </div>
                             {tc.retweetedImg ? <img className='tweetImg' src={tc.retweetedImg} alt=""></img> : ''}
                         </div>
-                        <li className='tweet-actions d-flex'>         
+                        <li key={tc._id} className='tweet-actions d-flex'>         
                             <button><img src={hearth} alt=""></img>{tc.comments?.length}</button>
                             <button onClick={(e) => retweeted(e, tc._id)}><img src={retweet} alt="" ></img>{tc.retweets}</button>
                             <button onClick={(e) => like(e, t._id, tc._id)}><img src={hearth} alt=""></img>{tc.tweetLikess?.length}</button>
@@ -206,7 +207,7 @@ const Tweets = () => {
                     : 
                                     
                                     <div className='tweet'>
-                                        <div key={tc._id} className='tweetDesc-img'>
+                                        <div className='tweetDesc-img'>
                                             <div className='tweetProfileData'>
                                                 <div>
                                                 {tc.tweetProfileImg ? <img id='tweetProfileImg' src={tc.tweetProfileImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
@@ -223,12 +224,11 @@ const Tweets = () => {
                                             </div>
                                             {tc.tweetImg ? <img className='tweetImg' src={tc.tweetImg} alt=""></img> : ''}
                                             <li className='tweet-actions d-flex'>
-    {/**cantidad de com,ret,likes */}           
+    {/**cantidad de com,ret,likes */}
                                                     <button><img src={chat} alt=""></img>{tc.comments?.length}</button>
                                                     <button onClick={(e) => retweeted(e, tc._id)}><img src={retweet} alt="" ></img>{tc.retweets}</button>
                                                     <button onClick={(e) => like(e, t._id, tc._id)}><img src={hearth} alt=""></img>{tc.tweetLikess?.length}</button>
                                                     <button onClick={(e) => saveTweet(e, tc._id)}><img src={save} alt=""></img></button>
-                                                
                                             </li>
                                         </div>
                                     </div>
@@ -263,7 +263,7 @@ const Tweets = () => {
                                                 </div>
                                             </div>
                                             <div className='like-comment-container mt-2'>
-                                                    <button id="like-comment" onClick={() => commentLike(t._id, tc._id, c._id)}><img src={hearth} alt=""></img>{c.commentLikes?.length}</button>
+                                                    <button id="like-comment" onClick={() => commentLike(t._id, tc._id, c._id)}> <img src={hearth} alt=""></img>{c.commentLikes?.length}</button>
                                                     <label><img src={chat} alt=""></img>{c.answerComments?.length}</label>
                                                     <button className="answer-comment" onClick={() => openAnswerLayout(t._id, tc._id, c._id)}>Comment</button>
                                             </div>
@@ -281,7 +281,7 @@ const Tweets = () => {
                                                         </div>    
                                                     </div>
                                                     <div className='answerLike'>
-                                                        <button onClick={() => answerLike(t._id, tc._id, c._id, ans._id)}><img src={hearth} alt=""></img></button>
+                                                        <button onClick={() => answerLike(t._id, tc._id, c._id, ans._id)}><img src={hearthL} alt=""></img></button>
                                                         <label className='mt-1'>{ans.answerLikes?.length} likes</label>
                                                     </div>
                                                 </div>
@@ -294,7 +294,6 @@ const Tweets = () => {
                             </div> 
                             )}
                     </div>
-                        <TrendAndPeople/>
                 </div>
             </div>
             </div>

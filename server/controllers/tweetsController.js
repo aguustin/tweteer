@@ -5,17 +5,19 @@ import mongoose from "mongoose";
 
 export const getProfileInformationController = async (req, res) => {
    const {userId, sessionId} = req.body;
- 
-   if(sessionId){
-        const userFollows = await tweets.find({followers: {_id: sessionId }});                                                          
-      
+   
+   if(userId && sessionId){
+        const userFollows = await tweets.find({_id: userId}, {followers: { _id: sessionId }});  //buscar dentro del userId                                                        
+        console.log("asd");
         if(userFollows.length > 0){ 
+            console.log("asdasdasA");
             const getProfile = await tweets.find({_id: userId}).sort({"tweets.tweetPublication": -1});
             res.send(getProfile);
 
         }else{
-          
-            const getEveryoneTweets = await tweets.aggregate([{
+            console.log("asdasdasB");
+            const getEveryoneTweets = await tweets.aggregate([
+            {
                 $unwind: "$tweets"
             },
             {
@@ -27,26 +29,44 @@ export const getProfileInformationController = async (req, res) => {
             },
             {
                 $group: {
-                    _id: "$_id",
+                    _id: {
+                        _id:"$_id",
+                        userName: "$userName"
+                    },
+                    count: { $sum: 1 },
                     tweets: {
                         $push: "$tweets"
+                    },
+                    followers: {
+                        $push: "$followers"
+                    },
+                    following: {
+                        $push: "$following"
                     }
                 }
             },
+            { //lo ultimo hecho ----------------------------(NO FUNCIONA LOS FOLLOWERS Y FOLLOWINGS)-------------------------------------
+                $project:{
+                    _id: "$_id._id",
+                    userName: "$_id.userName",
+                    tweets: 1,
+                    followers: 1,
+                    following: 1
+                }
+            }, //-------------------------------------------------------------------------------------------------------
             {
                 $sort:{
                     "tweets.tweetPublication": -1
                 }
             }
-            /*{ 
-                $sort : { "tweets._id" : -1}
-            }*/]);
+            ]);
         
             res.send(getEveryoneTweets);
         }
         
    }else{
-       const getProfile = await tweets.find({_id: userId}).sort({"tweets.tweetPublication": -1});
+    console.log("yy");
+       const getProfile = await tweets.find({_id: userId});
        res.send(getProfile);
    }
 }
