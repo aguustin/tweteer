@@ -25,4 +25,4 @@ app.use(morgan('tiny'));
 app.use(tweeterRoutes);
 app.use(usersRoutes);
 //listening
-app.listen(port, console.log(`Connected to port ${port}`));
+app.listen(port);

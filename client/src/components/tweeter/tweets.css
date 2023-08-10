@@ -216,7 +216,8 @@
 .answer-form{
     position: fixed;
     bottom: 50%;
-    width: 70%;
+    width: 40%;
+    min-width: 400px;
     z-index: 3;
     left: 50%;
     transform: translateX(-50%);
@@ -232,15 +233,33 @@
         border: none;
     }
 
+    && label{
+        margin-top: .3rem;
+        margin-left: 23rem;
+    }
+
+    && input{
+        display: none;
+    }
+
     && button{
         position: relative;
         margin-right: 0;
         padding: .5rem .8rem;
-        background-color: rgb(65, 65, 248);
-        color: white;
+        background-color: transparent;
+        color: black;
         font-weight: 600;
         outline: none;
-        border-radius: 5px;
+    }
+
+    && .sepB{
+        position: absolute;
+        right: 0;
+    }
+
+    && button:hover{
+        color: rgb(65, 65, 248);
+        transition: all .3s;
     }
 }
 

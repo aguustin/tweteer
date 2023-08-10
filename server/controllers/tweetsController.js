@@ -72,7 +72,6 @@ export const createTweetController = async (req, res) => {
     const firstTweet = await tweets.find({_id: userId});
     let tweetImg;
     let sumTendencie;
-    console.log("el hashtag: ", hashtag);
 
     if(hashtag.length > 0){
         if(firstTweet.length > 0){

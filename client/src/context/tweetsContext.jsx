@@ -65,7 +65,6 @@ export const TweetsContextProvider = ({children}) => {
         setPublicT(false);
         const res = await getProfileInformationRequest(userId, session[0]._id);
         const check = await checkFollowRequest(userId);
-        console.log("data", res.data);
         setChangeHomeLayout(false);
         setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
         setTweets(res.data);

@@ -53,7 +53,7 @@ export const saveRetweetRequest = async (retweetedData) => axios.post('/saveRetw
 
 export const exploreTweetsRequest = async (exploreData) => axios.post('/exploreTweets', exploreData);
 
-export const searchRequest = (searchData) => axios.post('/search', searchData, console.log(searchData));
+export const searchRequest = (searchData) => axios.post('/search', searchData);
 
 export const increaseLikesRequest = (likeData) => axios.post('/like', likeData);
 

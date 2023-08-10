@@ -36,7 +36,6 @@ const HomeLayout = () => {
 
     const seeProfile = async (e, userId) => {
         e.preventDefault();
-        console.log(userId);
         await seeProfileContext(userId);
         layoutHomeContext(e);
     }
