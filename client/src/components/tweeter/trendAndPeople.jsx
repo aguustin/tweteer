@@ -58,9 +58,9 @@ const TrendAndPeople = () => {
                         <label>Who to follow</label>
                     </div>
                     <div className="people-body d-flex">
-                        {allU.userImg ? <img id="peopleImg" src={allU?.userImg} alt=""></img> : <img id="peopleImg" src={notUser} alt=""></img> }
+                        {allU.userImg ? <div><img id="peopleImg" src={allU?.userImg} alt=""></img></div> : <div><img id="peopleImg" src={notUser} alt=""></img></div> }
                         <div className='user-followers'>
-                            <p>{allU.userName}</p>
+                            <p >{allU.userName}</p>
                             <label>{allU.followers.length} Followers</label>
                             <label>{allU.following.length} Following</label>
                         </div>

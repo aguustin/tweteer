@@ -36,16 +36,16 @@
 .navUser{
     margin-right: 1rem;
     right: 1rem;
+}
 
-    && img{
-        height: 60px;
-        width: 70px;
-        margin-left: 1rem;
-        object-fit: contain;
-    }
-    && button{
-        cursor: default;
-    }
+.navUser img{
+    height: 60px;
+    width: 70px;
+    margin-left: 1rem;
+    object-fit: contain;
+}
+.navUser button{
+    cursor: default;
 }
 
 @media screen and (max-width: 785px) {

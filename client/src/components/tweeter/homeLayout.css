@@ -74,12 +74,11 @@
     margin-top: 1rem;
     margin-left: 1.5rem;
     text-align: left;
+}
 
-    && button{
-        background-color: transparent;
-        color: rgb(182, 182, 182);
-    }
-
+.userDesc button{
+    background-color: transparent;
+    color: rgb(182, 182, 182);
 }
 
 .userDesc-cont{
@@ -96,59 +95,60 @@
     overflow-y: scroll;
     background-color: white;
     border-radius: 8px;
-
-    && label{
-        color: rgb(182, 182, 182);
-    }
-
-    && .people-header{
-        background-color: rgba(65,65,248,0.75);
-        font-size: 20px;
-        color: white;
-        justify-content: center;
-        align-items: center;
-        
-        && p{
-            margin-top: 10px;
-        }
-        && button{
-            position: absolute;
-            height: 0px;
-            top:1px;
-            right: 5px;
-            background-color: transparent;
-            color: white;
-        }
-    }
-    
-    && .people{
-        
-        border-bottom: 1px solid black;
-        padding: .8rem 2rem 2rem;
-        margin-top: 0;
-        align-items: center;
-        justify-content: center;
-      
-        && #followsButton{
-            position: relative;
-            margin-top: 0;
-        }
-        && img {
-            border-radius: 25px;
-            width: 50px;
-            height: 50px;
-            margin: 0 auto;
-        }
-        && p{
-            font-weight: 600;
-        }
-        && label{
-            margin-top: 0;
-        }
-    }
     box-shadow: 0px 1px 3px 0px rgba(168,168,168,0.75);
     -webkit-box-shadow: 0px 1px 3px 0px rgba(168,168,168,0.75);
     -moz-box-shadow: 0px 1px 3px 0px rgba(168,168,168,0.75);
+}
+
+label{
+    color: rgb(182, 182, 182);
+}
+
+.people-header{
+    background-color: rgba(65,65,248,0.75);
+    font-size: 20px;
+    color: white;
+    justify-content: center;
+    align-items: center;
+}
+
+.people-header p{
+    margin-top: 10px;
+}
+.people-header button{
+    position: absolute;
+    height: 0px;
+    top:1px;
+    right: 5px;
+    background-color: transparent;
+    color: white;
+}
+
+.people{
+    
+    border-bottom: 1px solid black;
+    padding: .8rem 2rem 2rem;
+    margin-top: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#followsButton{
+    position: relative;
+    margin-top: 0;
+}
+.people img {
+    border-radius: 25px;
+    width: 50px;
+    height: 50px;
+    margin: 0 auto;
+}
+.people p{
+    font-weight: 600;
+}
+.people label{
+    margin-top: 0;
 }
 
 .followsLayout::-webkit-scrollbar{
@@ -181,17 +181,17 @@
     transform: translateX(-50%);
     border-radius: 10px;
     padding: 0rem 2rem;
+}
 
-    && button{
-        padding: .5rem 1rem;
-        background-color: transparent;
-        border-radius: 5px;
-        font-weight: 600;
-        margin: 2rem;
-        box-shadow: 0px 1px 4px -1px rgba(65,65,248,0.75);
-        -webkit-box-shadow: 0px 1px 4px -1px rgba(65,65,248,0.75);
-        -moz-box-shadow: 0px 1px 4px -1px rgba(65,65,248,0.75);
-    }
+.editProfile button{
+    padding: .5rem 1rem;
+    background-color: transparent;
+    border-radius: 5px;
+    font-weight: 600;
+    margin: 2rem;
+    box-shadow: 0px 1px 4px -1px rgba(65,65,248,0.75);
+    -webkit-box-shadow: 0px 1px 4px -1px rgba(65,65,248,0.75);
+    -moz-box-shadow: 0px 1px 4px -1px rgba(65,65,248,0.75);
 }
 
 .form-group{
@@ -199,41 +199,41 @@
     text-align: left;
     margin-top: 50px;
 
-    && input{
-        width: 100%;
-        padding: .5rem;
-        border-top: none;
-        border-left: none;
-        border-right: none;
-        border-bottom: 1px solid rgb(65, 65, 248);
-        outline: none;
-    }
+}
 
-    && label{
-        position: absolute;
-        top:-25px;
-        left: -20px;
-    }
+.form-group input{
+    width: 100%;
+    padding: .5rem;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid rgb(65, 65, 248);
+    outline: none;
+}
 
+.form-group label{
+    position: absolute;
+    top:-25px;
+    left: -20px;
 }
 
 .explore{
     position: absolute;
     right: 1rem;
     bottom: 1rem;
+}
 
-    && input{
-        padding: .5rem .7rem;
-        outline: none;
-        background-color: rgb(247, 247, 247);
-        border:1px solid transparent;
-        border-radius: 25px;
-    }
+.explore input{
+    padding: .5rem .7rem;
+    outline: none;
+    background-color: rgb(247, 247, 247);
+    border:1px solid transparent;
+    border-radius: 25px;
+}
 
-    && button{
-        background-color: transparent;
-        cursor: default;
-    }
+.explore button{
+    background-color: transparent;
+    cursor: default;
 }
 
 @media screen and (max-width: 935px) {

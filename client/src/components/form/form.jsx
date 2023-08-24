@@ -1,5 +1,4 @@
 import "./form.css";
-import test from "../../imgs/test.png";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TweetsContext from "../../context/tweetsContext";
@@ -8,6 +7,7 @@ const Form = () => {
   const nav = useNavigate();
   const { session, createUserContext, setSessionContext, getProfileInformationContext } = useContext(TweetsContext);
   const [form, setForm] = useState(false);
+  const [adv, setAdv] = useState(false);
 
   const createUser = async (e) => {
     const userMail = e.target.elements.userMail.value;
@@ -37,10 +37,12 @@ const Form = () => {
     const confirmUser = await setSessionContext(authenticateData);
 
     if (confirmUser !== 0) {
+      console.log("dasdsadsadasd");
       await getProfileInformationContext(session[0]._id);
       nav("/tweeterio");
     } else {
-      console.log("error");
+      console.log("assdasd");
+      setAdv(true);
     }
   };
 
@@ -70,7 +72,7 @@ const Form = () => {
             </div>
           </div>
           <div className="form-footer">
-            <div>
+            <div className="d-flex justify-content-between">
               <button onClick={() => setForm(!form)}>Back</button>
               <button type="submit">Register</button>
             </div>
@@ -82,7 +84,7 @@ const Form = () => {
 
   const Login = () => {
     return (
-      <div className="e">
+      <div >
         <form className="form mx-auto" onSubmit={(e) => authenticateUser(e)}>
           <div className="form-header d-flex">
             <h1>TweeterIo</h1>
@@ -109,12 +111,10 @@ const Form = () => {
   };
 
   return (
-    <div>
-      <nav>
-        <img src={test} alt=""></img>
-        <img src={test} alt=""></img>
-      </nav>
-      <div>{form ? <Register /> : <Login />}</div>
+    <div className="body-form">
+      <div>
+        {adv ? <p>Wrong password!</p> : ''}
+        {form ? <Register /> : <Login />}</div>
     </div>
   );
 };

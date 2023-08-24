@@ -37,12 +37,9 @@ export const createUserController = async (req, res) => {
 
         }else{
             console.log("las contrasenas son diferentes");
-            res.sendStatus(401);
+            return 0;
         }
     }
-
-    
-    
 }
 
 export const authenticateUserController = async (req, res) => {
@@ -55,11 +52,11 @@ export const authenticateUserController = async (req, res) => {
             res.send(usersExist);
         }else{
             console.log("contrasena incorrecta");
-            res.sendStatus(400);
+            return 0;
         }
     }else{
         console.log("el usuario no existe");
-        res.sendStatus(400);
+        return 0;
     }
 }
 

@@ -21,24 +21,24 @@
     min-width: 405px;
     padding: .5rem;
     border-radius: 8px;
+}
 
-     && form{
-        width: 100%;
-        
-        && input{
-            width: 100%;
-            border: none;
-            outline: none;
-            padding: .5rem 1rem;
-        }
+.search form{
+    width: 100%; 
+}
 
-        && button{
-            background-color: rgb(65, 65, 248);
-            color: white;
-            padding: .5rem 1rem;
-            border-radius: 4px;
-        }
-     }
+.search form input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: .5rem 1rem;
+}
+
+.search form button {
+    background-color: rgb(65, 65, 248);
+    color: white;
+    padding: .5rem 1rem;
+    border-radius: 4px;
 }
 
 .lists-publications-container{
@@ -78,6 +78,11 @@
     border-radius: 10px;
 }
 
+.publications{
+    scrollbar-color: #4141f8 transparent;
+    scrollbar-width: thin;
+}
+
 .lists{
  background-color: white;
  margin-top: 1rem;
@@ -115,10 +120,10 @@
 
 .tweetProfileData{
     display: flex;
+}
 
-    && p, label{
-        margin-left: .9rem;
-    }
+.tweetProfileData p, label{
+    margin-left: .9rem;
 }
 
 .imgProfile img{
@@ -137,7 +142,7 @@
 
 .t-backg{
     background-color: rgb(247, 247, 247);
-    margin-top: 1rem;
+    margin-top: 2rem;
     padding: 3rem 1rem;
     border-radius: 5px;
 }
@@ -177,20 +182,15 @@
     transition: all .5s;
 }
 
-.retweets{
-    margin-top: 4rem;
+
+.retweets-info img {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
 }
 
-.retweets-info{
-    && img {
-        width: 60px;
-        height: 60px;
-        border-radius: 6px;
-    }
-
-    && label{
-        color: rgb(156, 156, 156);
-    }
+.retweets-info label{
+    color: rgb(156, 156, 156);
 }
 
 .retweets-info > div{
@@ -200,17 +200,17 @@
 .tweet-actions{
     width: 80%;
     margin-left: 5rem;
+}
 
-    && button{
-        padding: .5rem 0rem;
-        background-color: transparent;
-        color: rgb(156, 156, 156);
-        width: 25%;
-    }
+.tweet-actions button{
+    padding: .5rem 0rem;
+    background-color: transparent;
+    color: rgb(156, 156, 156);
+    width: 25%;
+}
 
-    && button img{
-        margin-right: .5rem;
-    }
+.tweet-actions button img{
+    margin-right: .5rem;
 }
 
 .answer-form{
@@ -223,118 +223,118 @@
     transform: translateX(-50%);
     background-color: white;
     padding: 1rem;
+}
 
-    && textarea{
-        position: relative;
-        width: 100%;
-        background-color: rgb(238, 238, 238);
-        padding: .5rem;
-        outline: none;
-        border: none;
-    }
+.answer-form textarea{
+    position: relative;
+    width: 100%;
+    background-color: rgb(238, 238, 238);
+    padding: .5rem;
+    outline: none;
+    border: none;
+}
 
-    && label{
-        margin-top: .3rem;
-        margin-left: 23rem;
-    }
+.answer-form label{
+    margin-top: .3rem;
+    margin-left: 23rem;
+}
 
-    && input{
-        display: none;
-    }
+.answer-form input{
+    display: none;
+}
 
-    && button{
-        position: relative;
-        margin-right: 0;
-        padding: .5rem .8rem;
-        background-color: transparent;
-        color: black;
-        font-weight: 600;
-        outline: none;
-    }
+.answer-form button{
+    position: relative;
+    margin-right: 0;
+    padding: .5rem .8rem;
+    background-color: transparent;
+    color: black;
+    font-weight: 600;
+    outline: none;
+}
 
-    && .sepB{
-        position: absolute;
-        right: 0;
-    }
+.sepB{
+    position: absolute;
+    right: 0;
+}
 
-    && button:hover{
-        color: rgb(65, 65, 248);
-        transition: all .3s;
-    }
+.answer-form button:hover{
+    color: rgb(65, 65, 248);
+    transition: all .3s;
 }
 
 .comments-form{
     margin-top: .5rem;
+}
 
-    && img{
-        width: 66px;
-        height: 66px;
-        border-radius: 8px;
-    };
+.comments-form img{
+    width: 66px;
+    height: 66px;
+    border-radius: 8px;
+};
 
-    && .comments-form > div{
-        padding: 0rem 1rem;
-        border: none;
-        outline: none;
-        width: 100%;
-        border-radius: 8px;
-    }
+ .comments-form > div{
+    padding: 0rem 1rem;
+    border: none;
+    outline: none;
+    width: 100%;
+    border-radius: 8px;
+}
 
-    #respondTweet{
-        width: 100%;
-        border: none;
-        padding: .5rem;
-        border-radius: 5px;
-    }
+#respondTweet{
+    width: 100%;
+    border: none;
+    padding: .5rem;
+    border-radius: 5px;
+}
 
-    && button{
-        padding: 0rem .8rem;
-        background-color: rgb(65, 65, 248);
-        height: 45px;
-        color: white;
-        font-weight: 600;
-        outline: none;
-        border-radius: 5px;
-    }
+.comments-form button{
+    padding: 0rem .8rem;
+    background-color: rgb(65, 65, 248);
+    height: 45px;
+    color: white;
+    font-weight: 600;
+    outline: none;
+    border-radius: 5px;
+}
 
-    && textarea{
-        width: 90%;
-        border: 1px solid rgb(190, 190, 190);
-        margin-left: 1rem;
-    }
+.comments-form textarea{
+    width: 90%;
+    border: 1px solid rgb(190, 190, 190);
+    margin-left: 1rem;
+}
 
-    && .cImgComment{
-        position: relative;
-        width: 88%;
-        left: 82px;
-        
-        && label{
-            position: absolute;
-            top: 1vh;
-            right: 13vw;
-        }
+.cImgComment{
+    position: relative;
+    width: 88%;
+    left: 82px;
+}
 
-        && button{
-            position: absolute;
-            right: 5vw;
-        
-        }
-    }
+.cImgComment label{
+    position: absolute;
+    top: 1vh;
+    right: 13vw;
+}
 
-    #respondTweetImg{
-        display: none;
-    }
+.cImgComment button{
+    position: absolute;
+    right: 5vw;
 
-    #labelImg{
-        height: 24px;
-        width: 24px;
-    }
+}
 
-    #commButton{
-        padding: 0rem;
-        background-color: transparent;
-        color:rgb(156, 156, 156);
-    }
+#respondTweetImg{
+    display: none;
+}
+
+#labelImg{
+    height: 24px;
+    width: 24px;
+}
+
+#commButton{
+    padding: 0rem;
+    background-color: transparent;
+    color:rgb(156, 156, 156);
 }
 
 #commButton:hover{
@@ -345,21 +345,22 @@
 .comments-container{
     text-align: left;
     margin-left: 5rem;
-    && img{
-        border-radius: 8px;
-    };
+}
 
-    && button{
-        color: rgb(179, 179, 179);
-        background-color: transparent;
-        border: none;
-    };
+.comments-container img{
+    border-radius: 8px;
+};
 
-    && label{
-        color: rgb(179, 179, 179);
-        font-size: 14px;
-        margin-top: 2px;
-    }
+.comments-container button{
+    color: rgb(179, 179, 179);
+    background-color: transparent;
+    border: none;
+};
+
+.comments-container label{
+    color: rgb(179, 179, 179);
+    font-size: 14px;
+    margin-top: 2px;
 }
 
 #comment-image-profile{
@@ -385,48 +386,50 @@
     margin-top: 1rem;
     padding-left: 1rem;
 
-   .answer-img{
-    width: 60px;
+}
+.answer-img{
+ width: 60px;
+ object-fit: cover;
+}
+.answer-width{
+     width: 80%;
+     margin-top: .9rem;
+     background-color: rgb(240, 240, 240);
+     padding: .1rem .5rem;
+     border-radius: 4px;
+
+}
+
+.answer-width img{
+    width: 15px;
     object-fit: cover;
-   }
-    && .answer-width{
-       
-        width: 80%;
-        margin-top: .9rem;
-        background-color: rgb(240, 240, 240);
-        padding: .1rem .5rem;
-        border-radius: 4px;
-
-        && img{
-            width: 15px;
-            object-fit: cover;
-        }
-    }
-
-    && .answer-width > div{
-        text-align: center;
-    }
-
-    #answer-img{
-        width: 200px;
-        object-fit: cover;
-        margin:0 auto;
-    }
 }
 
-.like-comment-container{
-    && label{
-        && img{
-            width: 14px;
-            margin-right: 5px;
-            margin-bottom: 3px;
-        }
-    }
+.answer-width > div{
+     text-align: center;
 }
+
+#answer-img{
+    width: 200px;
+    object-fit: cover;
+    margin:0 auto;
+}
+
+.like-comment-container label img{
+    width: 14px;
+    margin-right: 5px;
+    margin-bottom: 3px;
+}
+
 
 .answer-comment{
     position: relative;
     margin-right: 0px;
+    background-color: transparent;
+}
+
+#like-comment{
+    background-color: transparent;
 }
 
 #like-comment img{
@@ -439,11 +442,14 @@
 
 .answerLike{
     display: flex;
+}
+.answerLike button{
+    background-color: transparent;
+}
 
-    && img{
-        border-radius: 0px;
-        width: 14px;
-    }
+.answerLike img{
+    border-radius: 0px;
+    width: 14px;
 }
 
 @media  screen and (max-width: 1120px) {
@@ -455,17 +461,15 @@
     .lists-publications-container{
         display: block;
 
-        && .publications{
-            width: 100%;
-            margin: 0 auto;
-        }
+    }
+    .publications{
+        width: 100%;
+        margin: 0 auto;
     }
 
-    .tweet-actions{
-        && img{
-            width: 13px;
-            margin-bottom: 4px;
-        }
+    .tweet-actions img{
+        width: 13px;
+        margin-bottom: 4px;
     }
 
     .trends{

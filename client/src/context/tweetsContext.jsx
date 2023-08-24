@@ -33,7 +33,6 @@ export const TweetsContextProvider = ({children}) => {
         const res = await authenticateUserRequest(authenticateData);
         localStorage.setItem("credentials", JSON.stringify(res.data));
         setSession(JSON.parse(localStorage.getItem("credentials")));
-
         return 1
     }
 

@@ -263,7 +263,7 @@ const Tweets = () => {
                             <div className='like-comment-container mt-2'>
                                      <button id="like-comment" onClick={() => commentLike(t._id, tc._id, c._id)}> <img src={hearth} alt=""></img>{c.commentLikes?.length}</button>
                                      <label><img src={chat} alt=""></img>{c.answerComments?.length}</label>
-                                     <button className="answer-comment" onClick={() => openAnswerLayout(t._id, tc._id, c._id)}>Comment</button>
+                                     <button className="answer-comment text-secondary" onClick={() => openAnswerLayout(t._id, tc._id, c._id)}>Comment</button>
                             </div>
                             {c.answerComments.map((ans) => 
                             <div key={ans._id}>
