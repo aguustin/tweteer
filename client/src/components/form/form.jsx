@@ -37,11 +37,9 @@ const Form = () => {
     const confirmUser = await setSessionContext(authenticateData);
 
     if (confirmUser !== 0) {
-      console.log("dasdsadsadasd");
       await getProfileInformationContext(session[0]._id);
       nav("/tweeterio");
     } else {
-      console.log("assdasd");
       setAdv(true);
     }
   };
