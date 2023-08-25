@@ -4,8 +4,8 @@
 
 ### IMPORTANTE:
 ### Para pode ejecutar la app una vez bajada de github hay que realizar los siguientes pasos:
-- En la terminal dentro de C:rutaDeLaCarpeta/sublimeInk instalar nodemon ( npm i nodemon -D ) y ejecutar el comando "npm run dev"
-- En otra ventana de la terminal dentro de C:rutaDeLaCarpeta/sublimeInk/client instalar los scripts de react (npm i react-scripts) y ejecutar el comando "npm start"
+- En la terminal dentro de "C:rutaDeLaCarpeta/tweeterio" instalar nodemon ( npm i nodemon -D ) y ejecutar el comando "npm run dev"
+- En otra ventana de la terminal dentro de "C:rutaDeLaCarpeta/tweeterio/client" instalar los scripts de react (npm i react-scripts) y ejecutar el comando "npm start"
 
 ## Herramientas utilizadas
 - HTML
@@ -56,21 +56,19 @@ __- index.js -__
 
 ### __form__: Verificacion de las credenciales de una cuenta admin.
 
-### __retweetForm__: .
+### __retweetForm__: Formulario para poder retweetear una publicacion ya existente.
 
-### __homeLayout__: .
-
-### __listsLayout__: .
+### __homeLayout__: Contiene imagen de portada, imagen de perfil, nombre del perfil, cantidad de usuarios seguidores y seguidos por el usuario. Tambien es en la seccion donde se puede editar toda la informacion sobre el perfil del usuario
 
 ### __nav__: Contiene el boton que despliega la navegacion lateral, el buscador de stickers y el boton que despliega el carrito de compras.
 
-### __publicTweet__: .
+### __publicTweet__: Formulario que permite realizar publicaciones en el perfil propio del usuario.
 
-### __searchLayout__: .
+### __searchLayout__: Buscador de perfiles.
 
-### __trendAndPeople__: .
+### __trendAndPeople__: Muestra seis trends ordenados de mayoor a menor por la cantidad de publicaciones hechas con un mismo hashtag.
 
-### __tweets__: .
+### __tweets__: Muestra toda la informacion respecto a las publicaciones hechas como, descripcion de la publicacion, cantidad de likes, cantidad de retweets, comentarios.
 
 ### __imgs__: Contiene imagenes para la vista de la web.
 
