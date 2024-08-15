@@ -1,20 +1,28 @@
 import "./nav.css";
 import notUser from  '../../imgs/notUser.jpg';
 import icono from "../../imgs/icono.png";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import LayoutContext from "../../context/layoutsContext";
 import TweetsContext from "../../context/tweetsContext";
 import Loading from "../loading/loading";
+import { useNavigate } from "react-router-dom";
 
 const Nav = () => {
+  const [openLogout, setOpenLogout ] = useState(false)
   const { layoutHomeContext, layoutListContext, layoutSearchContext, load } =  useContext(LayoutContext);
   const { session, getProfileInformationContext } = useContext(TweetsContext);
+  const navigation = useNavigate()
 
   const myProfile = async (e) => {
     e.preventDefault();
     await getProfileInformationContext(session);
     await layoutHomeContext(e);
   };
+
+  const logout = () => {
+    localStorage.removeItem("credentials")
+    navigation("/")
+  }
 
   if(load){
     return(
@@ -33,7 +41,10 @@ const Nav = () => {
         </div>
         <div className="navUser">
           {session[0]?.userImg ? <img src={session[0]?.userImg} alt=""></img> : <img src={notUser} alt=""></img>}
-          <button>{session[0]?.userName}</button>
+          <button onClick={() => setOpenLogout(!openLogout)}>{session[0]?.userName}</button>
+          { openLogout && <div className="logout">
+            <button onClick={() => logout()}>Log out</button>
+          </div> }
         </div>
       </nav>
     </div>

@@ -1,0 +1,20 @@
+services:
+    webapp-server:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      image: myapp-tweteer-img
+      container_name: container-tweteer-app
+      volumes:
+       - .:/app
+       - /app/node_modules
+      ports:
+        - "8080:8080"
+      depends_on:
+        - mongo
+      env_file: .env
+    mongo:
+      image: mongo
+      container_name: container-mongo-app
+      ports:
+        - "27017:27017"

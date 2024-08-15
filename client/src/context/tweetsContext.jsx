@@ -6,7 +6,7 @@ const TweetsContext = createContext();
 
 export const TweetsContextProvider = ({children}) => {
     const [ se, setSe ] = useState("");
-    const [session, setSession] = useState([]);
+    const [session, setSession] = useState();
     const [allUsers, setAllUsers] = useState([]);
     const [tweets, setTweets] = useState([]);
     const [retweet, setRetweet] = useState([]);

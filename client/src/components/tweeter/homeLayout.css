@@ -174,10 +174,9 @@ label{
 .editProfile{
     position: fixed;
     z-index: 4;
-    top: 20%;
+    top: 10%;
     left: 50%;
     background-color: white;
-    transform: translateY(-30%);
     transform: translateX(-50%);
     border-radius: 10px;
     padding: 0rem 2rem;
@@ -197,7 +196,7 @@ label{
 .form-group{
     position: relative;
     text-align: left;
-    margin-top: 50px;
+    margin-top: 10px;
 
 }
 
@@ -250,10 +249,6 @@ label{
             margin: 0 auto;
         }
         margin-left: 0rem;
-    }
-
-    .editProfile{
-        position: relative;
     }
 
     .userDesc{

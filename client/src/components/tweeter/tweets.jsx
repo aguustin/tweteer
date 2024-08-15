@@ -47,7 +47,7 @@ const Tweets = () => {
         const commentData = {
             tweetId: tweetId,
             commentsUsers: session[0]?.userName,
-            commentsProfilesImg: session[0]?.profilePhoto,
+            commentsProfilesImg: session[0]?.userImg,
             commentsImg: e.target.elements.respondTweetImg.files[0],
             commentsPublication: e.target.elements.respondTweet.value,
             commentsDate: commentsDate
@@ -55,7 +55,7 @@ const Tweets = () => {
 
         await respondTweetContext(commentData);
     }
-    
+
     const openAnswerLayout = (profileId, tweetId, commentId) => {
         setProfileId(profileId);
         setTweetId(tweetId);
@@ -76,7 +76,7 @@ const Tweets = () => {
 
         await likeContext(likeData);
     }
-
+    console.log("comments:" ,tweets)
     const commentLike = async (profileId, tweetId, commentId) => {
 
         const commentLikeData = {
@@ -113,7 +113,7 @@ const Tweets = () => {
             tweetId: tweetId,
             commentId: commentId,
             answerUsername: session[0]?.userName,
-            answerProfilesImg: session[0]?.profilePhoto,
+            answerProfilesImg: session[0]?.userImg,
             answerPublication: e.target.elements.answer.value,
             answerTweetImg: e.target.elements.answerTweetImg.files[0]
         }
@@ -140,12 +140,14 @@ const Tweets = () => {
         return (
             <form className='answer-form' onSubmit={(e) => answer(e)}>
                 <textarea type="text" placeholder='Answer comment' name="answer"></textarea>
-                <label htmlFor="answerTweetImg"><img id="labelAnsImg" src={twImg} alt=""></img></label>
-                <input id="answerTweetImg" type="file" name="answerTweetImg"></input>
-                <span  className='sepB'>
-                    <button type="button" onClick={() => closeAnswerLayout()}>Cancel</button>
-                    <button type="submit">Answer</button>
-                </span>
+                <div className='ansfile'>
+                    <label htmlFor="answerTweetImg"><img id="labelAnsImg" src={twImg} alt=""></img></label>
+                    <input id="answerTweetImg" type="file" name="answerTweetImg"></input>
+                    <span  className='sepB'>
+                        <button type="button" onClick={() => closeAnswerLayout()}>Cancel</button>
+                        <button type="submit">Answer</button>
+                    </span>
+              </div>
             </form>
         )
     }
@@ -248,7 +250,7 @@ const Tweets = () => {
                     </div>
                      {tc.comments.map((c) => 
                      <div key={c._id} className='comments-container d-flex mt-3'>
-                        <img id="comment-image-profile" src={notUser} alt=""></img>
+                        {c.commentsProfilesImg !== "undefined" ? <img id="comment-image-profile" src={c.commentsProfilesImg} alt=""></img> : <img id="comment-image-profile" src={notUser} alt=""></img>}
                         <div className='w-100'>
                              <div className='comment'>
                                 <div className='d-flex'>
@@ -269,7 +271,7 @@ const Tweets = () => {
                             <div key={ans._id}>
                                 <div className='answer-comment'>
                                      <div className='d-flex'>
-                                        <img className='answer-img' src={notUser} alt=""></img>
+                                        {ans.answerProfilesImg !== "undefined" ? <img className='answer-img' src={ans.answerProfilesImg} alt=""></img> : <img className='answer-img' src={notUser} alt=""></img>}
                                         <label>{ans.answerArroba}</label>
                                     </div>
                                     <div className="answer-width">
