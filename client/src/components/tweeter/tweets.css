@@ -382,6 +382,11 @@
     font-weight: 500;
 }
 
+.comment-width img{
+    max-width: 500px;
+    max-height: 500px;
+}
+
 .answer-comment{
     margin-top: 1rem;
     padding-left: 1rem;

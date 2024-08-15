@@ -40,8 +40,9 @@ const Nav = () => {
           <button onClick={(e) => layoutListContext(e)}>BookMarks</button>
         </div>
         <div className="navUser">
-          {session[0]?.userImg ? <img src={session[0]?.userImg} alt=""></img> : <img src={notUser} alt=""></img>}
-          <button onClick={() => setOpenLogout(!openLogout)}>{session[0]?.userName}</button>
+          
+          {session && session[0]?.userImg ? <img src={session[0]?.userImg} alt=""></img> : <img src={notUser} alt=""></img>}
+          { session && <button onClick={() => setOpenLogout(!openLogout)}>{session[0]?.userName}</button>}
           { openLogout && <div className="logout">
             <button onClick={() => logout()}>Log out</button>
           </div> }

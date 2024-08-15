@@ -1,7 +1,7 @@
 import './searchLayout.css';
 import { useContext } from "react";
 import TweetsContext from '../../context/tweetsContext';
-import prueba from "../../imgs/prueba.jpg";
+import notUser from "../../imgs/notUser.jpg";
 import LayoutContext from '../../context/layoutsContext';
 
 const SearchLayout = (users) => {
@@ -19,14 +19,14 @@ const SearchLayout = (users) => {
         await getProfileInformationContext(session);
         await layoutHomeContext(e);
     };
-
+    console.log("us: " ,users)
     return(
         <div>
             {se ?
         <div className="searchedPeople">
              {users.users.map((all) => <div className="peopleData">
                     <div>
-                        <img src={prueba} alt=""></img>
+                       {all.userImg ? <img src={all.userImg} alt=""></img> : <img src={notUser} alt=""></img> }
                     </div>
                     <div className='data'>
                         <p>{all.userName}</p>

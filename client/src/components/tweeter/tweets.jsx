@@ -26,15 +26,17 @@ const Tweets = () => {
     let month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const commentsDate = `${day[fecha.getDay()]}, ${fecha.getDate()} ${month[fecha.getMonth()]} - ${fecha.getHours()}:${fecha.getMinutes()}`;
     const {homeLayout, listsLayout, searching} = useContext(LayoutContext);
-    const {session, allUsers, tweets, se, setSe, retweetLayout, respondTweetContext, answerContext, likeContext, likeCommentContext, answerLikeContext, retweetContext, saveTweetContext, getProfileInformationContext, getAllTendContext} = useContext(TweetsContext);
+    const {session, allUsers, tweets, se, setSe, retweetLayout, respondTweetContext, answerContext, likeContext, likeCommentContext, answerLikeContext, retweetContext, saveTweetContext, getProfileInformationContext, getAllTendContext, deleteTweetContext} = useContext(TweetsContext);
     
     useEffect(() => {
         (async() => {
-            await getProfileInformationContext(session[0]?._id);
-            await getAllTendContext();
+            if (session) {
+                await getProfileInformationContext(session[0]._id);
+                await getAllTendContext();
+            }
         })();
         // eslint-disable-next-line
-    },[session[0]?._id]);
+    }, [session]);
 
     const searchs = (e) => {
         e.preventDefault();
@@ -52,6 +54,10 @@ const Tweets = () => {
             commentsPublication: e.target.elements.respondTweet.value,
             commentsDate: commentsDate
         }
+
+        let textarea = document.querySelector('#respondTweet');
+        textarea.value = '';
+       
 
         await respondTweetContext(commentData);
     }
@@ -135,6 +141,10 @@ const Tweets = () => {
         setBlackLayout(!black);
     }
 
+    const deleteTweet = async (tweetId) => {
+        await deleteTweetContext(tweetId);
+    }
+
     const Answer = () => {
         setBlackLayout(true);
         return (
@@ -176,6 +186,7 @@ const Tweets = () => {
                         <div key={t._id}>
                         {t.tweets.map((tc) => 
                         <div key={tc._id} className='t-backg'>
+                        <button onClick={() => deleteTweet(tc._id)}>X</button>
                         {tc.retweeted === 1 ?  
                         <div className='retweets'>
                         <div className='retweets-info d-flex'>
@@ -238,7 +249,7 @@ const Tweets = () => {
                     {listsLayout ? '' :  
                         <form className='comments-form mt-2' encType='multipart/form-data' onSubmit={(e) => respondTweet(e, tc._id)}>
                              <div className='d-flex'>
-                                 {session[0].profilePhoto ? <img src={session[0].profilePhoto} alt=""></img> : <img src={notUser} alt=""></img>}
+                                 {session[0].userImg ? <img src={session[0].userImg} alt=""></img> : <img src={notUser} alt=""></img>}
                                 <textarea id="respondTweet" type="text" name="respondTweet" placeholder='Tweet your reply'></textarea>
                             </div>
                             <div className='cImgComment'>

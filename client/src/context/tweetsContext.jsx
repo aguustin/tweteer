@@ -158,6 +158,13 @@ export const TweetsContextProvider = ({children}) => {
         setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
         setTweets(res.data);
     }
+console.log("tw: ", tweets)
+    const deleteTweetContext = async (tweetId) => {
+        /*const res = await deleteTweetRequest(tweetId)
+        setTweets(tweets.map((t) => tweets.id))
+       /* setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
+        setTweets(res.data);*/
+    }
 
     return(
         <TweetsContext.Provider value={{

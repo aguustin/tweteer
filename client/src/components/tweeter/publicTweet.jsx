@@ -58,7 +58,7 @@ const PublicTweet = () => {
           <p>Tweet something</p>
         </div>
         <div className="d-flex">
-          {session[0]?.userImg ? <img id="public-img" src={session[0]?.userImg} alt=""></img> :  <img id="public-img" src={notUser} alt=""></img>}
+          { session && session[0]?.userImg ? <img id="public-img" src={session[0]?.userImg} alt=""></img> :  <img id="public-img" src={notUser} alt=""></img>}
           <form onSubmit={(e) => createTweet(e)} className="public-form-size align-items-center" encType="multipart/form-data">
             <textarea type="text" placeholder="What's happening?" name="publication" onChange={hashtagTweet}></textarea>
             <div className="d-flex">
