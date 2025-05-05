@@ -141,6 +141,7 @@
 }
 
 .t-backg{
+    position: relative;
     background-color: rgb(247, 247, 247);
     margin-top: 2rem;
     padding: 3rem 1rem;
@@ -223,6 +224,7 @@
     transform: translateX(-50%);
     background-color: white;
     padding: 1rem;
+    border-radius: 10px;
 }
 
 .answer-form textarea{
@@ -256,6 +258,11 @@
 .sepB{
     position: absolute;
     right: 0;
+}
+#labelAnsImg{
+    position:absolute;
+    left: 10px;
+    bottom:0px
 }
 
 .answer-form button:hover{
@@ -458,8 +465,17 @@
 }
 
 .ansfile{
+    position: relative;
     display: flex;
     align-items: center;
+    
+}
+
+.deleteButton{
+    position: absolute;
+    right:10px;
+    top:10px;
+    background-color: transparent;
 }
 
 @media  screen and (max-width: 1120px) {

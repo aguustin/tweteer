@@ -705,3 +705,13 @@ export const deleteAllController = async (req, res) => {
     await tweets.deleteMany();
     res.sendStatus(200);
 }
+
+export const deleteTweetController = async (req, res) => {
+    const {userId, tweetId} = req.body
+    await tweets.updateOne(
+        { _id: userId },
+        { $pull: { tweets: { _id: tweetId } } }
+    )
+
+    res.sendStatus(200)
+}

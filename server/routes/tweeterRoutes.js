@@ -17,7 +17,8 @@ import { createTweetController,
      getAllTendController,
      getTendenciesController,
      getAllTweetsController,
-     deleteAllController 
+     deleteAllController,
+     deleteTweetController 
      } from "../controllers/tweetsController.js";
 
 const router = Router();
@@ -59,5 +60,7 @@ router.get('/getTendencies/:tendencie', getTendenciesController);
 router.get('/explore', getAllTweetsController);
 
 router.delete('/deleteAll', deleteAllController);
+
+router.post('/deleteTweet', deleteTweetController)
 
 export default router;

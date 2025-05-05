@@ -5,9 +5,11 @@ import TweetsContext from "../../context/tweetsContext";
 
 const Form = () => {
   const nav = useNavigate();
-  const { session, createUserContext, setSessionContext, getProfileInformationContext } = useContext(TweetsContext);
+  const { /*session,*/ createUserContext, setSessionContext, getProfileInformationContext } = useContext(TweetsContext);
   const [form, setForm] = useState(false);
   const [adv, setAdv] = useState(false);
+
+
 
   const createUser = async (e) => {
     const userMail = e.target.elements.userMail.value;
@@ -28,19 +30,21 @@ const Form = () => {
 
   const authenticateUser = async (e) => {
     e.preventDefault();
+    console.log('eeeeeeee')
     const userMail = e.target.elements.userMail.value;
     const password = e.target.elements.password.value;
     const authenticateData = {
       userMail: userMail,
       password: password,
     };
-    const confirmUser = await setSessionContext(authenticateData);
+    const confirmUser =  await setSessionContext(authenticateData);
+    console.log(confirmUser)
 
-    if (confirmUser !== 0) {
-      await getProfileInformationContext(session[0]._id);
-      nav("/tweeterio");
-    } else {
+    if (confirmUser === 2) {
       setAdv(true);
+    } else {
+      await getProfileInformationContext(confirmUser[0]._id);
+      nav("/tweeterio");
     }
   };
 
@@ -89,11 +93,11 @@ const Form = () => {
           </div>
           <div>
             <div className="form-group">
-              <input type="text" name="userMail" placeholder="..." required/>
+              <input  type="text" name="userMail"  placeholder="..." autoComplete="off" required/>
               <label>Mail</label>
             </div>
             <div className="form-group">
-              <input type="password" name="password" placeholder="..." required/>
+              <input autoComplete="off" type="password" name="password"  placeholder="..." required/>
               <label>Password</label>
             </div>
           </div>
@@ -111,7 +115,7 @@ const Form = () => {
   return (
     <div className="body-form">
       <div>
-        {adv ? <p>Wrong password!</p> : ''}
+        {adv ? <p>Credenciales incorrectas</p> : ''}
         {form ? <Register /> : <Login />}</div>
     </div>
   );
