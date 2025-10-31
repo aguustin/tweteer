@@ -14,6 +14,7 @@ import LayoutContext from '../../context/layoutsContext';
 import Nav from './nav';
 import notUser from  '../../imgs/notUser.jpg';
 import TweetsContext from '../../context/tweetsContext';
+import closePng from '../../imgs/close.png'
 
 const Tweets = () => {
     const [ answerLayout, setAnswerLayout ] = useState(false);
@@ -21,6 +22,7 @@ const Tweets = () => {
     const [ profileId, setProfileId ] = useState();
     const [ tweetId, setTweetId ] = useState();
     const [ commentId, setCommentId ] = useState();
+    
     let fecha = new Date();
     let day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     let month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -141,8 +143,9 @@ const Tweets = () => {
         setBlackLayout(!black);
     }
 
-    const deleteTweet = async (tweetId) => {
-        await deleteTweetContext(tweetId);
+    const deleteTweet = async (userId, tweetId) => {
+        console.log("asdasdasd")
+        await deleteTweetContext(userId, tweetId);
     }
 
     const Answer = () => {
@@ -151,16 +154,19 @@ const Tweets = () => {
             <form className='answer-form' onSubmit={(e) => answer(e)}>
                 <textarea type="text" placeholder='Answer comment' name="answer"></textarea>
                 <div className='ansfile'>
-                    <label htmlFor="answerTweetImg"><img id="labelAnsImg" src={twImg} alt=""></img></label>
-                    <input id="answerTweetImg" type="file" name="answerTweetImg"></input>
-                    <span  className='sepB'>
+                    <div className='sepIn'>
+                        <label htmlFor="answerTweetImg"><img id="labelAnsImg" src={twImg} alt=""></img></label>
+                        <input id="answerTweetImg" type="file" name="answerTweetImg"></input>
+                    </div>
+                    <div  className='sepB'>
                         <button type="button" onClick={() => closeAnswerLayout()}>Cancel</button>
                         <button type="submit">Answer</button>
-                    </span>
+                    </div>
               </div>
             </form>
         )
     }
+
 
     return(
         <div>
@@ -186,7 +192,7 @@ const Tweets = () => {
                         <div key={t._id}>
                         {t.tweets.map((tc) => 
                         <div key={tc._id} className='t-backg'>
-                        <button onClick={() => deleteTweet(tc._id)}>X</button>
+                        <button className='deleteButton' onClick={() => deleteTweet(session[0]._id, tc._id)}><img src={closePng} alt=""></img></button>
                         {tc.retweeted === 1 ?  
                         <div className='retweets'>
                         <div className='retweets-info d-flex'>
@@ -203,7 +209,7 @@ const Tweets = () => {
                         <div className='tweetDesc-img border border-info p-4 mt-2' >
                             <div className='tweetProfileData'>
                                 <div>
-                                {tc.profileRetweetedImg ? <img id='tweetProfileImg' src={tc.profileRetweetedImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
+                                {tc.tweetProfileImg ? <img id='tweetProfileImg' src={tc.tweetProfileImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
                                 </div>
                                 <div>
                                     <p>{tc.retweetedUserName}</p>

@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { authenticateUserRequest, createUserRequest, editPasswordRequest, editProfileRequest, followRequest, checkFollowRequest, unFollowRequest, getAllUsersRequest } from "../api/userRequests";
-import { createTweetRequest, respondTweetRequest, searchRequest, answerRequest, retweetRequest, saveTweetRequest, saveRetweetRequest, increaseLikesRequest, increaseCommentLikesRequest, increaseAnswerLikesRequest, getProfileInformationRequest, exploreTweetsRequest, getTendenciesRequest, getAllTendRequest } from "../api/tweetsRequests";
+import { createTweetRequest, respondTweetRequest, searchRequest, answerRequest, retweetRequest, saveTweetRequest, saveRetweetRequest, increaseLikesRequest, increaseCommentLikesRequest, increaseAnswerLikesRequest, getProfileInformationRequest, exploreTweetsRequest, getTendenciesRequest, getAllTendRequest, deleteTweetRequest } from "../api/tweetsRequests";
 
 const TweetsContext = createContext();
 
@@ -31,9 +31,17 @@ export const TweetsContextProvider = ({children}) => {
 
     const setSessionContext = async (authenticateData) => {
         const res = await authenticateUserRequest(authenticateData);
-        localStorage.setItem("credentials", JSON.stringify(res.data));
-        setSession(JSON.parse(localStorage.getItem("credentials")));
-        return 1
+        if(res.data !== 2){
+            console.log('aca b')
+            
+            await localStorage.setItem("credentials", JSON.stringify(res.data));
+            await setSession(JSON.parse(localStorage.getItem("credentials")));
+            
+            return res.data
+        }else{
+            console.log('aca')
+            return res.data
+        }
     }
 
     const editProfileContext = async (editData) => {
@@ -158,12 +166,21 @@ export const TweetsContextProvider = ({children}) => {
         setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
         setTweets(res.data);
     }
-console.log("tw: ", tweets)
-    const deleteTweetContext = async (tweetId) => {
-        /*const res = await deleteTweetRequest(tweetId)
-        setTweets(tweets.map((t) => tweets.id))
-       /* setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
-        setTweets(res.data);*/
+
+    const deleteTweetContext = async (userId, tweetId) => {
+        console.log("eee")
+        const tweetObj = {
+            userId: userId,
+            tweetId: tweetId
+        }
+        await deleteTweetRequest(tweetObj)
+        setTweets(prevUsers => {
+            return prevUsers.map(user => ({
+              ...user,
+              tweets: user.tweets.filter(tweet => tweet._id !== tweetId)
+            }));
+          });
+      
     }
 
     return(
@@ -205,7 +222,8 @@ console.log("tw: ", tweets)
             getProfileInformationContext,
             seeProfileContext,
             getAllTendContext,
-            getTendenciesContext
+            getTendenciesContext,
+            deleteTweetContext
         }}>{children}</TweetsContext.Provider>
     )
 }

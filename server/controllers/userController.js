@@ -48,14 +48,16 @@ export const authenticateUserController = async (req, res) => {
 
     if(usersExist.length !== 0){
         let authenticatePassword = bcrypt.compareSync(password, usersExist[0].password);
-        if(authenticatePassword !== 0){
+        console.log(authenticatePassword)
+        if(authenticatePassword){
             res.send(usersExist);
         }else{
-            console.log("contrasena incorrecta");
+            res.status(200).json(2)
         }
     }else{
-        console.log("el usuario no existe");
+        res.status(200).json(2)
     }
+    
 }
 
 export const editProfileController = async (req, res) => {

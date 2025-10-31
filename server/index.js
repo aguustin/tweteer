@@ -5,12 +5,13 @@ import { port } from "./config.js";
 import { dbConnection } from "./db.js";
 import tweeterRoutes from "./routes/tweeterRoutes.js";
 import usersRoutes from "./routes/usersRoutes.js";
+import cors from "cors"
 
 dbConnection();
 const app = express();
 
 //settings
-
+app.use(cors())
 //middlewares
 app.use(express.text());
 app.use(express.json());
