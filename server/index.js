@@ -20,7 +20,6 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 
-app.use(cors())
 //middlewares
 app.use(express.text());
 app.use(express.json());
