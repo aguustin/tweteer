@@ -1,287 +1,549 @@
-.back{
-    position: fixed;
-    background-color: black;
-    top:0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    opacity: .7;
-    z-index: 3;
+/* Overlay de fondo */
+
+
+.back {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  animation: fadeIn 0.3s ease;
 }
 
-.profileInfo{
-    width: 100vw;
-    position: relative;
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.portadaProfile{
-    width: 100%;
-    z-index: 0;
-}
-.portadaProfile img{
-    width: 100%;
-    height: 350px;
-    object-fit:cover;
-}
-
-.profileDesc{
-    width: 86vw;
-    display: flex;
-    background-color: white;
-    border-radius: 10px;
-    top:300px;
-    transform: translateX(-1vw);
-    padding-bottom: 2rem;
-    box-shadow: 0px 1px 3px 0px rgba(168,168,168,0.75);
-    -webkit-box-shadow: 0px 1px 3px 0px rgba(168,168,168,0.75);
-    -moz-box-shadow: 0px 1px 3px 0px rgba(168,168,168,0.75);
+/* Contenedor del perfil */
+.profileInfo {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 25px;
 }
 
-#editLayout{
-    position: absolute;
-    right: 1rem;
-    top:1rem;
-    border-style:none;
-    background-color: rgb(65, 65, 248);
-    color: white;
-    font-weight: 600;
-    border-radius: 5px;
-    padding: .5rem 1.3rem;
+/* Portada del perfil */
+.portadaProfile {
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
 }
 
-#editLayout:hover{
-    background-color: rgb(99, 99, 255);
-    transform: translateY(-2px);
-    transition: all .5s;
+.portadaProfile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.photoUser{
-    position: relative;
-    width: 18vw;
-    margin-left: 1rem;
-    height: 130px;
+/* Descripción del perfil */
+.profileDesc {
+  padding: 0 30px 30px;
+  position: relative;
+  max-width: 100%;
 }
 
-.photoUser img{
-    position: relative;
-    bottom: 6vh;
-    width: 16vw;
-    height: 16vh;
+/* Foto de usuario */
+.photoUser {
+  width: 140px;
+  height: 140px;
+  margin: -70px auto 0;
+  position: relative;
+  z-index: 10;
 }
 
-.userDesc{
-    width: 34vw;
-    margin-top: 1rem;
-    margin-left: 1.5rem;
-    text-align: left;
+.photoUser img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6px solid white;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.userDesc button{
-    background-color: transparent;
-    color: rgb(182, 182, 182);
+/* Información del usuario */
+.userDesc {
+  text-align: center;
+  margin-top: 20px;
 }
 
-.userDesc-cont{
-    text-align: center;
-    display: flex;
+.userDesc-cont {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 
-.followsLayout{
-    position: absolute;
-    max-height: 500px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    overflow-y: scroll;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0px 1px 3px 0px rgba(168,168,168,0.75);
-    -webkit-box-shadow: 0px 1px 3px 0px rgba(168,168,168,0.75);
-    -moz-box-shadow: 0px 1px 3px 0px rgba(168,168,168,0.75);
+.userDesc-cont h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
 }
 
-label{
-    color: rgb(182, 182, 182);
+.userDesc-cont > div:last-child {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.people-header{
-    background-color: rgba(65,65,248,0.75);
+.userDesc-cont button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  background: rgba(102, 126, 234, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.userDesc-cont button:hover {
+  background: rgba(102, 126, 234, 0.2);
+  transform: translateY(-2px);
+}
+
+.userDesc-cont button label {
+  color: #667eea;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Descripción del usuario */
+.description {
+  margin: 20px 0;
+}
+
+.description p {
+  color: #4a4a4a;
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Botón de editar/seguir */
+#editLayout {
+  display: block;
+  margin: 25px auto;
+  padding: 12px 40px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#editLayout:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+
+/* Explorar tweets */
+.explore {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+  gap: 10px;
+}
+
+.explore input {
+  flex: 1;
+  max-width: 400px;
+  padding: 12px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 25px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
+}
+
+.explore input:focus {
+  outline: none;
+  border-color: #667eea;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.explore button[type="submit"] {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.explore button[type="submit"]:hover {
+  transform: scale(1.1);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.explore button[type="submit"]::before {
+  content: '🔍';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+}
+
+/* Modal de editar perfil */
+.editProfile {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+  padding: 35px;
+  width: 90%;
+  max-width: 550px;
+  max-height: 85vh;
+  overflow-y: auto;
+  z-index: 1000;
+  animation: slideInModal 0.4s ease-out;
+}
+
+@keyframes slideInModal {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -45%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.editProfile .form-group {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.editProfile .form-group input[type="file"] {
+  width: 100%;
+  padding: 12px;
+  border: 2px dashed #e0e0e0;
+  border-radius: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
+}
+
+.editProfile .form-group input[type="file"]:hover {
+  border-color: #667eea;
+  background: white;
+}
+
+.editProfile .form-group input[type="text"] {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
+  box-sizing: border-box;
+}
+
+.editProfile .form-group input[type="text"]:focus {
+  outline: none;
+  border-color: #667eea;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.editProfile .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #666;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.editProfile > form > div:last-child {
+  display: flex;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.editProfile button {
+  flex: 1;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.editProfile button[type="submit"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.editProfile button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+
+.editProfile button:not([type="submit"]) {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.editProfile button:not([type="submit"]):hover {
+  background: #f8f9fa;
+}
+
+/* Layout de seguidores/siguiendo */
+.followsLayout {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+  width: 90%;
+  max-width: 500px;
+  max-height: 70vh;
+  overflow-y: auto;
+  z-index: 1000;
+  animation: slideInModal 0.4s ease-out;
+}
+
+/* Header de seguidores */
+.people-header {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px 25px;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px 20px 0 0;
+  z-index: 10;
+}
+
+.people-header p {
+  color: white;
+  font-weight: 700;
+  font-size: 20px;
+  margin: 0;
+}
+
+.people-header button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.people-header button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+/* Lista de personas */
+.people {
+  padding: 20px 25px;
+  gap: 15px;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.2s ease;
+}
+
+.people:hover {
+  background: #fafafa;
+}
+
+#followsButton {
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+#followsButton img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+#followsButton:hover img {
+  border-color: #667eea;
+  transform: scale(1.05);
+}
+
+.people > div {
+  flex: 1;
+}
+
+.people > div > p {
+  font-weight: 700;
+  color: #1a1a1a;
+  font-size: 16px;
+  margin: 0 0 8px 0;
+}
+
+.people > div > div {
+  display: flex;
+  gap: 15px;
+}
+
+.people label {
+  color: #666;
+  font-size: 13px;
+}
+
+/* Scrollbar personalizado */
+.followsLayout::-webkit-scrollbar,
+.editProfile::-webkit-scrollbar {
+  width: 8px;
+}
+
+.followsLayout::-webkit-scrollbar-track,
+.editProfile::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.followsLayout::-webkit-scrollbar-thumb,
+.editProfile::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 10px;
+}
+
+.followsLayout::-webkit-scrollbar-thumb:hover,
+.editProfile::-webkit-scrollbar-thumb:hover {
+  background: #764ba2;
+}
+
+/* Utilidades */
+.d-flex {
+  display: flex;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .portadaProfile {
+    height: 180px;
+  }
+
+  .photoUser {
+    width: 110px;
+    height: 110px;
+    margin-top: -55px;
+  }
+
+  .photoUser img {
+    border: 4px solid white;
+  }
+
+  .profileDesc {
+    padding: 0 20px 20px;
+  }
+
+  .userDesc-cont h1 {
+    font-size: 24px;
+  }
+
+  .description p {
+    font-size: 15px;
+  }
+
+  .editProfile,
+  .followsLayout {
+    width: 95%;
+    padding: 25px;
+  }
+
+  .explore input {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .portadaProfile {
+    height: 150px;
+  }
+
+  .photoUser {
+    width: 90px;
+    height: 90px;
+    margin-top: -45px;
+  }
+
+  .userDesc-cont h1 {
     font-size: 20px;
-    color: white;
-    justify-content: center;
-    align-items: center;
-}
+  }
 
-.people-header p{
-    margin-top: 10px;
-}
-.people-header button{
-    position: absolute;
-    height: 0px;
-    top:1px;
-    right: 5px;
-    background-color: transparent;
-    color: white;
-}
+  .userDesc-cont > div:last-child {
+    flex-direction: column;
+    gap: 10px;
+  }
 
-.people{
-    
-    border-bottom: 1px solid black;
-    padding: .8rem 2rem 2rem;
-    margin-top: 0;
-    align-items: center;
-    justify-content: center;
-}
-
-
-#followsButton{
-    position: relative;
-    margin-top: 0;
-}
-.people img {
-    border-radius: 25px;
-    width: 50px;
-    height: 50px;
-    margin: 0 auto;
-}
-.people p{
-    font-weight: 600;
-}
-.people label{
-    margin-top: 0;
-}
-
-.followsLayout::-webkit-scrollbar{
-    background-color: transparent;
-    width: 4px;
-}
-
-.followsLayout::-webkit-scrollbar-thumb{
-    background-color: rgba(168,168,168,0.75);
-    border-radius: 10px;
-}
-
-#followsButton{
-    background-color: transparent;
-    left: 0;
-}
-
-.description{
-    margin-top: 1.2rem;
-    font-weight: 600;
-}
-
-.editProfile{
-    position: fixed;
-    z-index: 4;
-    top: 10%;
-    left: 50%;
-    background-color: white;
-    transform: translateX(-50%);
-    border-radius: 10px;
-    padding: 0rem 2rem;
-}
-
-.editProfile button{
-    padding: .5rem 1rem;
-    background-color: transparent;
-    border-radius: 5px;
-    font-weight: 600;
-    margin: 2rem;
-    box-shadow: 0px 1px 4px -1px rgba(65,65,248,0.75);
-    -webkit-box-shadow: 0px 1px 4px -1px rgba(65,65,248,0.75);
-    -moz-box-shadow: 0px 1px 4px -1px rgba(65,65,248,0.75);
-}
-
-.form-group{
-    position: relative;
-    text-align: left;
-    margin-top: 10px;
-
-}
-
-.form-group input{
+  .userDesc-cont button {
     width: 100%;
-    padding: .5rem;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    border-bottom: 1px solid rgb(65, 65, 248);
-    outline: none;
+  }
+
+  #editLayout {
+    width: 100%;
+  }
+
+  .explore {
+    flex-direction: column;
+  }
+
+  .explore input {
+    width: 100%;
+  }
+
+  .people {
+    padding: 15px;
+  }
+
+  #followsButton img {
+    width: 44px;
+    height: 44px;
+  }
 }
-
-.form-group label{
-    position: absolute;
-    top:-25px;
-    left: -20px;
-}
-
-.explore{
-    position: absolute;
-    right: 1rem;
-    bottom: 1rem;
-}
-
-.explore input{
-    padding: .5rem .7rem;
-    outline: none;
-    background-color: rgb(247, 247, 247);
-    border:1px solid transparent;
-    border-radius: 25px;
-}
-
-.explore button{
-    background-color: transparent;
-    cursor: default;
-}
-
-@media screen and (max-width: 935px) {
-
-    .profileInfo{
-       display: block;
-    }
-
-    .photoUser{
-        width: 100%;
-        && img{
-            width: 180px;
-            height: 180px;
-            margin: 0 auto;
-        }
-        margin-left: 0rem;
-    }
-
-    .userDesc{
-        width: 50%;
-        margin: 0 auto;
-        display: block;    
-    }
-
-    .userDesc-cont{
-        margin-top: 1.5rem;
-        text-align: center;
-        display: block;
-    }
-
-    .profileDesc{
-        display: block;
-    }
-
-    .explore{
-        position: relative;
-        margin-top: 3rem;
-        left: .4rem;
-        bottom: 0rem;
-    }
-
-    #editLayout{
-        position: relative;
-        right: 0rem;
-    }
-
-    .description{
-        text-align: center;
-    }
-
-}
-

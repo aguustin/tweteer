@@ -1,8 +1,4 @@
-@font-face {
-  font-family: 'arista';
-  src: url("./fonts/Roboto-Light.ttf") 
 
-}
 
 * img{
   object-fit: cover;
@@ -17,8 +13,4 @@
   text-align: center;
   overflow-x: hidden;
 
-}
-
-.App p{
-  font-family: arista;
 }

@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import "./index.css";
 import { LayoutContextProvider } from './context/layoutsContext';
 import { BrowserRouter , Routes ,Route } from 'react-router-dom';
 import Tweets from './components/tweeter/tweets';
