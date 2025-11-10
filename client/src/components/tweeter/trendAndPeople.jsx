@@ -5,20 +5,18 @@ import TweetsContext from '../../context/tweetsContext';
 import LayoutContext from '../../context/layoutsContext';
 
 const TrendAndPeople = () => {
-
-    const {allUsers, tendencies, getTendenciesContext} = useContext(TweetsContext);
-    const {layoutSearchContext, layoutHomeContext} = useContext(LayoutContext);
-    const { session, seeProfileContext, getProfileInformationContext } = useContext(TweetsContext);
+    const { allUsers, tendencies, getTendenciesContext, session, seeProfileContext, getProfileInformationContext } = useContext(TweetsContext);
+    const { layoutSearchContext, layoutHomeContext } = useContext(LayoutContext);
 
     const seeProfile = async (e, userId) => {
         e.preventDefault();
         await seeProfileContext(userId);
         layoutHomeContext(e);
-    }
+    };
 
     const myProfile = async (e) => {
         e.preventDefault();
-        await getProfileInformationContext(session);
+        await getProfileInformationContext(session[0]._id);
         await layoutHomeContext(e);
     };
     
@@ -26,53 +24,92 @@ const TrendAndPeople = () => {
         e.preventDefault();
         await layoutSearchContext();
         await getTendenciesContext(tendencie);
-    }
+    };
 
-    let a = tendencies.slice(0, 7);
-    let users = allUsers.slice(0, 4);
-    return(
+    const topTrends = tendencies.slice(0, 7);
+    const suggestedUsers = allUsers.slice(0, 4);
+
+    return (
         <div className="trendAndPeople">
             <div className="trends">
-                <div className='trends-header'>
-                    <p>Trends for you</p>
+                <div className='trends-header p-2'>
+                    <p>Tendencias para ti</p>
                 </div>
                 <div>
-                { 
-                a?.map((tend, o) => <span key={o}>  
-                {tend?._id.map((t, i) => <span key={i}> 
-                        <div className='trendsDivs' onClick={(e) => getTendencie(e, t.word)}>
-                            <p>#{t.word}</p>
-                            <label>{t?.countH} Tweets</label>
+                    {topTrends?.length > 0 ? (
+                        topTrends.map((tend, index) => (
+                            <span key={index}>  
+                                {tend?._id?.map((t, i) => (
+                                    <span key={i}> 
+                                        <div 
+                                            className='trendsDivs' 
+                                            onClick={(e) => getTendencie(e, t.word)}
+                                            role="button"
+                                            tabIndex={0}
+                                            onKeyPress={(e) => {
+                                                if (e.key === 'Enter') getTendencie(e, t.word);
+                                            }}
+                                        >
+                                            <p>#{t.word}</p>
+                                            <label>{t?.countH || 0} Tweets</label>
+                                        </div>
+                                    </span>
+                                ))}
+                            </span>
+                        ))
+                    ) : (
+                        <div style={{ padding: '20px', textAlign: 'center', color: '#999' }}>
+                            <p>No hay tendencias disponibles</p>
                         </div>
-                
-                        </span>
-                )}
-                </span>
-                )}
+                    )}
                 </div>
             </div>
 
-            {users.map((allU) => <div key={allU._id} className="people">
-                <div className='mx-auto'>
-                    <div className='trends-header'>
-                        <label>Who to follow</label>
-                    </div>
-                    <div className="people-body d-flex">
-                        {allU.userImg ? <div><img id="peopleImg" src={allU?.userImg} alt=""></img></div> : <div><img id="peopleImg" src={notUser} alt=""></img></div> }
-                        <div className='user-followers'>
-                            <p >{allU.userName}</p>
-                            <label>{allU.followers.length} Followers</label>
-                            <label>{allU.following.length} Following</label>
+            {suggestedUsers.map((user) => (
+                <div key={user._id} className="people">
+                    <div className='mx-auto'>
+                        <div className='trends-header'>
+                            <label>👥 A quién seguir</label>
                         </div>
-                        {allU._id === session[0]?._id ? <button onClick={(e) => myProfile(e)}>See profile</button> : <button onClick={(e) => seeProfile(e, allU._id)}>See profile</button>}
-                    </div>
-                    <div className='peoplePortada text-center'>
-                        {allU.userPortada ? <img src={allU?.userPortada} alt=""></img> : <img src={notUser} alt=""></img> }
+                        
+                        <div className="people-body d-flex">
+                            <div>
+                                <img 
+                                    id="peopleImg" 
+                                    src={user.userImg || notUser} 
+                                    alt={`${user.userName}'s profile`}
+                                />
+                            </div>
+                            <div className='user-followers'>
+                                <p>{user.userName}</p>
+                                <label>👤 {user.followers?.length || 0} Seguidores</label>
+                                <label>🔗 {user.following?.length || 0} Siguiendo</label>
+                            </div>
+                        </div>
+                        
+                        <div className='peoplePortada text-center'>
+                            <img 
+                                src={user.userPortada || notUser} 
+                                alt={`${user.userName}'s cover`}
+                            />
+                        </div>
+                        
+                        <div>
+                            {user._id === session[0]?._id ? (
+                                <button onClick={myProfile}>
+                                    Ver mi perfil
+                                </button>
+                            ) : (
+                                <button onClick={(e) => seeProfile(e, user._id)}>
+                                    Ver perfil
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>)}
+            ))}
         </div>
-    )
-}
+    );
+};
 
 export default TrendAndPeople;

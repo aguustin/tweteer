@@ -9,7 +9,7 @@ export const getProfileInformationController = async (req, res) => {
    if(userId && sessionId){
         const userFollows = await tweets.find({_id: userId}, {followers: { _id: sessionId }});  //buscar dentro del userId                                                        
         
-        if(userFollows.length > 0){ 
+        if(userFollows?.length > 0){ 
             const getProfile = await tweets.find({_id: userId}).sort({"tweets._id": -1});
             res.send(getProfile);
 
@@ -68,140 +68,51 @@ export const getProfileInformationController = async (req, res) => {
 }
 
 export const createTweetController = async (req, res) => {
-    const {userId, userImg, userName, publication, tweetPrivacy, tweetDate, hashtag} = req.body;
-    const firstTweet = await tweets.find({_id: userId});
+  try {
+    const { userId, userImg, userName, publication, tweetPrivacy, tweetDate, hashtag } = req.body;
     let tweetImg;
-    let sumTendencie;
-
-    if(hashtag.length > 0){
-        if(firstTweet.length > 0){
-            if(req.files?.tweetImg){
-                const result = await tweetsUploader(req.files.tweetImg.tempFilePath);
-                tweetImg = result.secure_url;
-                await fs.remove(req.files.tweetImg.tempFilePath);
-            }
-            await tweets.updateOne(
-                {_id: userId},
-                {
-                    $addToSet:{
-                        tweets:{
-                            tweetUserId: userId,
-                            tweetProfileImg: userImg,
-                            tweetUsername: userName,
-                            tweetPublication: publication,
-                            tweetImg: tweetImg,
-                            tweetPrivacy: tweetPrivacy,
-                            tweetDate: tweetDate,
-                            retweets: 0,
-                            hashtags:[{ word: hashtag }]
-                        }
-                    }
-                }
-                )
-            const updateState = await tweets.find({_id: userId});
-            res.send(updateState);
-            
-        }else{
-            const saveTweet = new tweets({
-                _id: userId,
-                userName: userName,
-                tweets:[{
-                    tweetProfileImg: userImg,
-                    tweetUsername: userName,
-                    tweetPublication: publication,
-                    tweetImg: tweetImg,
-                    tweetPrivacy: tweetPrivacy,
-                    tweetDate: tweetDate,
-                    retweets: 0,
-                    hashtags:[{ word: hashtag }] 
-                }]
-            })
-            await saveTweet.save();
-            res.send(saveTweet);
+    const updated = await tweets.findOne({ _id: userId });
+    if(updated){
+        if (req.files?.tweetImg) {
+        const result = await tweetsUploader(req.files.tweetImg.tempFilePath);
+        tweetImg = result.secure_url;
+        await fs.remove(req.files.tweetImg.tempFilePath);
         }
-        sumTendencie = await tweets.aggregate([
-        {
-            $project: {
-                tweets: {
-                $filter: {
-                    input: "$tweets",
-                    as:"tweets",
-                    cond: {
-                         $eq: ["$$tweets.hashtags.word", [hashtag]]
-                    }
-                    },
-                }
-            }
-        },   
-        ])
-
-        if(sumTendencie.length > 0){
-           const tweetId = sumTendencie[0].tweets[0]?._id.toString();
-           const hashtagId = sumTendencie[0].tweets[0]?.hashtags[0]._id.toString();
-           
-            await tweets.updateOne(
-                {_id: sumTendencie[0]._id},
-                {
-                        $inc:{
-                            "tweets.$[t].hashtags.$[i].countH": 1
-                        }
-                },
-                {
-                    arrayFilters:[
-                       { "t._id": tweetId },
-                       { "i._id": hashtagId }
-                    ]
-                }
-            )
-        }
-
-    }else{
-    
-    if(firstTweet.length > 0){
-        if(req.files?.tweetImg){
-            const result = await tweetsUploader(req.files.tweetImg.tempFilePath);
-            tweetImg = result.secure_url;
-            await fs.remove(req.files.tweetImg.tempFilePath);
-        }
+        console.log(userId, userImg, userName, publication, tweetPrivacy, tweetDate, hashtag)
         await tweets.updateOne(
-            {_id: userId},
-            {
-                $addToSet:{
-                    tweets:{
-                        tweetUserId: userId,
-                        tweetProfileImg: userImg,
-                        tweetUsername: userName,
-                        tweetPublication: publication,
-                        tweetImg: tweetImg,
-                        tweetPrivacy: tweetPrivacy,
-                        tweetDate: tweetDate,
-                        retweets: 0
-                    }
-                }
-            }
-            )
-        const updateState = await tweets.find({_id: userId});
-        res.send(updateState);
-        
-    }else{
-        const saveTweet = new tweets({
-            _id: userId,
-            userName: userName,
-            tweets:[{
+        { _id: userId },
+        {
+            $push: {
+            tweets: {
+                tweetUserId: userId,
                 tweetProfileImg: userImg,
                 tweetUsername: userName,
                 tweetPublication: publication,
                 tweetImg: tweetImg,
                 tweetPrivacy: tweetPrivacy,
                 tweetDate: tweetDate,
-                retweets: 0
-            }]
-        })
-        await saveTweet.save();
-        res.send(saveTweet);
-    }
-}
-}
+                retweets: 0,
+                hashtags: hashtag?.length > 0 ? [{ word: hashtag }] : []
+            }
+            },
+            $setOnInsert: {
+            userName: userName,
+            followers: [],
+            following: []
+            }
+        },
+        { upsert: true }
+        );
+
+
+        res.status(200).json(updated);
+     }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al crear tweet" });
+  }
+};
+
 
 
 export const respondTweetController = async (req, res) => {
@@ -309,7 +220,7 @@ export const saveTweetController = async (req, res) => {
         }
     })
 
-    if(findSaveTweet.length > 0){
+    if(findSaveTweet?.length > 0){
         await tweets.updateOne(
             {_id: sessionId},
             {
@@ -460,7 +371,7 @@ export const increaseLikesController = async (req, res) => { //deberia encontrar
         }
       })
   
-    if(findLike.length > 0){
+    if(findLike?.length > 0){
         
        await tweets.updateOne(
             {_id: profileId },
@@ -525,7 +436,7 @@ export const increaseCommentLikesController = async (req, res) => {
         }
     })
 
-    if(findCommentLike.length > 0){
+    if(findCommentLike?.length > 0){
         await tweets.updateOne(
             {_id: profileId},
             {
@@ -598,7 +509,7 @@ export const increaseAnswerLikesController = async (req, res) => {
     })
    
 
-if(findAnswerLike.length > 0){
+if(findAnswerLike?.length > 0){
     
     await tweets.updateOne(
         {_id: profileId},

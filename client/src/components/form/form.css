@@ -19,7 +19,7 @@
 
 .form-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
 .form-header h1 {
@@ -53,7 +53,10 @@
   box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
 }
 
+.form-group input:focus + label,
 .form-group input:not(:placeholder-shown) + label {
+  top: -24px;
+  
   font-size: 16px;
   color: #667eea;
   background: white;
@@ -61,7 +64,10 @@
 }
 
 .form-group label {
-   color: #667eea;
+  position: absolute;
+  left: 0px;
+  top: -24px;
+  color: #667eea;
   font-size: 16px;
   pointer-events: none;
   transition: all 0.3s ease;
@@ -113,12 +119,13 @@
   background: #fee;
   border: 2px solid #fcc;
   border-radius: 10px;
-  padding: 10px;
-  margin-top: -20px;
-  margin-bottom: 40px;
+  padding: 15px;
+  margin-bottom: 20px;
   color: #c33;
   text-align: center;
   font-weight: 500;
+  margin-top: -30px;
+  margin-bottom: 30px;
 }
 
 .d-flex {

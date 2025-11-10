@@ -5,14 +5,25 @@ export const getProfileInformationRequest = (userId, sessionId) => axios.post(`$
 export const createTweetRequest = async (tweetData) => {
     const form = new FormData()
 
-    for(let key in tweetData){
-        form.append(key, tweetData[key])
+    for (let key in tweetData) {
+    if (key === "hashtag" && Array.isArray(tweetData[key])) {
+     
+      form.append(key, JSON.stringify(tweetData[key]));
+    } else if (tweetData[key] !== undefined && tweetData[key] !== null) {
+     
+      form.append(key, tweetData[key]);
     }
-    return await axios.post(`${process.env.REACT_APP_BACK_URL}/publicTweet`, form, {
-        headers: {
-            "Content-Type": "multipart/form-data",
-        },
-    });
+  }
+
+  return await axios.post(
+    `${process.env.REACT_APP_BACK_URL}/publicTweet`,
+    form,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
 }
 
 export const respondTweetRequest = async (commentData) => {

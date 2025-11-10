@@ -168,7 +168,7 @@ const Tweets = () => {
     }
 
 
-    return(
+      return(
         <div>
             {black ? <div className='i'></div> : ''}
             {answerLayout ? <Answer/> : ''}
@@ -185,14 +185,14 @@ const Tweets = () => {
             {retweetLayout ? <RetweetLayout/> : ''}
                 {homeLayout ? <HomeLayout/> : ''}
                 <div className='lists-publications-container mx-auto'>
-                <TrendAndPeople/>
+                  {homeLayout ? <TrendAndPeople/> : '' }
                     <div className='publications'>
                         {homeLayout ? <PublicTweet/> : ''}
                         {tweets.map((t) =>
                         <div key={t._id}>
                         {t.tweets.map((tc) => 
                         <div key={tc._id} className='t-backg'>
-                        <button className='deleteButton' onClick={() => deleteTweet(session[0]._id, tc._id)}><img src={closePng} alt=""></img></button>
+                        <button onClick={() => deleteTweet(tc._id)}>X</button>
                         {tc.retweeted === 1 ?  
                         <div className='retweets'>
                         <div className='retweets-info d-flex'>
@@ -209,7 +209,7 @@ const Tweets = () => {
                         <div className='tweetDesc-img border border-info p-4 mt-2' >
                             <div className='tweetProfileData'>
                                 <div>
-                                {tc.tweetProfileImg ? <img id='tweetProfileImg' src={tc.tweetProfileImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
+                                {tc.profileRetweetedImg ? <img id='tweetProfileImg' src={tc.profileRetweetedImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
                                 </div>
                                 <div>
                                     <p>{tc.retweetedUserName}</p>

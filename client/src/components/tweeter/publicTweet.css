@@ -1,67 +1,260 @@
-.publicTweet{
-    padding: .7rem;
-    margin-bottom: 1rem;
-    height: 210px;
-    box-shadow: 0px 0px 12px -7px rgba(128,128,128,0.75);
-    -webkit-box-shadow: 0px 0px 12px -7px rgba(128,128,128,0.75);
-    -moz-box-shadow: 0px 0px 12px -7px rgba(128,128,128,0.75);
+/* Contenedor principal */
+.publicTweet {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border-bottom: 3px solid #f0f0f0;
 }
 
-.publicTweet textarea{
-    height: 100px;
+/* Header */
+.publicTweet-header {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.publicTweet-header p {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* Imagen de perfil */
+#public-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+
+/* Formulario */
+.public-form-size {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.public-form-size textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  resize: vertical;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
+  box-sizing: border-box;
+}
+
+.public-form-size textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.public-form-size textarea::placeholder {
+  color: #999;
+}
+
+/* Contenedor inferior del formulario */
+.public-form-size > div.d-flex {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+/* Select de privacidad */
+.selectPrivacyPublication {
+  padding: 10px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #667eea;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 150px;
+  max-width: 250px;
+}
+
+.selectPrivacyPublication:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.selectPrivacyPublication:hover {
+  background: #f8f9fa;
+  border-color: #667eea;
+}
+
+/* Input de imagen (oculto) */
+.tweetImgIn {
+  display: none;
+}
+
+/* Label para subir imagen */
+.public-form-size label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #e0e0e0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.public-form-size label:hover {
+  background: #667eea;
+  border-color: #667eea;
+  transform: scale(1.1);
+}
+
+.public-form-size label img {
+  width: 22px;
+  height: 22px;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.public-form-size label:hover img {
+  opacity: 1;
+  filter: brightness(0) invert(1);
+}
+
+/* Botón de publicar */
+#publicTweet {
+  padding: 12px 32px;
+  border: none;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+#publicTweet:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+#publicTweet:active {
+  transform: translateY(0);
+}
+
+/* Utilidades */
+.d-flex {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.abc{
     width: 100%;
-    padding: 1rem .5rem;
-    border: none;
-    outline: none;
+    justify-content: right !important;
 }
 
-.publicTweet select{
-    cursor: pointer;
-    border: none;
-    font-weight: 600;
+/* Responsive */
+@media (max-width: 768px) {
+  .publicTweet {
+    padding: 20px;
+  }
+
+  .publicTweet-header p {
+    font-size: 17px;
+  }
+
+  #public-img {
+    width: 44px;
+    height: 44px;
+    margin-right: 12px;
+  }
+
+  .public-form-size textarea {
+    min-height: 90px;
+    font-size: 15px;
+  }
+
+  .public-form-size > div.d-flex {
+    gap: 10px;
+  }
+
+  .selectPrivacyPublication {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  #publicTweet {
+    padding: 10px 24px;
     font-size: 14px;
-    color:rgb(65, 65, 248);
-    outline: none;
+  }
 }
 
-.publicTweet label{
-    cursor: pointer;
-    margin-left: 2rem;
-}
+@media (max-width: 480px) {
+  .publicTweet {
+    padding: 15px;
+  }
 
-.publicTweet-header{
-    border-bottom: .4px solid rgb(182, 182, 182);
-}
+  .publicTweet > div.d-flex {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-.public-form-size{
-    position: relative;
+  #public-img {
+    margin-bottom: 10px;
+  }
+
+  .public-form-size {
     width: 100%;
+  }
+
+  .public-form-size > div.d-flex {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .selectPrivacyPublication {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .public-form-size label,
+  #publicTweet {
+    align-self: flex-end;
+  }
+
+  .public-form-size > div.d-flex {
+    gap: 15px;
+  }
 }
 
-.public-form-size button{
-    position: absolute;
-    right: 1rem;
-    background-color: rgb(65, 65, 248);
-    color: white;
-    padding: .5rem 2rem;
-    border-radius: 4px;
-    font-weight: 600;
-}
+/*@media screen and (max-width:900px) {
+   
+    .publicTweet{
+       width: 100% !important;
+    }
 
-.tweetImgIn{
-    display: none;
-}
-
-#public-img{
-    width: 66px;
-    height: 66px;
-    border-radius: 8px;
-    margin-top: .5rem;
-}
-
-
-#publicTweet:hover{
-    background-color: rgb(99, 99, 255);
-    transform: translateY(-2px);
-    transition: all .5s;
-}
+}*/

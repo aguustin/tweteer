@@ -6,74 +6,152 @@ import TweetsContext from "../../context/tweetsContext";
 
 const PublicTweet = () => {
   const { session, publicT, createTweetContext } = useContext(TweetsContext);
-  const [hashtag, setHashtag] = useState("");
-  let saveHashtag = [];
-  let fecha = new Date();
-  let day = ["Sunday", "Saturday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-  let month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-  const hashtagTweet = async (e) => {
-    e.preventDefault();
-    if(e.target.value === '#'){
-      setHashtag(e.target.value);
-    }else if(hashtag.length <= 0){
-      saveHashtag = null;
-    }else if(hashtag.charAt[0] === "#"){
-      setHashtag(e.target.value);
-    }else if(saveHashtag.length > 0){
-      console.log("");
-    }else if(e.target.value.includes(" ") && hashtag.length > 0){
-      saveHashtag = e.target.value.trim();
-      saveHashtag = saveHashtag.substring(1);
-    }
+  // Estados
+  const [hashtag, setHashtag] = useState("");
+  const [charCount, setCharCount] = useState(0);
+  const [saveHashtag, setSaveHashtag] = useState([]); // ✅ ahora se mantiene entre renders
+
+  const maxChars = 280;
+
+  // Fechas
+  const fecha = new Date();
+  const day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]; // ✅ corregido el orden
+  const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  const hashtagTweet = (e) => {
     
-  }
+    const text = e.target.value;
+    setCharCount(text.length);
+
+    if (text === "#") {
+      setHashtag(text);
+    } else if (hashtag.length <= 0) {
+      setSaveHashtag([]);
+    } else if (hashtag.charAt(0) === "#") { 
+      setHashtag(text);
+    } else if (saveHashtag.length > 0) {
+      console.log(""); 
+    } else if (text.includes(" ") && hashtag.length > 0) {
+      let cleaned = text.trim().substring(1);
+      setSaveHashtag((prev) => [...prev, cleaned]);
+    }
+  };
 
 
   const createTweet = async (e) => {
     e.preventDefault();
-    const tweetDate = `${day[fecha.getDay()]}, ${fecha.getDate()} ${month[fecha.getMonth()]} - ${fecha.getHours()}:${fecha.getMinutes()}`;
-    saveHashtag?.slice(1, -1);
-    
+
+    const tweetDate = `${day[fecha.getDay()]}, ${fecha.getDate()} ${
+      month[fecha.getMonth()]
+    } - ${fecha.getHours()}:${fecha.getMinutes()}`;
+
     const tweetData = {
-      userId: session[0]._id,
+      userId: session[0]?._id,
       userImg: session[0]?.userImg,
-      userName: session[0].userName,
+      userName: session[0]?.userName,
       publication: e.target.elements.publication.value,
       tweetImg: e.target.elements.tweetImg.files[0],
       tweetPrivacy: e.target.elements.privacy.value,
       tweetDate: tweetDate,
-      hashtag: saveHashtag
+      hashtag: saveHashtag,
     };
 
-    saveHashtag = [];
-    e.target.reset();
     await createTweetContext(tweetData);
+  
+    e.target.reset();
+    setCharCount(0);
+    setSaveHashtag([]);
   };
- 
+
   return (
-    <div>
-      {publicT ? <div className="publicTweet">
-        <div className="publicTweet-header">
-          <p>Tweet something</p>
+    <>
+      {publicT ? (
+        <div className="publicTweet">
+          <div className="publicTweet-header">
+            <p>¿Qué está pasando?</p>
+          </div>
+
+          <div className="d-flex">
+            <img
+              id="public-img"
+              src={session && session[0]?.userImg ? session[0].userImg : notUser}
+              alt={
+                session && session[0]?.userName
+                  ? `${session[0].userName}'s profile`
+                  : "Profile"
+              }
+            />
+
+            <form
+              onSubmit={createTweet}
+              className="public-form-size align-items-center"
+              encType="multipart/form-data"
+            >
+              <div style={{ position: "relative", width: "100%" }}>
+                <textarea
+                  type="text"
+                  placeholder="¿Qué está pasando?"
+                  name="publication"
+                  onChange={hashtagTweet}
+                  maxLength={maxChars}
+                  aria-label="Escribe tu tweet"
+                />
+
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "10px",
+                    right: "15px",
+                    fontSize: "13px",
+                    color: charCount > maxChars * 0.9 ? "#dc3545" : "#999",
+                    fontWeight: charCount > maxChars * 0.9 ? "600" : "400",
+                  }}
+                >
+                  {charCount}/{maxChars}
+                </div>
+              </div>
+
+              <div className="abc d-flex">
+                <select
+                  className="selectPrivacyPublication"
+                  name="privacy"
+                  aria-label="Selecciona quién puede ver tu tweet"
+                >
+                  <option value="everyone">🌍 Todos pueden ver</option>
+                  <option value="only">👥 Solo seguidores</option>
+                </select>
+
+                <input
+                  id="tweetImg"
+                  className="tweetImgIn"
+                  type="file"
+                  name="tweetImg"
+                  accept="image/*"
+                />
+                <label htmlFor="tweetImg" aria-label="Adjuntar imagen">
+                  <img src={twImg} alt="" />
+                </label>
+
+                <button
+                  id="publicTweet"
+                  type="submit"
+                  disabled={charCount === 0}
+                  style={{
+                    opacity: charCount === 0 ? 0.6 : 1,
+                    cursor: charCount === 0 ? "not-allowed" : "pointer",
+                  }}
+                >
+                  Twittear
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div className="d-flex">
-          { session && session[0]?.userImg ? <img id="public-img" src={session[0]?.userImg} alt=""></img> :  <img id="public-img" src={notUser} alt=""></img>}
-          <form onSubmit={(e) => createTweet(e)} className="public-form-size align-items-center" encType="multipart/form-data">
-            <textarea type="text" placeholder="What's happening?" name="publication" onChange={hashtagTweet}></textarea>
-            <div className="d-flex">
-              <select className="selectPrivacyPublication" name="privacy">
-                <option value="everyone">Everyone</option>
-                <option value="only">Only people who follows me</option>
-              </select>
-              <input id="tweetImg" className="tweetImgIn" type="file" name="tweetImg" accept="image/*"></input>
-              <label htmlFor="tweetImg"><img src={twImg} alt=""></img></label>
-              <button id="publicTweet" type="submit">Tweet</button>
-            </div>
-          </form>
-        </div>
-      </div> : ''}
-    </div>
+      ) : (
+        ""
+      )}
+    </>
   );
 };
 
