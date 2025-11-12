@@ -36,33 +36,38 @@ const TrendAndPeople = () => {
                     <p>Tendencias para ti</p>
                 </div>
                 <div>
-                    {topTrends?.length > 0 ? (
-                        topTrends.map((tend, index) => (
-                            <span key={index}>  
-                                {tend?._id?.map((t, i) => (
-                                    <span key={i}> 
-                                        <div 
-                                            className='trendsDivs' 
-                                            onClick={(e) => getTendencie(e, t.word)}
-                                            role="button"
-                                            tabIndex={0}
-                                            onKeyPress={(e) => {
-                                                if (e.key === 'Enter') getTendencie(e, t.word);
-                                            }}
-                                        >
-                                            <p>#{t.word}</p>
-                                            <label>{t?.countH || 0} Tweets</label>
-                                        </div>
-                                    </span>
-                                ))}
-                            </span>
-                        ))
-                    ) : (
-                        <div style={{ padding: '20px', textAlign: 'center', color: '#999' }}>
-                            <p>No hay tendencias disponibles</p>
-                        </div>
-                    )}
-                </div>
+    {topTrends && topTrends.some(tend => 
+        tend?._id?.some(t => t?.word && t.word.trim().length > 0)
+    ) ? (
+        topTrends.map((tend, index) => (
+            <span key={index}>
+                {tend?._id?.map((t, i) => (
+                    t?.word && t.word.trim().length > 0 && ( 
+                        <span key={i}>
+                            <div 
+                                className='trendsDivs'
+                                onClick={(e) => getTendencie(e, t.word)}
+                                role="button"
+                                tabIndex={0}
+                                onKeyPress={(e) => {
+                                    if (e.key === 'Enter') getTendencie(e, t.word);
+                                }}
+                            >
+                                <p>#{t.word}</p>
+                                <label>{t?.countH || 0} Tweets</label>
+                            </div>
+                        </span>
+                    )
+                ))}
+            </span>
+        ))
+    ) : (
+        <div style={{ padding: '20px', textAlign: 'center', color: '#999' }}>
+            <p>No hay tendencias disponibles</p>
+        </div>
+    )}
+</div>
+
             </div>
 
             {suggestedUsers.map((user) => (

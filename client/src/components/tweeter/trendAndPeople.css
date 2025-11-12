@@ -1,7 +1,7 @@
 .trendAndPeople{
     min-width: 400px;
-    margin-right: 20px;
-    margin-left: 10px;
+    margin-right: 10px;
+    margin-left: 20px;
     text-align: left;
 }
 
@@ -65,16 +65,7 @@
 }
 
 .people button{
-   position: relative;
-   height: 30px;
-   width: 80%;
-   margin: auto;
-   background-color: rgb(65, 65, 248);
-   color: white;
-   padding: 0rem .7rem;
-   border-radius: 4px;
-   font-weight: 600;
-   margin-top: 10px;
+   width: 100%;
 }
 
 .peopleHobbies{

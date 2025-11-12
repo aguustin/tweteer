@@ -67,49 +67,103 @@ export const getProfileInformationController = async (req, res) => {
    }
 }
 
+
 export const createTweetController = async (req, res) => {
   try {
-    const { userId, userImg, userName, publication, tweetPrivacy, tweetDate, hashtag } = req.body;
-    let tweetImg;
-    const updated = await tweets.findOne({ _id: userId });
-    if(updated){
-        if (req.files?.tweetImg) {
-        const result = await tweetsUploader(req.files.tweetImg.tempFilePath);
-        tweetImg = result.secure_url;
-        await fs.remove(req.files.tweetImg.tempFilePath);
-        }
-        console.log(userId, userImg, userName, publication, tweetPrivacy, tweetDate, hashtag)
-        await tweets.updateOne(
+    const {
+      userId,
+      userImg,
+      userName,
+      publication,
+      tweetPrivacy,
+      tweetDate,
+      hashtag,
+    } = req.body;
+
+    // Subida de imagen (si existe)
+    let tweetImg = null;
+    if (req.files?.tweetImg) {
+      const result = await tweetsUploader(req.files.tweetImg.tempFilePath);
+      tweetImg = result.secure_url;
+      await fs.remove(req.files.tweetImg.tempFilePath);
+    }
+
+    // Crear el objeto base del tweet
+    const newTweet = {
+      tweetUserId: userId,
+      tweetProfileImg: userImg,
+      tweetUsername: userName,
+      tweetPublication: publication,
+      tweetImg,
+      tweetPrivacy,
+      tweetDate: new Date(),
+      retweets: 0,
+      ...(hashtag?.length > 0 && { hashtags: [{ word: hashtag }] }),
+    };
+
+    // Verificar si el usuario ya tiene registro de tweets
+    const userTweets = await tweets.findOne({ _id: userId });
+
+    if (userTweets) {
+      // Agregar nuevo tweet al usuario existente
+      await tweets.updateOne(
         { _id: userId },
+        { $addToSet: { tweets: newTweet } }
+      );
+    } else {
+      // Crear documento nuevo para el usuario
+      await tweets.create({
+        _id: userId,
+        userName,
+        tweets: [newTweet],
+      });
+    }
+
+    // Actualizar tendencia (solo si hay hashtag)
+    if (hashtag?.length > 0) {
+      const trend = await tweets.aggregate([
         {
-            $push: {
-            tweets: {
-                tweetUserId: userId,
-                tweetProfileImg: userImg,
-                tweetUsername: userName,
-                tweetPublication: publication,
-                tweetImg: tweetImg,
-                tweetPrivacy: tweetPrivacy,
-                tweetDate: tweetDate,
-                retweets: 0,
-                hashtags: hashtag?.length > 0 ? [{ word: hashtag }] : []
-            }
-            },
-            $setOnInsert: {
-            userName: userName,
-            followers: [],
-            following: []
-            }
+          $match: { "tweets.hashtags.word": hashtag },
         },
-        { upsert: true }
+        {
+          $project: {
+            tweets: {
+              $filter: {
+                input: "$tweets",
+                as: "t",
+                cond: { $eq: ["$$t.hashtags.word", [hashtag]] },
+              },
+            },
+          },
+        },
+      ]);
+
+      if (trend.length && trend[0].tweets[0]?.hashtags[0]) {
+        const tweetId = trend[0].tweets[0]._id.toString();
+        const hashtagId = trend[0].tweets[0].hashtags[0]._id.toString();
+
+        await tweets.updateOne(
+          { _id: trend[0]._id },
+          {
+            $inc: { "tweets.$[t].hashtags.$[h].countH": 1 },
+          },
+          {
+            arrayFilters: [
+              { "t._id": tweetId },
+              { "h._id": hashtagId },
+            ],
+          }
         );
+      }
+    }
 
+    // Obtener tweets actualizados del usuario (para devolver al frontend)
+    const updatedUser = await tweets.findOne({ _id: userId });
+    res.status(200).json(updatedUser);
 
-        res.status(200).json(updated);
-     }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error al crear tweet" });
+  } catch (error) {
+    console.error("Error creando tweet:", error);
+    res.status(500).json({ error: "Error al crear el tweet" });
   }
 };
 
@@ -118,7 +172,7 @@ export const createTweetController = async (req, res) => {
 export const respondTweetController = async (req, res) => {
     const {tweetId, commentsUsers, commentsProfilesImg, commentsPublication, commentsDate} = req.body;
     let commentsImg;
-
+    console.log(req.body)
     if(req.files?.commentsImg){
         const result = await tweetsUploader(req.files.commentsImg.tempFilePath);
         commentsImg = result.secure_url;
@@ -619,6 +673,7 @@ export const deleteAllController = async (req, res) => {
 
 export const deleteTweetController = async (req, res) => {
     const {userId, tweetId} = req.body
+    console.log(req.body)
     await tweets.updateOne(
         { _id: userId },
         { $pull: { tweets: { _id: tweetId } } }

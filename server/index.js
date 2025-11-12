@@ -24,10 +24,10 @@ app.use(cors(corsOptions))
 app.use(express.text());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-/*app.use(fileUpload({
+app.use(fileUpload({
     useTempFiles: true,
     tempFileDir: './profiles'
-}))*/
+}))
 app.use(morgan('tiny'));
 
 //routes
@@ -35,3 +35,4 @@ app.use(tweeterRoutes);
 app.use(usersRoutes);
 //listening
 app.listen(port);
+

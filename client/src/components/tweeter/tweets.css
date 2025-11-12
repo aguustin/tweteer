@@ -113,6 +113,7 @@
   align-items: center;
   justify-content: center;
   opacity: 0;
+  background-color: red !important;
 }
 
 .t-backg:hover .deleteButton {
@@ -180,12 +181,20 @@
   margin: 0;
 }
 
+.deleteTweet{
+  position: absolute;
+  right: 10px;
+  top:10px;
+  background-color: transparent;
+}
+
 #tweetPublication {
   color: #4a4a4a;
   font-size: 15px;
   line-height: 1.5;
   margin: 0;
   word-wrap: break-word;
+  text-align: left;
 }
 
 .tweetImg {
@@ -749,12 +758,15 @@
 
 @media (max-width: 900px) {
   .publications{
-    width: 100%;
+    width: 86%;
+    margin: auto;
+    margin-left: 60px;
   }
   .lists-publications-container{
     display: block;
     width: 96%;
   }
+  
 }
 
 @media (max-width: 768px) {
@@ -786,3 +798,10 @@
   }
 }
 
+@media screen and (max-width:480px) {
+  .publications{
+    width: 100%;
+    margin-left: 0;
+    margin: auto;
+  }
+}

@@ -1,70 +1,348 @@
-.navTweeter{
-    width: 100vw;
-    display: flex;
+/* Navegación lateral con efecto hover */
+.navTweeter {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 70px;
+  height: 100vh;
+  background: white;
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  z-index: 11;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.navTweeter:hover {
+ cursor: pointer;
+  width: 100px;
+  box-shadow: 4px 0 30px rgba(0, 0, 0, 0.12);
+}
+
+.navTweeter::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 70px;
+  height: 100%;
+  z-index: 12;
+}
+
+/* Logo */
+.navTweeter > img {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 40px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Botones de navegación */
+.navButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  padding: 0 10px;
+  margin-bottom: 20px;
+  z-index: 12;
+}
+
+.navButtons button {
+  width: 100%;
+  min-height: 50px;
+  padding: 14px;
+  border: none;
+  border-radius: 25px;
+  background: transparent;
+  color: #1a1a1a;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  white-space: nowrap;
+}
+
+/* Ocultar texto cuando está colapsado */
+.navButtons button {
+  font-size: 0;
+}
+
+.navTweeter:hover .navButtons button {
+  font-size: 18px;
+  padding-left: 27px;
+}
+
+/* Barra lateral de efecto */
+.navButtons button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.navButtons button:hover::before {
+  transform: scaleY(1);
+}
+
+.navButtons button:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.navButtons button:active {
+  transform: scale(0.98);
+}
+
+/* Iconos con emojis - siempre visibles */
+.navButtons button::after {
+  font-size: 24px;
+  transition: all 0.3s ease;
+}
+
+/* Ajustar posición del emoji cuando está expandido */
+.navTweeter:hover .navButtons button::after {
+  position: absolute;
+  right: 20px;
+  font-size: 20px;
+}
+
+/* Usuario en navegación */
+.navUser {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: transparent;
+  border: 2px solid transparent;
+}
+
+.navUser:hover {
+  background: white;
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.navUser img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  z-index: 12;
+}
+
+.navUser:hover img {
+  border-color: #667eea;
+  transform: scale(1.05);
+}
+
+.navUser > button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #1a1a1a;
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+  cursor: pointer;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  max-height: 0;
+  transition: all 0.3s ease;
+}
+
+.navTweeter:hover .navUser > button {
+  opacity: 1;
+  max-height: 50px;
+}
+
+.navUser > button:hover {
+  color: #667eea;
+}
+
+/* Menú de logout */
+.logout {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  right: -100px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+  animation: slideUp 0.3s ease;
+  z-index: 13;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.logout button {
+  width: 300px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  background: white;
+  color: #dc3545;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.logout button:hover {
+  background: rgba(220, 53, 69, 0.1);
+  transform: translateX(5px);
+}
+
+.logout button::before {
+  margin-right: 8px;
+}
+
+/* NO agregar padding al body - la barra no ocupa espacio */
+body {
+  padding-left: 0;
+}
+
+
+/* Responsive - móvil */
+@media (max-width: 480px) {
+  .navTweeter {
+    width: 100%;
+    height: auto;
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    flex-direction: row;
+    padding: 12px 20px;
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.08);
+    justify-content: space-around;
     align-items: center;
+  }
+
+ 
+  .navTweeter:hover {
+    width: 100%;
+  }
+
+  .navTweeter::before {
+    display: none;
+  }
+
+  .navTweeter > img {
+    display: none;
+  }
+
+  .navButtons {
+    flex-direction: row;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+    justify-content: space-around;
+  }
+
+  .navButtons button {
+    width: auto;
+    min-height: auto;
+    padding: 12px 20px;
+    border-radius: 20px;
+    font-size: 0 !important;
     justify-content: center;
-    padding: 1rem;
-    border-bottom: .1px solid rgba(128,128,128,0.75);
+  }
+
+  .navButtons button::after {
+    font-size: 22px;
+    position: static !important;
+  }
+
+  .navButtons button::before {
+    display: none;
+  }
+
+  .navUser {
+    flex-shrink: 0;
+    padding: 8px;
+    margin: 0;
+    flex-direction: row;
+  }
+
+  .navUser img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .navUser > button {
+    display: none !important;
+  }
+
+  .logout {
+    bottom: calc(100% + 10px);
+    left: auto;
+    right: 0;
+    width: 180px;
+  }
+
+  body {
+    padding-left: 0;
+    padding-bottom: 70px;
+  }
 }
 
-.navTweeter > img{
-    width: 40px;
-    margin-left: 1rem;
-    object-fit: contain;
-}
+@media (max-width: 360px) {
+  .navTweeter {
+    padding: 10px 15px;
+  }
 
-.navButtons{
-    margin: 0 auto;
-}
+  .navButtons button {
+    padding: 10px 16px;
+  }
 
-.navButtons button{
-    width: 170px;
-}
+  .navButtons button::after {
+    font-size: 20px;
+  }
 
-.navButtons button, .navUser button{
-    background-color: transparent;
-    border: transparent;
-    font-weight: 600;
-}
+  .navUser {
+    padding: 6px;
+  }
 
-.navButtons button:hover, .navUser:hover{
-    cursor: pointer;
-    color: rgb(65, 65, 248);
-    transition: all .3s;
-}
-
-.navUser{
-    margin-right: 1rem;
-    right: 1rem;
-}
-
-.navUser img{
-    height: 60px;
-    width: 70px;
-    margin-left: 1rem;
-    object-fit: contain;
-}
-.navUser button{
-    cursor: default;
-}
-
-.logout{
-    background-color: white;
-    padding: 1rem 2rem;
-    position: absolute;
-    z-index: 2;
-    top: 5.5rem;
-    right: 2rem;
-}
-
-@media screen and (max-width: 785px) {
-    .navButtons button{
-        width: 100px;
-    }
-}
-
-@media screen and (max-width: 600px) {
-    .navButtons button{
-        display: block;
-    }
+  .navUser img {
+    width: 32px;
+    height: 32px;
+  }
 }

@@ -24,7 +24,7 @@ const tweeterSchema = new mongoose.Schema({
         tweetUserId: { type: String },
         tweetProfileImg:{ type:String },
         tweetUsername:{ type:String },
-        tweetDate:{ type: String },
+        tweetDate:{ type: Date },
         tweetPublication:{ type:String },
         tweetImg:{ type:String },
         tweetPrivacy:{ type:String },

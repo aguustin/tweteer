@@ -14,7 +14,7 @@ import LayoutContext from '../../context/layoutsContext';
 import Nav from './nav';
 import notUser from  '../../imgs/notUser.jpg';
 import TweetsContext from '../../context/tweetsContext';
-import closePng from '../../imgs/close.png'
+import deletePng from '../../imgs/close.png'
 
 const Tweets = () => {
     const [ answerLayout, setAnswerLayout ] = useState(false);
@@ -33,7 +33,7 @@ const Tweets = () => {
     useEffect(() => {
         (async() => {
             if (session) {
-                await getProfileInformationContext(session[0]._id);
+                await getProfileInformationContext(session?.[0]?._id);
                 await getAllTendContext();
             }
         })();
@@ -59,10 +59,11 @@ const Tweets = () => {
 
         let textarea = document.querySelector('#respondTweet');
         textarea.value = '';
-       
+       console.log("comment data: ", commentData)
 
         await respondTweetContext(commentData);
     }
+    
 
     const openAnswerLayout = (profileId, tweetId, commentId) => {
         setProfileId(profileId);
@@ -127,7 +128,7 @@ const Tweets = () => {
         }
         await answerContext(answerData);
     }
-
+    console.log(tweets)
     const retweeted = async (e, tweetId) => {
         e.preventDefault();
         await retweetContext(tweetId);
@@ -144,7 +145,7 @@ const Tweets = () => {
     }
 
     const deleteTweet = async (userId, tweetId) => {
-        console.log("asdasdasd")
+        console.log("userId: ", userId, " ", "asdasdasd", tweetId)
         await deleteTweetContext(userId, tweetId);
     }
 
@@ -165,6 +166,18 @@ const Tweets = () => {
               </div>
             </form>
         )
+    }
+
+    function formatTweetDate(dateString) {
+        const date = new Date(dateString);
+
+        const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+        const day = date.getDate();
+        const month = date.toLocaleDateString('en-US', { month: 'short' });
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+
+        return `${dayName}, ${day} ${month} - ${hours}:${minutes}`;
     }
 
 
@@ -192,7 +205,7 @@ const Tweets = () => {
                         <div key={t._id}>
                         {t.tweets.map((tc) => 
                         <div key={tc._id} className='t-backg'>
-                        <button onClick={() => deleteTweet(tc._id)}>X</button>
+                        {session?.[0]._id === t._id && <button className='deleteTweet' onClick={() => deleteTweet(session?.[0]?._id, tc._id)}><img src={deletePng} alt=""></img></button> }
                         {tc.retweeted === 1 ?  
                         <div className='retweets'>
                         <div className='retweets-info d-flex'>
@@ -204,7 +217,7 @@ const Tweets = () => {
                                 </div>
                                 <p>{tc.tweetPublication}</p>
                             </div>
-                            <label>{tc.tweetDate}</label>
+                            <label>{formatTweetDate(tc.tweetDate)}</label>
                         </div>
                         <div className='tweetDesc-img border border-info p-4 mt-2' >
                             <div className='tweetProfileData'>
@@ -236,7 +249,7 @@ const Tweets = () => {
                                 <div>
                                     <div className='d-flex'>
                                         <p>{tc.tweetUsername}</p>
-                                        <label>{tc.tweetDate}</label>
+                                        <label>{formatTweetDate(tc.tweetDate)}</label>
                                     </div>
                                     <p id="tweetPublication">{tc.tweetPublication}</p>
                                 </div>

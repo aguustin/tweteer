@@ -43,145 +43,152 @@ export const TweetsContextProvider = ({children}) => {
             return res.data
         }
     }
+const sortTweetsByDate = (data) => {
+  if (!Array.isArray(data)) return data;
+  return data.map(user => ({
+    ...user,
+    tweets: [...(user.tweets || [])].sort((a, b) => {
+        const dateA = new Date(a.tweetDate).getTime();
+      const dateB = new Date(b.tweetDate).getTime();
+      return dateB - dateA; 
+    }),
+  }));
+};
 
-    const editProfileContext = async (editData) => {
-        const res = await editProfileRequest(editData);
-        localStorage.clear();
-        localStorage.setItem("credentials", JSON.stringify(res.data));
-        setSession(JSON.parse(localStorage.getItem("credentials")));
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
-        setTweets(res.data);
-    }
+// --- Context functions ---
 
-    const editPasswordContext = async (editAccount) => {
-        localStorage.clear();
-        const res = await editPasswordRequest(editAccount);
-        localStorage.setItem("credentials", JSON.stringify(res.data));
-        setSession(JSON.parse(localStorage.getItem("credentials")));
-    }
+const editProfileContext = async (editData) => {
+  const res = await editProfileRequest(editData);
+  localStorage.clear();
+  localStorage.setItem("credentials", JSON.stringify(res.data));
+  setSession(res.data);
+  setTweets(sortTweetsByDate(res.data));
+};
 
-    const getProfileInformationContext = async (se) => {
-        const ownTweets = await getProfileInformationRequest(se);
-        setPublicT(true);
-        setChangeHomeLayout(true);
-        setTweets(ownTweets.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1))); //ultimo hecho
-        setTweets(ownTweets.data);
-    }
+const editPasswordContext = async (editAccount) => {
+  const res = await editPasswordRequest(editAccount);
+  localStorage.clear();
+  localStorage.setItem("credentials", JSON.stringify(res.data));
+  setSession(res.data);
+};
 
-    const seeProfileContext = async (userId) => {
-        setPublicT(false);
-        const res = await getProfileInformationRequest(userId, session[0]._id);
-        const check = await checkFollowRequest(userId);
-        setChangeHomeLayout(false);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
-        setTweets(res.data);
+const getProfileInformationContext = async (se) => {
+  const res = await getProfileInformationRequest(se);
+  setPublicT(true);
+  setChangeHomeLayout(true);
+  setTweets(sortTweetsByDate(res.data));
+};
 
-        if(check.status === 200){
-            setCheckF(1);
-        }else{
-            setCheckF(0);
-        }
-    }
+const seeProfileContext = async (userId) => {
+  const [res, check] = await Promise.all([
+    getProfileInformationRequest(userId, session[0]._id),
+    checkFollowRequest(userId),
+  ]);
 
-    const followContext = async (followingId) => {
-        await followRequest(followingId, session[0]._id);
-        setCheckF(1);
-    }
+  setPublicT(false);
+  setChangeHomeLayout(false);
+  setTweets(sortTweetsByDate(res.data));
+  setCheckF(check.status === 200 ? 1 : 0);
+};
 
-    const unFollowContext = async (followingId) => {
-        await unFollowRequest(followingId, session[0]._id);
-        setCheckF(0);
-    }
+const followContext = async (followingId) => {
+  await followRequest(followingId, session[0]._id);
+  setCheckF(1);
+};
 
-    const createTweetContext = async (tweetData) => {
-        const res = await createTweetRequest(tweetData);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
-        setTweets(res.data);
-    }
+const unFollowContext = async (followingId) => {
+  await unFollowRequest(followingId, session[0]._id);
+  setCheckF(0);
+};
 
-    const respondTweetContext = async (commentData) => { 
-        const res = await respondTweetRequest(commentData);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
-        setTweets(res.data);
-    }
+const createTweetContext = async (tweetData) => {
+  const res = await createTweetRequest(tweetData);
+  const updatedUser = res.data;
 
-    const answerContext = async (answerData) => {
-        const res = await answerRequest(answerData);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
-        setTweets(res.data);
-    }
+  setTweets((prev) =>
+    prev.map((user) =>
+      user._id === updatedUser._id
+        ? {
+            ...updatedUser,
+            tweets: [...updatedUser.tweets].sort(
+              (a, b) => new Date(b.tweetDate) - new Date(a.tweetDate)
+            ),
+          }
+        : user
+    )
+  );
+};
 
-    const searchContext = async (searchData) => {
-        const res = await searchRequest(searchData);
-        setSearchUser(res.data);
-    }
+const respondTweetContext = async (commentData) => {
+  const res = await respondTweetRequest(commentData);
+  setTweets(sortTweetsByDate(res.data));
+};
 
-    const likeContext = async (likeData) => {
-        const res = await increaseLikesRequest(likeData);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
-        setTweets(res.data);
-    }
+const answerContext = async (answerData) => {
+  const res = await answerRequest(answerData);
+  setTweets(sortTweetsByDate(res.data));
+};
 
-    const likeCommentContext = async (commentLikeData) => {
-        const res = await increaseCommentLikesRequest(commentLikeData);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
-        setTweets(res.data);
-    }
+const searchContext = async (searchData) => {
+  const res = await searchRequest(searchData);
+  setSearchUser(res.data);
+};
 
-    const answerLikeContext = async (answerLike) => {
-        const res = await increaseAnswerLikesRequest(answerLike);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
-        setTweets(res.data);
-    }
+const likeContext = async (likeData) => {
+  const res = await increaseLikesRequest(likeData);
+  setTweets(sortTweetsByDate(res.data));
+};
 
-    const retweetContext = async (tweetId) => {
-        const res = await retweetRequest(tweetId);
-        setRetweet(res.data);
-        setRetweetLayout(true);
-    }
+const likeCommentContext = async (commentLikeData) => {
+  const res = await increaseCommentLikesRequest(commentLikeData);
+  setTweets(sortTweetsByDate(res.data));
+};
 
-    const saveTweetContext = async (tweetId) => {
-        await saveTweetRequest(tweetId, session[0]._id);
-    }
+const answerLikeContext = async (answerLike) => {
+  const res = await increaseAnswerLikesRequest(answerLike);
+  setTweets(sortTweetsByDate(res.data));
+};
 
-    const saveRetweetContext = async (retweetedData) => {
-        await saveRetweetRequest(retweetedData);
-        setRetweetLayout(false);
-    }
+const retweetContext = async (tweetId) => {
+  const res = await retweetRequest(tweetId);
+  setRetweet(res.data);
+  setRetweetLayout(true);
+};
 
-    const exploreTweetsContext = async (exploreData) => {
-        const res = await exploreTweetsRequest(exploreData);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
-        setTweets(res.data);
-    }
+const saveTweetContext = async (tweetId) => {
+  await saveTweetRequest(tweetId, session[0]._id);
+};
 
-    const getAllTendContext = async () => {
-        const res = await getAllTendRequest();
-        setTendencies(res.data);
-        
-    }
+const saveRetweetContext = async (retweetedData) => {
+  await saveRetweetRequest(retweetedData);
+  setRetweetLayout(false);
+};
 
-    const getTendenciesContext = async (tendencie) => {
-        const res = await getTendenciesRequest(tendencie);
-        setTweets(res.data.map((ta) => ta.tweets.sort((a, b) => a.tweetDate < b.tweetDate ? 1 : -1)));
-        setTweets(res.data);
-    }
+const exploreTweetsContext = async (exploreData) => {
+  const res = await exploreTweetsRequest(exploreData);
+  setTweets(sortTweetsByDate(res.data));
+};
 
-    const deleteTweetContext = async (userId, tweetId) => {
-        console.log("eee")
-        const tweetObj = {
-            userId: userId,
-            tweetId: tweetId
-        }
-        await deleteTweetRequest(tweetObj)
-        setTweets(prevUsers => {
-            return prevUsers.map(user => ({
-              ...user,
-              tweets: user.tweets.filter(tweet => tweet._id !== tweetId)
-            }));
-          });
-      
-    }
+const getAllTendContext = async () => {
+  const res = await getAllTendRequest();
+  setTendencies(res.data);
+};
+
+const getTendenciesContext = async (tendencie) => {
+  const res = await getTendenciesRequest(tendencie);
+  setTweets(sortTweetsByDate(res.data));
+};
+
+const deleteTweetContext = async (userId, tweetId) => {
+  await deleteTweetRequest({ userId, tweetId });
+  setTweets((prev) =>
+    prev.map((user) =>
+      user._id === userId
+        ? { ...user, tweets: user.tweets.filter((t) => t._id !== tweetId) }
+        : user
+    )
+  );
+};
 
     return(
         <TweetsContext.Provider value={{

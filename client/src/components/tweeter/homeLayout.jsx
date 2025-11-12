@@ -87,34 +87,40 @@ const HomeLayout = () => {
 
     const FollowersLayout = () => {
         return (
-            <div className='followsLayout'>
+            <div className='followsLayout' onClick={(e) => e.stopPropagation()}>
                 <div className='people-header d-flex'>
                     <p>Seguidores</p>
                     <button onClick={() => closeModal(setOpenFollowers)}>×</button>
                 </div>
                 {tweets.map((follows) => (
                     <div key={follows._id}>
-                        {follows.followers.map((followers) => (
-                            <div key={followers._id} className='people d-flex'>
-                                <button 
-                                    id="followsButton" 
-                                    onClick={(e) => seeProfile(e, followers.followerId)}
-                                    aria-label={`Ver perfil de ${followers.followerName}`}
-                                >
-                                    <img 
-                                        src={followers?.followerImg || notUser} 
-                                        alt={`${followers.followerName}'s profile`}
-                                    />
-                                </button>
-                                <div>
-                                    <p>{followers.followerName}</p>
-                                    <div className='d-flex'>
-                                        <label>Seguidores: {follows.followers?.length || 0}</label>
-                                        <label>Siguiendo: {follows.following?.length || 0}</label>
+                        {follows.followers && follows.followers.length > 0 ? (
+                            follows.followers.map((followers) => (
+                                <div key={followers._id} className='people d-flex'>
+                                    <button 
+                                        id="followsButton" 
+                                        onClick={(e) => seeProfile(e, followers.followerId)}
+                                        aria-label={`Ver perfil de ${followers.followerName}`}
+                                    >
+                                        <img 
+                                            src={followers?.followerImg || notUser} 
+                                            alt={`${followers.followerName}'s profile`}
+                                        />
+                                    </button>
+                                    <div>
+                                        <p>{followers.followerName}</p>
+                                        <div className='d-flex'>
+                                            <label>Seguidores: {follows.followers?.length || 0}</label>
+                                            <label>Siguiendo: {follows.following?.length || 0}</label>
+                                        </div>
                                     </div>
                                 </div>
+                            ))
+                        ) : (
+                            <div style={{ padding: '30px', textAlign: 'center', color: '#999' }}>
+                                <p>No hay seguidores aún</p>
                             </div>
-                        ))}
+                        )}
                     </div>
                 ))}  
             </div>
@@ -123,34 +129,40 @@ const HomeLayout = () => {
 
     const FollowingsLayout = () => {
         return (
-            <div className='followsLayout'>
+            <div className='followsLayout' onClick={(e) => e.stopPropagation()}>
                 <div className='people-header d-flex'>
                     <p>Siguiendo</p>
                     <button onClick={() => closeModal(setOpenFollowings)}>×</button>
                 </div>
                 {tweets.map((follows) => (
                     <div key={follows._id}>
-                        {follows.following.map((followings) => (
-                            <div key={followings._id} className='people d-flex'>
-                                <button 
-                                    id="followsButton" 
-                                    onClick={(e) => seeProfile(e, followings.followingId)}
-                                    aria-label={`Ver perfil de ${followings.followingName}`}
-                                >
-                                    <img 
-                                        src={followings?.followingImg || notUser} 
-                                        alt={`${followings.followingName}'s profile`}
-                                    />
-                                </button>
-                                <div>
-                                    <p>{followings.followingName}</p>
-                                    <div className='d-flex'>
-                                        <label>Seguidores: {follows.followers?.length || 0}</label>
-                                        <label>Siguiendo: {follows.following?.length || 0}</label>
+                        {follows.following && follows.following.length > 0 ? (
+                            follows.following.map((followings) => (
+                                <div key={followings._id} className='people d-flex'>
+                                    <button 
+                                        id="followsButton" 
+                                        onClick={(e) => seeProfile(e, followings.followingId)}
+                                        aria-label={`Ver perfil de ${followings.followingName}`}
+                                    >
+                                        <img 
+                                            src={followings?.followingImg || notUser} 
+                                            alt={`${followings.followingName}'s profile`}
+                                        />
+                                    </button>
+                                    <div>
+                                        <p>{followings.followingName}</p>
+                                        <div className='d-flex'>
+                                            <label>Seguidores: {follows.followers?.length || 0}</label>
+                                            <label>Siguiendo: {follows.following?.length || 0}</label>
+                                        </div>
                                     </div>
                                 </div>
+                            ))
+                        ) : (
+                            <div style={{ padding: '30px', textAlign: 'center', color: '#999' }}>
+                                <p>No sigues a nadie aún</p>
                             </div>
-                        ))}
+                        )}
                     </div>
                 ))} 
             </div>
@@ -242,7 +254,6 @@ const HomeLayout = () => {
                                 <p>{profile.userDesc || 'Sin descripción'}</p>
                             </div>
                         </div>
-                        
                         {changeHomeLayout ? (
                             <button id="editLayout" onClick={() => setEditLayout(!editLayout)}>
                                 Editar Perfil
