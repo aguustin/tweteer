@@ -46,18 +46,22 @@
 .peopleData button {
     position: absolute;
     right: 0;
-    padding: .5rem .7rem;
-    background: var(--gradient);
-    color: white;
+    padding: 7px 16px;
+    border: 2px solid var(--accent);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--accent);
+    font-size: 13px;
     font-weight: 600;
-    border-radius: 6px;
-    border: none;
+    font-family: var(--font);
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: background 0.18s, color 0.18s;
+    white-space: nowrap;
 }
 
 .peopleData button:hover {
-    opacity: 0.85;
+    background: var(--accent);
+    color: #fff;
 }
 
 .searchedPeople::-webkit-scrollbar {

@@ -87,7 +87,7 @@ const Nav = () => {
           <button onClick={layoutListContext} aria-label="Marcadores">
             <img src={marcadorPng} alt="" />
           </button>
-          <button onClick={layoutFeedContext} aria-label="Feed global">
+          <button className="nav-theme-btn" onClick={layoutFeedContext} aria-label="Feed global">
             🌐
           </button>
 

@@ -47,7 +47,7 @@
   border: 2px solid var(--border-input);
   border-radius: 12px;
   font-size: 16px;
-  font-family: inherit;
+  font-family: var(--font);
   resize: vertical;
   transition: all 0.3s ease;
   background: var(--bg-input);

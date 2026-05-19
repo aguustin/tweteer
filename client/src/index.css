@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 /* ─── Design tokens ─────────────────────────────────────────── */
 :root {
@@ -32,6 +32,9 @@
   /* Nav */
   --nav-bg: #ffffff;
   --nav-width: 70px;
+
+  /* Typography */
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 /* ─── Dark theme ─────────────────────────────────────────────── */
@@ -63,12 +66,14 @@
 
 body {
   margin: 0;
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   transition: background-color 0.25s ease, color 0.25s ease;
+  font-size: 15px;
+  letter-spacing: -0.01em;
 }
 
 /* ─── Dark mode global overrides ─────────────────────────────── */
@@ -88,3 +93,50 @@ body {
 [data-theme="dark"] .modal-base {
   background: var(--bg-card) !important;
 }
+
+[data-theme="dark"] .tweet-actions button img {
+  opacity: 0.85;
+  filter: brightness(2);
+}
+
+/* ─── Image preview (upload) ─────────────────────────────────── */
+.img-preview-wrapper {
+  position: relative;
+  margin: 10px 0 6px;
+  max-width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-hover);
+}
+
+.img-preview {
+  display: block;
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+.img-preview-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: background 0.2s;
+  padding: 0;
+}
+.img-preview-close:hover { background: rgba(0, 0, 0, 0.8); }

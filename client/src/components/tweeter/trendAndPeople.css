@@ -1,113 +1,159 @@
 .trendAndPeople {
-    min-width: 400px;
-    margin-right: 10px;
-    margin-left: 20px;
-    text-align: left;
+    width: 340px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: sticky;
+    top: 16px;
+    align-self: flex-start;
 }
 
-.trendAndPeople p {
-    font-weight: 600;
-}
-
-.trends-header {
-    border-bottom: 1px solid var(--border);
-    width: 95%;
-    margin: auto;
-    padding: .8rem 0;
-}
-
-.trends,
-.people {
-    background-color: var(--bg-card);
-    padding: .5rem .2rem;
-    border-radius: 8px;
+/* ─── Card base ─────────────────────────────────────────────── */
+.sidebar-card {
+    background: var(--bg-card);
+    border-radius: 16px;
     border: 1px solid var(--border);
+    overflow: hidden;
 }
 
-.trendsDivs {
-    cursor: pointer;
-    list-style: none;
-    width: 92%;
-    margin: auto;
-    padding: .5rem 0;
+.sidebar-card-header {
+    padding: 16px 16px 10px;
+    border-bottom: 1px solid var(--border);
 }
 
-.trends p {
-    margin: -.1rem;
+.sidebar-card-header p {
+    font-size: 17px;
+    font-weight: 700;
     color: var(--text-primary);
+    margin: 0;
+    letter-spacing: -0.02em;
 }
 
-.trends label {
-    font-size: 14px;
+.sidebar-empty {
+    padding: 20px 16px;
+    text-align: center;
+}
+
+.sidebar-empty p {
     color: var(--text-muted);
+    font-size: 14px;
+    margin: 0;
+}
+
+/* ─── Tendencias ────────────────────────────────────────────── */
+.trendsDivs {
+    padding: 10px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+}
+
+.trendsDivs:last-child {
+    border-bottom: none;
 }
 
 .trendsDivs:hover {
-    color: var(--accent);
+    background: var(--bg-hover);
 }
 
-.people {
-    position: relative;
-    margin-top: 1rem;
-}
-
-.people-body {
-    margin-top: 1.4rem;
-    align-items: center;
-}
-
-.user-followers {
-    text-align: left;
-}
-
-.user-followers p,
-.user-followers label {
-    margin-left: 10px;
-}
-
-.user-followers p {
-    color: var(--text-primary);
+.trendsDivs p {
+    font-size: 15px;
     font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 2px;
 }
 
-.user-followers label {
-    font-size: 14px;
+.trendsDivs label {
+    font-size: 13px;
     color: var(--text-muted);
+    cursor: pointer;
 }
 
-.peopleHobbies {
-    margin-top: 1rem;
-}
-
-.peopleHobbies label {
-    font-size: 16px;
-    color: var(--text-muted);
-}
-
-.peoplePortada {
-    margin-top: .7rem;
-    padding-bottom: 1.7rem;
+/* ─── A quién seguir ────────────────────────────────────────── */
+.people-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
     border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
 }
 
-.peoplePortada img {
-    height: 100px;
-    width: 96%;
-    border-radius: 8px;
-    margin: auto;
+.people-item:last-child {
+    border-bottom: none;
 }
 
-#peopleImg {
-    height: 66px;
-    width: 66px;
-    border-radius: 8px;
-    margin-left: .7rem;
+.people-item:hover {
+    background: var(--bg-hover);
 }
 
+.people-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+}
+
+.people-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.people-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.people-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* ─── Botón "Ver perfil" ────────────────────────────────────── */
+.profile-btn {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border: 2px solid var(--accent);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    white-space: nowrap;
+}
+
+.profile-btn:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+.profile-btn--mine {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+}
+
+.profile-btn--mine:hover {
+    background: var(--accent-2);
+    color: #fff;
+}
+
+/* ─── Responsive ────────────────────────────────────────────── */
 @media screen and (max-width: 1100px) {
     .trendAndPeople {
-        width: 300px !important;
-        min-width: 300px !important;
+        width: 280px;
     }
 }
 

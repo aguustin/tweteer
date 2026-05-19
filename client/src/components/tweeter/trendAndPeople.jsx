@@ -19,7 +19,7 @@ const TrendAndPeople = () => {
         await getProfileInformationContext(session[0]._id);
         await layoutHomeContext(e);
     };
-    
+
     const getTendencie = async (e, tendencie) => {
         e.preventDefault();
         await layoutSearchContext();
@@ -31,79 +31,60 @@ const TrendAndPeople = () => {
 
     return (
         <div className="trendAndPeople">
-            <div className="trends">
-                <div className='trends-header p-2'>
+
+            <div className="sidebar-card trends">
+                <div className="sidebar-card-header">
                     <p>Tendencias para ti</p>
                 </div>
-                <div>
-                    {topTrends.length > 0 ? (
-                        topTrends.map((tend, index) => (
-                            <div
-                                key={index}
-                                className='trendsDivs'
-                                onClick={(e) => getTendencie(e, tend._id)}
-                                role="button"
-                                tabIndex={0}
-                                onKeyPress={(e) => {
-                                    if (e.key === 'Enter') getTendencie(e, tend._id);
-                                }}
-                            >
-                                <p>#{tend._id}</p>
-                                <label>{tend.count} {tend.count === 1 ? 'Tweet' : 'Tweets'}</label>
-                            </div>
-                        ))
-                    ) : (
-                        <div style={{ padding: '20px', textAlign: 'center', color: '#999' }}>
-                            <p>No hay tendencias en las últimas 24hs</p>
+                {topTrends.length > 0 ? (
+                    topTrends.map((tend, index) => (
+                        <div
+                            key={index}
+                            className="trendsDivs"
+                            onClick={(e) => getTendencie(e, tend._id)}
+                            role="button"
+                            tabIndex={0}
+                            onKeyPress={(e) => { if (e.key === 'Enter') getTendencie(e, tend._id); }}
+                        >
+                            <p>#{tend._id}</p>
+                            <label>{tend.count} {tend.count === 1 ? 'Tweet' : 'Tweets'}</label>
                         </div>
-                    )}
-                </div>
-
+                    ))
+                ) : (
+                    <div className="sidebar-empty">
+                        <p>Sin tendencias en las últimas 24hs</p>
+                    </div>
+                )}
             </div>
 
-            {suggestedUsers.map((user) => (
-                <div key={user._id} className="people">
-                    <div className='mx-auto'>
-                        <div className='trends-header'>
-                            <label>👥 A quién seguir</label>
-                        </div>
-                        
-                        <div className="people-body d-flex">
-                            <div>
-                                <img 
-                                    id="peopleImg" 
-                                    src={user.userImg || notUser} 
-                                    alt={`${user.userName}'s profile`}
-                                />
-                            </div>
-                            <div className='user-followers'>
-                                <p>{user.userName}</p>
-                                <label>👤 {user.followers?.length || 0} Seguidores</label>
-                                <label>🔗 {user.following?.length || 0} Siguiendo</label>
-                            </div>
-                        </div>
-                        
-                        <div className='peoplePortada text-center'>
-                            <img 
-                                src={user.userPortada || notUser} 
-                                alt={`${user.userName}'s cover`}
-                            />
-                        </div>
-                        
-                        <div>
-                            {user._id === session[0]?._id ? (
-                                <button onClick={myProfile}>
-                                    Ver mi perfil
-                                </button>
-                            ) : (
-                                <button onClick={(e) => seeProfile(e, user._id)}>
-                                    Ver perfil
-                                </button>
-                            )}
-                        </div>
-                    </div>
+            <div className="sidebar-card people-section">
+                <div className="sidebar-card-header">
+                    <p>A quién seguir</p>
                 </div>
-            ))}
+                {suggestedUsers.map((user) => (
+                    <div key={user._id} className="people-item">
+                        <img
+                            className="people-avatar"
+                            src={user.userImg || notUser}
+                            alt={user.userName}
+                        />
+                        <div className="people-info">
+                            <span className="people-name">{user.userName}</span>
+                            <span className="people-meta">{user.followers?.length || 0} seguidores</span>
+                        </div>
+                        {user._id === session[0]?._id ? (
+                            <button className="profile-btn profile-btn--mine" onClick={myProfile}>
+                                Mi perfil
+                            </button>
+                        ) : (
+                            <button className="profile-btn" onClick={(e) => seeProfile(e, user._id)}>
+                                Ver perfil
+                            </button>
+                        )}
+                    </div>
+                ))}
+            </div>
+
         </div>
     );
 };

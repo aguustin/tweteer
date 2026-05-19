@@ -8,6 +8,7 @@ const PublicTweet = () => {
   const { session, publicT, createTweetContext, allUsers } = useContext(TweetsContext);
 
   const [charCount, setCharCount] = useState(0);
+  const [imgPreview, setImgPreview] = useState(null);
   const [saveHashtag, setSaveHashtag] = useState([]);
   const [hashtag, setHashtag] = useState("");
   const [mentionQuery, setMentionQuery] = useState("");
@@ -84,6 +85,7 @@ const PublicTweet = () => {
     setCharCount(0);
     setSaveHashtag([]);
     setHashtag("");
+    setImgPreview(null);
   };
 
   return (
@@ -145,6 +147,20 @@ const PublicTweet = () => {
                 )}
               </div>
 
+              {imgPreview && (
+                <div className="img-preview-wrapper">
+                  <img src={imgPreview} alt="preview" className="img-preview" />
+                  <button
+                    type="button"
+                    className="img-preview-close"
+                    onClick={() => {
+                      setImgPreview(null);
+                      document.getElementById('tweetImg').value = '';
+                    }}
+                  >✕</button>
+                </div>
+              )}
+
               <div className="abc d-flex">
                 <select
                   className="selectPrivacyPublication"
@@ -161,6 +177,10 @@ const PublicTweet = () => {
                   type="file"
                   name="tweetImg"
                   accept="image/*"
+                  onChange={(e) => {
+                    const f = e.target.files[0];
+                    setImgPreview(f ? URL.createObjectURL(f) : null);
+                  }}
                 />
                 <label htmlFor="tweetImg" aria-label="Adjuntar imagen">
                   <img src={twImg} alt="" />

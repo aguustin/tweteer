@@ -30,7 +30,9 @@ export const respondTweetRequest = async (commentData) => {
     const form = new FormData();
 
     for(let key in commentData){
-        form.append(key, commentData[key])
+        if (commentData[key] !== undefined && commentData[key] !== null) {
+            form.append(key, commentData[key]);
+        }
     }
     return await axios.post(`${process.env.REACT_APP_BACK_URL}/respondTweet`, form, {
         headers:{
@@ -44,7 +46,9 @@ export const answerRequest = async (answerData) => {
     const form = new FormData();
 
     for(let key in answerData){
-        form.append(key, answerData[key]);
+        if (answerData[key] !== undefined && answerData[key] !== null) {
+            form.append(key, answerData[key]);
+        }
     }
 
     return await axios.post(`${process.env.REACT_APP_BACK_URL}/answerTw`, form, {
