@@ -12,29 +12,36 @@ import save from "../../imgs/save.png";
 import { useContext, useEffect, useState } from 'react';
 import LayoutContext from '../../context/layoutsContext';
 import Nav from './nav';
-import notUser from  '../../imgs/notUser.jpg';
+import notUser from '../../imgs/notUser.jpg';
 import TweetsContext from '../../context/tweetsContext';
-import deletePng from '../../imgs/close.png'
+import deletePng from '../../imgs/close.png';
+import { formatRelativeTime } from '../../utils/formatDate';
+import TweetSkeleton from '../loading/TweetSkeleton';
 
 const Tweets = () => {
-    const [ answerLayout, setAnswerLayout ] = useState(false);
-    const [ black, setBlackLayout ] = useState(false);
-    const [ profileId, setProfileId ] = useState();
-    const [ tweetId, setTweetId ] = useState();
-    const [ commentId, setCommentId ] = useState();
-    
+    const [answerLayout, setAnswerLayout] = useState(false);
+    const [black, setBlackLayout] = useState(false);
+    const [profileId, setProfileId] = useState();
+    const [tweetId, setTweetId] = useState();
+    const [commentId, setCommentId] = useState();
+    const [shareToast, setShareToast] = useState("");
+    const [loadingTweets, setLoadingTweets] = useState(false);
+
     let fecha = new Date();
     let day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     let month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const commentsDate = `${day[fecha.getDay()]}, ${fecha.getDate()} ${month[fecha.getMonth()]} - ${fecha.getHours()}:${fecha.getMinutes()}`;
-    const {homeLayout, listsLayout, searching} = useContext(LayoutContext);
-    const {session, allUsers, tweets, se, setSe, retweetLayout, respondTweetContext, answerContext, likeContext, likeCommentContext, answerLikeContext, retweetContext, saveTweetContext, getProfileInformationContext, getAllTendContext, deleteTweetContext} = useContext(TweetsContext);
-    
+
+    const { homeLayout, listsLayout, searching, exploreHasMore, loadMoreExplore, feedLayout, feedTweets, feedHasMore, loadMoreFeed } = useContext(LayoutContext);
+    const { session, allUsers, tweets, se, setSe, retweetLayout, respondTweetContext, answerContext, likeContext, likeCommentContext, answerLikeContext, retweetContext, saveTweetContext, getProfileInformationContext, getAllTendContext, deleteTweetContext, getTendenciesContext } = useContext(TweetsContext);
+
     useEffect(() => {
         (async() => {
             if (session) {
+                setLoadingTweets(true);
                 await getProfileInformationContext(session?.[0]?._id);
                 await getAllTendContext();
+                setLoadingTweets(false);
             }
         })();
         // eslint-disable-next-line
@@ -44,8 +51,23 @@ const Tweets = () => {
         e.preventDefault();
         setSe(e.target.value);
     }
-    const a = allUsers.filter((data) => data.userName?.toLowerCase().includes(se.toLowerCase()));
-   
+
+    // Si la búsqueda empieza con #, filtra por hashtag en vez de por usuario
+    const isHashtagSearch = se.startsWith('#') && se.length > 1;
+    const hashtagQuery = isHashtagSearch ? se.slice(1) : "";
+    const a = isHashtagSearch
+        ? []
+        : allUsers.filter((data) => data.userName?.toLowerCase().includes(se.toLowerCase()));
+
+    useEffect(() => {
+        if (!isHashtagSearch || !hashtagQuery) return;
+        const timer = setTimeout(() => {
+            getTendenciesContext(hashtagQuery);
+        }, 400);
+        return () => clearTimeout(timer);
+    // eslint-disable-next-line
+    }, [hashtagQuery, isHashtagSearch]);
+
     const respondTweet = async (e, tweetId) => {
         e.preventDefault();
         const commentData = {
@@ -56,14 +78,10 @@ const Tweets = () => {
             commentsPublication: e.target.elements.respondTweet.value,
             commentsDate: commentsDate
         }
-
         let textarea = document.querySelector('#respondTweet');
         textarea.value = '';
-       console.log("comment data: ", commentData)
-
         await respondTweetContext(commentData);
     }
-    
 
     const openAnswerLayout = (profileId, tweetId, commentId) => {
         setProfileId(profileId);
@@ -71,7 +89,6 @@ const Tweets = () => {
         setCommentId(commentId);
         setAnswerLayout(!answerLayout);
     }
-
 
     const like = async (e, profileId, tweetId) => {
         e.preventDefault();
@@ -82,12 +99,10 @@ const Tweets = () => {
             userNameLikes: session[0].userName,
             profileIdLikes: session[0]._id
         }
-
         await likeContext(likeData);
     }
-    console.log("comments:" ,tweets)
-    const commentLike = async (profileId, tweetId, commentId) => {
 
+    const commentLike = async (profileId, tweetId, commentId) => {
         const commentLikeData = {
             profileId: profileId,
             tweetId: tweetId,
@@ -95,12 +110,10 @@ const Tweets = () => {
             commentProfileLikes: session[0].userImg,
             commentUserNameLikes: session[0].userName
         };
-
         await likeCommentContext(commentLikeData);
     }
 
     const answerLike = async (profileId, tweetId, commentId, answerId) => {
-
         const answerLikeData = {
             profileId: profileId,
             tweetId: tweetId,
@@ -108,7 +121,6 @@ const Tweets = () => {
             answerId: answerId,
             answerUserNameLikes: session[0].userName
         };
-
         await answerLikeContext(answerLikeData);
     }
 
@@ -116,7 +128,6 @@ const Tweets = () => {
         e.preventDefault();
         setAnswerLayout(!answerLayout);
         setBlackLayout(!black);
-
         const answerData = {
             profileId: profileId,
             tweetId: tweetId,
@@ -128,7 +139,7 @@ const Tweets = () => {
         }
         await answerContext(answerData);
     }
-    console.log(tweets)
+
     const retweeted = async (e, tweetId) => {
         e.preventDefault();
         await retweetContext(tweetId);
@@ -145,8 +156,26 @@ const Tweets = () => {
     }
 
     const deleteTweet = async (userId, tweetId) => {
-        console.log("userId: ", userId, " ", "asdasdasd", tweetId)
         await deleteTweetContext(userId, tweetId);
+    }
+
+    const shareTweet = (tweetId) => {
+        const url = `${window.location.origin}/tweet/${tweetId}`;
+        navigator.clipboard.writeText(url).then(() => {
+            setShareToast("¡Enlace copiado!");
+            setTimeout(() => setShareToast(""), 2500);
+        });
+    }
+
+    // Render @mentions as bold colored spans
+    const renderPublication = (text) => {
+        if (!text) return null;
+        const parts = text.split(/(@\w+)/g);
+        return parts.map((part, i) =>
+            part.match(/^@\w+$/)
+                ? <span key={i} className="mention-highlight">{part}</span>
+                : part
+        );
     }
 
     const Answer = () => {
@@ -159,175 +188,186 @@ const Tweets = () => {
                         <label htmlFor="answerTweetImg"><img id="labelAnsImg" src={twImg} alt=""></img></label>
                         <input id="answerTweetImg" type="file" name="answerTweetImg"></input>
                     </div>
-                    <div  className='sepB'>
+                    <div className='sepB'>
                         <button type="button" onClick={() => closeAnswerLayout()}>Cancel</button>
                         <button type="submit">Answer</button>
                     </div>
-              </div>
+                </div>
             </form>
         )
     }
 
-    function formatTweetDate(dateString) {
-        const date = new Date(dateString);
-
-        const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
-        const day = date.getDate();
-        const month = date.toLocaleDateString('en-US', { month: 'short' });
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-
-        return `${dayName}, ${day} ${month} - ${hours}:${minutes}`;
-    }
-
-
-      return(
+    return(
         <div>
             {black ? <div className='i'></div> : ''}
             {answerLayout ? <Answer/> : ''}
+            {shareToast && <div className="share-toast">{shareToast}</div>}
             <Nav/>
-         <div className='tweets'>
-            {searching ? <div className='search'>
-                <form className='d-flex'>           
-                    <input value={se} onChange={searchs} type="text" placeholder='Search'></input>
-                    <button>Search</button>
-                </form>  
-                <SearchLayout users={a}/>
-         </div>
-            : ''}
-            {retweetLayout ? <RetweetLayout/> : ''}
+            <div className='tweets'>
+                {searching ? (
+                    <div className='search'>
+                        <form className='d-flex'>
+                            <input value={se} onChange={searchs} type="text" placeholder='Buscar usuario o #hashtag'></input>
+                            <button>Buscar</button>
+                        </form>
+                        {isHashtagSearch
+                            ? <p className="hashtag-search-label">Mostrando tweets con #{hashtagQuery}</p>
+                            : <SearchLayout users={a}/>
+                        }
+                    </div>
+                ) : ''}
+                {retweetLayout ? <RetweetLayout/> : ''}
                 {homeLayout ? <HomeLayout/> : ''}
                 <div className='lists-publications-container mx-auto'>
-                  {homeLayout ? <TrendAndPeople/> : '' }
+                    {homeLayout ? <TrendAndPeople/> : ''}
                     <div className='publications'>
                         {homeLayout ? <PublicTweet/> : ''}
-                        {tweets.map((t) =>
+
+                        {loadingTweets ? (
+                            <>
+                                <TweetSkeleton />
+                                <TweetSkeleton />
+                                <TweetSkeleton />
+                            </>
+                        ) : (
+                        tweets.map((t) =>
                         <div key={t._id}>
-                        {t.tweets.map((tc) => 
+                        {t.tweets.map((tc) =>
                         <div key={tc._id} className='t-backg'>
-                        {session?.[0]._id === t._id && <button className='deleteTweet' onClick={() => deleteTweet(session?.[0]?._id, tc._id)}><img src={deletePng} alt=""></img></button> }
-                        {tc.retweeted === 1 ?  
+                        {session?.[0]._id === t._id && <button className='deleteTweet' onClick={() => deleteTweet(session?.[0]?._id, tc._id)}><img src={deletePng} alt=""></img></button>}
+                        {tc.retweeted === 1 ?
                         <div className='retweets'>
-                        <div className='retweets-info d-flex'>
-                            { tc.tweetProfileImg ? <img src={tc.tweetProfileImg} alt=""></img> : <img src={notUser} alt=""></img> }
-                            <div>
-                                <div className='d-flex'>
-                                    <p>{tc.tweetUsername}</p>
-                                    <label>retweeted</label>
-                                </div>
-                                <p>{tc.tweetPublication}</p>
-                            </div>
-                            <label>{formatTweetDate(tc.tweetDate)}</label>
-                        </div>
-                        <div className='tweetDesc-img border border-info p-4 mt-2' >
-                            <div className='tweetProfileData'>
-                                <div>
-                                {tc.profileRetweetedImg ? <img id='tweetProfileImg' src={tc.profileRetweetedImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
-                                </div>
-                                <div>
-                                    <p>{tc.retweetedUserName}</p>
-                                    <p>{tc.retweetedPublication}</p>
-                                </div>
-                            </div>
-                            {tc.retweetedImg ? <img className='tweetImg' src={tc.retweetedImg} alt=""></img> : ''}
-                        </div>
-                        <li key={tc._id} className='tweet-actions d-flex'>         
-                            <button className='mx-auto' onClick={(e) => retweeted(e, tc._id)}><img src={retweet} alt="" ></img>{tc.retweets}</button>
-                            <button className='mx-auto' onClick={(e) => like(e, t._id, tc._id)}><img src={hearth} alt=""></img>{tc.tweetLikess?.length}</button>
-                            <button className='mx-auto' onClick={(e) => saveTweet(e, tc._id)}><img src={save} alt=""></img></button>
-                        </li>
-                    </div> 
-                    
-                    : 
-                                    
-                    <div className='tweet'>
-                        <div className='tweetDesc-img'>
-                               <div className='tweetProfileData'>
-                                   <div>
-                                {tc.tweetProfileImg ? <img id='tweetProfileImg' src={tc.tweetProfileImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
-                                </div>
+                            <div className='retweets-info d-flex'>
+                                {tc.tweetProfileImg ? <img src={tc.tweetProfileImg} alt=""></img> : <img src={notUser} alt=""></img>}
                                 <div>
                                     <div className='d-flex'>
                                         <p>{tc.tweetUsername}</p>
-                                        <label>{formatTweetDate(tc.tweetDate)}</label>
+                                        <label>retweeted</label>
                                     </div>
-                                    <p id="tweetPublication">{tc.tweetPublication}</p>
+                                    <p>{renderPublication(tc.tweetPublication)}</p>
                                 </div>
+                                <label className="tweet-date">{formatRelativeTime(tc.tweetDate)}</label>
                             </div>
-                            {tc.tweetImg ? <img className='tweetImg' src={tc.tweetImg} alt=""></img> : ''}
-                            <li className='tweet-actions d-flex'>
-                                 <button><img src={chat} alt=""></img>{tc.comments?.length}</button>
-                                <button onClick={(e) => retweeted(e, tc._id)}><img src={retweet} alt="" ></img>{tc.retweets}</button>
-                                <button onClick={(e) => like(e, t._id, tc._id)}><img src={hearth} alt=""></img>{tc.tweetLikess?.length}</button>
-                                <button onClick={(e) => saveTweet(e, tc._id)}><img src={save} alt=""></img></button>
+                            <div className='tweetDesc-img border border-info p-4 mt-2'>
+                                <div className='tweetProfileData'>
+                                    <div>
+                                        {tc.profileRetweetedImg ? <img id='tweetProfileImg' src={tc.profileRetweetedImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
+                                    </div>
+                                    <div>
+                                        <p>{tc.retweetedUserName}</p>
+                                        <p>{renderPublication(tc.retweetedPublication)}</p>
+                                    </div>
+                                </div>
+                                {tc.retweetedImg ? <img className='tweetImg' src={tc.retweetedImg} alt=""></img> : ''}
+                            </div>
+                            <li key={tc._id} className='tweet-actions d-flex'>
+                                <button className='mx-auto' onClick={(e) => retweeted(e, tc._id)}><img src={retweet} alt=""></img>{tc.retweets}</button>
+                                <button className='mx-auto' onClick={(e) => like(e, t._id, tc._id)}><img src={hearth} alt=""></img>{tc.tweetLikess?.length}</button>
+                                <button className='mx-auto' onClick={(e) => saveTweet(e, tc._id)}><img src={save} alt=""></img></button>
+                                <button className='mx-auto share-btn' onClick={() => shareTweet(tc._id)} title="Copiar enlace">🔗</button>
                             </li>
                         </div>
-                    </div>
-                }
-                    <div>
-                    {listsLayout ? '' :  
-                        <form className='comments-form mt-2' encType='multipart/form-data' onSubmit={(e) => respondTweet(e, tc._id)}>
-                             <div className='d-flex'>
-                                 {session[0].userImg ? <img src={session[0].userImg} alt=""></img> : <img src={notUser} alt=""></img>}
-                                <textarea id="respondTweet" type="text" name="respondTweet" placeholder='Tweet your reply'></textarea>
-                            </div>
-                            <div className='cImgComment'>
-                                <label htmlFor="respondTweetImg"><img id="labelImg" src={twImg} alt=""></img></label>
-                                 <input id="respondTweetImg" type="file" name="respondTweetImg" accept="image/*"></input>
-                                 <button id="commButton" type="submit">Comment</button>
-                            </div> 
-                        </form> }
-                    </div>
-                     {tc.comments.map((c) => 
-                     <div key={c._id} className='comments-container d-flex mt-3'>
-                        {c.commentsProfilesImg !== "undefined" ? <img id="comment-image-profile" src={c.commentsProfilesImg} alt=""></img> : <img id="comment-image-profile" src={notUser} alt=""></img>}
-                        <div className='w-100'>
-                             <div className='comment'>
-                                <div className='d-flex'>
-                                    <p>{c.commentsUsers}</p>
-                                    <label>{c.commentsDate}</label>
-                                </div>
-                                 <div className="comment-width">
-                                    <p>{c.commentsPublication}</p>
-                                    {c.commentsImg ? <img src={c.commentsImg} alt=""></img> : ''}
-                                </div>
-                             </div>
-                            <div className='like-comment-container mt-2'>
-                                     <button id="like-comment" onClick={() => commentLike(t._id, tc._id, c._id)}> <img src={hearth} alt=""></img>{c.commentLikes?.length}</button>
-                                     <label><img src={chat} alt=""></img>{c.answerComments?.length}</label>
-                                     <button className="answer-comment text-secondary" onClick={() => openAnswerLayout(t._id, tc._id, c._id)}>Comment</button>
-                            </div>
-                            {c.answerComments.map((ans) => 
-                            <div key={ans._id}>
-                                <div className='answer-comment'>
-                                     <div className='d-flex'>
-                                        {ans.answerProfilesImg !== "undefined" ? <img className='answer-img' src={ans.answerProfilesImg} alt=""></img> : <img className='answer-img' src={notUser} alt=""></img>}
-                                        <label>{ans.answerArroba}</label>
+
+                        :
+
+                        <div className='tweet'>
+                            <div className='tweetDesc-img'>
+                                <div className='tweetProfileData'>
+                                    <div>
+                                        {tc.tweetProfileImg ? <img id='tweetProfileImg' src={tc.tweetProfileImg} alt=""></img> : <img id='tweetProfileImg' src={notUser} alt=""></img>}
                                     </div>
-                                    <div className="answer-width">
-                                        <p>{ans.answerDesc}</p>
-                                        <div>
-                                            {ans.answerTweetImg ? <img id="answer-img" src={ans.answerTweetImg} alt=""></img> : ''}
-                                        </div>    
-                                     </div>
-                                    <div className='answerLike'>
-                                        <button onClick={() => answerLike(t._id, tc._id, c._id, ans._id)}><img src={hearth} alt=""></img></button>
-                                        <label className='mt-1'>{ans.answerLikes?.length} likes</label>
+                                    <div>
+                                        <div className='d-flex'>
+                                            <p>{tc.tweetUsername}</p>
+                                            <label className="tweet-date">{formatRelativeTime(tc.tweetDate)}</label>
+                                        </div>
+                                        <p id="tweetPublication">{renderPublication(tc.tweetPublication)}</p>
                                     </div>
                                 </div>
-                            </div>)}
+                                {tc.tweetImg ? <img className='tweetImg' src={tc.tweetImg} alt=""></img> : ''}
+                                <li className='tweet-actions d-flex'>
+                                    <button><img src={chat} alt=""></img>{tc.comments?.length}</button>
+                                    <button onClick={(e) => retweeted(e, tc._id)}><img src={retweet} alt=""></img>{tc.retweets}</button>
+                                    <button onClick={(e) => like(e, t._id, tc._id)}><img src={hearth} alt=""></img>{tc.tweetLikess?.length}</button>
+                                    <button onClick={(e) => saveTweet(e, tc._id)}><img src={save} alt=""></img></button>
+                                    <button className='share-btn' onClick={() => shareTweet(tc._id)} title="Copiar enlace">🔗</button>
+                                </li>
+                            </div>
                         </div>
+                        }
+                        <div>
+                        {listsLayout ? '' :
+                            <form className='comments-form mt-2' encType='multipart/form-data' onSubmit={(e) => respondTweet(e, tc._id)}>
+                                <div className='d-flex'>
+                                    {session[0].userImg ? <img src={session[0].userImg} alt=""></img> : <img src={notUser} alt=""></img>}
+                                    <textarea id="respondTweet" type="text" name="respondTweet" placeholder='Tweet your reply'></textarea>
+                                </div>
+                                <div className='cImgComment'>
+                                    <label htmlFor="respondTweetImg"><img id="labelImg" src={twImg} alt=""></img></label>
+                                    <input id="respondTweetImg" type="file" name="respondTweetImg" accept="image/*"></input>
+                                    <button id="commButton" type="submit">Comment</button>
+                                </div>
+                            </form>}
+                        </div>
+                        {tc.comments.map((c) =>
+                        <div key={c._id} className='comments-container d-flex mt-3'>
+                            {c.commentsProfilesImg !== "undefined" ? <img id="comment-image-profile" src={c.commentsProfilesImg} alt=""></img> : <img id="comment-image-profile" src={notUser} alt=""></img>}
+                            <div className='w-100'>
+                                <div className='comment'>
+                                    <div className='d-flex'>
+                                        <p>{c.commentsUsers}</p>
+                                        <label>{c.commentsDate}</label>
+                                    </div>
+                                    <div className="comment-width">
+                                        <p>{renderPublication(c.commentsPublication)}</p>
+                                        {c.commentsImg ? <img src={c.commentsImg} alt=""></img> : ''}
+                                    </div>
+                                </div>
+                                <div className='like-comment-container mt-2'>
+                                    <button id="like-comment" onClick={() => commentLike(t._id, tc._id, c._id)}><img src={hearth} alt=""></img>{c.commentLikes?.length}</button>
+                                    <label><img src={chat} alt=""></img>{c.answerComments?.length}</label>
+                                    <button className="answer-comment text-secondary" onClick={() => openAnswerLayout(t._id, tc._id, c._id)}>Comment</button>
+                                </div>
+                                {c.answerComments.map((ans) =>
+                                <div key={ans._id}>
+                                    <div className='answer-comment'>
+                                        <div className='d-flex'>
+                                            {ans.answerProfilesImg !== "undefined" ? <img className='answer-img' src={ans.answerProfilesImg} alt=""></img> : <img className='answer-img' src={notUser} alt=""></img>}
+                                            <label>{ans.answerArroba}</label>
+                                        </div>
+                                        <div className="answer-width">
+                                            <p>{renderPublication(ans.answerDesc)}</p>
+                                            <div>
+                                                {ans.answerTweetImg ? <img id="answer-img" src={ans.answerTweetImg} alt=""></img> : ''}
+                                            </div>
+                                        </div>
+                                        <div className='answerLike'>
+                                            <button onClick={() => answerLike(t._id, tc._id, c._id, ans._id)}><img src={hearth} alt=""></img></button>
+                                            <label className='mt-1'>{ans.answerLikes?.length} likes</label>
+                                        </div>
+                                    </div>
+                                </div>)}
+                            </div>
+                        </div>
+                        )}
+                        </div>
+                        )}
+                        </div>
+                        )
+                        )}
+
+                        {searching && exploreHasMore && (
+                            <div className="load-more-container">
+                                <button className="load-more-btn" onClick={loadMoreExplore}>
+                                    Cargar más
+                                </button>
+                            </div>
+                        )}
                     </div>
-                    )}
-                    </div>
-                )}
-                </div> 
-                )}
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-</div>
-)
+    )
 }
 
 export default Tweets;

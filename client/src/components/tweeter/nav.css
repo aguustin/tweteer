@@ -5,18 +5,17 @@
   left: 0;
   width: 70px;
   height: 100vh;
-  background: white;
+  background: var(--nav-bg);
   box-shadow: 2px 0 20px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   padding: 20px 0;
   z-index: 11;
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
 }
 
 .navTweeter:hover {
- cursor: pointer;
+  cursor: pointer;
   width: 100px;
   box-shadow: 4px 0 30px rgba(0, 0, 0, 0.12);
 }
@@ -59,7 +58,7 @@
   border: none;
   border-radius: 25px;
   background: transparent;
-  color: #1a1a1a;
+  color: var(--text-primary);
   font-size: 18px;
   font-weight: 600;
   text-align: left;
@@ -91,7 +90,7 @@
   left: 0;
   width: 4px;
   height: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient);
   transform: scaleY(0);
   transition: transform 0.3s ease;
 }
@@ -101,8 +100,8 @@
 }
 
 .navButtons button:hover {
-  background: rgba(102, 126, 234, 0.1);
-  color: #667eea;
+  background: var(--accent-bg);
+  color: var(--accent);
 }
 
 .navButtons button:active {
@@ -137,8 +136,8 @@
 }
 
 .navUser:hover {
-  background: white;
-  border-color: #667eea;
+  background: var(--bg-card);
+  border-color: var(--accent);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
 }
 
@@ -147,14 +146,14 @@
   height: 45px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--border-input);
   flex-shrink: 0;
   transition: all 0.3s ease;
   z-index: 12;
 }
 
 .navUser:hover img {
-  border-color: #667eea;
+  border-color: var(--accent);
   transform: scale(1.05);
 }
 
@@ -162,7 +161,7 @@
   width: 100%;
   border: none;
   background: transparent;
-  color: #1a1a1a;
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 15px;
   text-align: center;
@@ -182,7 +181,7 @@
 }
 
 .navUser > button:hover {
-  color: #667eea;
+  color: var(--accent);
 }
 
 /* Menú de logout */
@@ -191,23 +190,18 @@
   bottom: calc(100% + 10px);
   left: 0;
   right: -100px;
-  background: white;
+  background: var(--bg-card);
   border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-lg);
   padding: 8px;
   animation: slideUp 0.3s ease;
   z-index: 13;
+  border: 1px solid var(--border);
 }
 
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .logout button {
@@ -215,7 +209,7 @@
   padding: 12px 20px;
   border: none;
   border-radius: 10px;
-  background: white;
+  background: var(--bg-card);
   color: #dc3545;
   font-weight: 600;
   font-size: 15px;
@@ -229,15 +223,9 @@
   transform: translateX(5px);
 }
 
-.logout button::before {
-  margin-right: 8px;
-}
-
-/* NO agregar padding al body - la barra no ocupa espacio */
 body {
   padding-left: 0;
 }
-
 
 /* Responsive - móvil */
 @media (max-width: 480px) {
@@ -255,7 +243,6 @@ body {
     align-items: center;
   }
 
- 
   .navTweeter:hover {
     width: 100%;
   }
@@ -322,6 +309,161 @@ body {
     padding-left: 0;
     padding-bottom: 70px;
   }
+}
+
+/* Notificaciones */
+.nav-notif-wrapper {
+  position: relative;
+}
+
+.nav-notif-btn {
+  position: relative;
+  font-size: 22px !important;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px 14px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+.nav-notif-btn:hover {
+  background: var(--accent-bg);
+}
+
+.notif-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: #e0245e;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 50%;
+  min-width: 17px;
+  height: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  pointer-events: none;
+}
+
+.notif-panel {
+  position: fixed;
+  left: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 300px;
+  background: var(--bg-card);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  z-index: 9999;
+  overflow: hidden;
+  max-height: 70vh;
+  overflow-y: auto;
+  animation: slideIn 0.2s ease;
+}
+
+@media (max-width: 480px) {
+  .notif-panel {
+    left: 8px;
+    right: 8px;
+    width: auto;
+    top: auto;
+    bottom: 80px;
+    transform: none;
+  }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.notif-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px 10px;
+  font-weight: 700;
+  font-size: 15px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+  background: var(--bg-card);
+}
+
+.notif-clear {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  font-weight: 600;
+}
+
+.notif-clear:hover { text-decoration: underline; }
+
+.notif-empty {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  background: var(--bg-card);
+}
+
+.notif-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-primary);
+  transition: background 0.15s;
+  background: var(--bg-card);
+}
+
+.notif-item:hover { background: var(--bg-hover); }
+.notif-item:last-child { border-bottom: none; }
+
+.notif-item img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid transparent;
+}
+
+.notif-like img    { border-color: #e0245e; }
+.notif-comment img { border-color: var(--accent); }
+.notif-follow img  { border-color: #17bf63; }
+.notif-answer img  { border-color: #f45d22; }
+
+/* Dark mode toggle */
+.nav-theme-btn {
+  font-size: 20px !important;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px 14px;
+  border-radius: 25px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.nav-theme-btn:hover {
+  background: var(--accent-bg);
 }
 
 @media (max-width: 360px) {

@@ -1,51 +1,74 @@
 import "./publicTweet.css";
 import notUser from "../../imgs/notUser.jpg";
 import twImg from "../../imgs/photo.png";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import TweetsContext from "../../context/tweetsContext";
 
 const PublicTweet = () => {
-  const { session, publicT, createTweetContext } = useContext(TweetsContext);
+  const { session, publicT, createTweetContext, allUsers } = useContext(TweetsContext);
 
-  // Estados
-  const [hashtag, setHashtag] = useState("");
   const [charCount, setCharCount] = useState(0);
-  const [saveHashtag, setSaveHashtag] = useState([]); // ✅ ahora se mantiene entre renders
+  const [saveHashtag, setSaveHashtag] = useState([]);
+  const [hashtag, setHashtag] = useState("");
+  const [mentionQuery, setMentionQuery] = useState("");
+  const [showMentions, setShowMentions] = useState(false);
+  const [mentionStart, setMentionStart] = useState(-1);
+  const textareaRef = useRef(null);
 
   const maxChars = 280;
 
-  // Fechas
-  const fecha = new Date();
-  const day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]; // ✅ corregido el orden
-  const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-  const hashtagTweet = (e) => {
-    
+  const handleTextChange = (e) => {
     const text = e.target.value;
     setCharCount(text.length);
 
+    // hashtag tracking (existing logic)
     if (text === "#") {
       setHashtag(text);
     } else if (hashtag.length <= 0) {
       setSaveHashtag([]);
-    } else if (hashtag.charAt(0) === "#") { 
+    } else if (hashtag.charAt(0) === "#") {
       setHashtag(text);
-    } else if (saveHashtag.length > 0) {
-      console.log(""); 
     } else if (text.includes(" ") && hashtag.length > 0) {
       let cleaned = text.trim().substring(1);
       setSaveHashtag((prev) => [...prev, cleaned]);
     }
+
+    // @mention detection
+    const cursor = e.target.selectionStart;
+    const textUpToCursor = text.slice(0, cursor);
+    const atMatch = textUpToCursor.match(/@(\w*)$/);
+    if (atMatch) {
+      setMentionQuery(atMatch[1]);
+      setMentionStart(cursor - atMatch[0].length);
+      setShowMentions(true);
+    } else {
+      setShowMentions(false);
+      setMentionQuery("");
+    }
   };
 
+  const filteredUsers = mentionQuery
+    ? allUsers.filter(u =>
+        u.userName?.toLowerCase().includes(mentionQuery.toLowerCase()) &&
+        u._id !== session[0]?._id
+      ).slice(0, 5)
+    : [];
+
+  const insertMention = (userName) => {
+    const textarea = textareaRef.current;
+    const text = textarea.value;
+    const before = text.slice(0, mentionStart);
+    const after = text.slice(mentionStart + mentionQuery.length + 1);
+    const newText = `${before}@${userName} ${after}`;
+    textarea.value = newText;
+    setCharCount(newText.length);
+    setShowMentions(false);
+    setMentionQuery("");
+    textarea.focus();
+  };
 
   const createTweet = async (e) => {
     e.preventDefault();
-
-    const tweetDate = `${day[fecha.getDay()]}, ${fecha.getDate()} ${
-      month[fecha.getMonth()]
-    } - ${fecha.getHours()}:${fecha.getMinutes()}`;
-
     const tweetData = {
       userId: session[0]?._id,
       userImg: session[0]?.userImg,
@@ -53,15 +76,14 @@ const PublicTweet = () => {
       publication: e.target.elements.publication.value,
       tweetImg: e.target.elements.tweetImg.files[0],
       tweetPrivacy: e.target.elements.privacy.value,
-      tweetDate: tweetDate,
+      tweetDate: new Date().toISOString(),
       hashtag: saveHashtag,
     };
-
     await createTweetContext(tweetData);
-  
     e.target.reset();
     setCharCount(0);
     setSaveHashtag([]);
+    setHashtag("");
   };
 
   return (
@@ -76,11 +98,7 @@ const PublicTweet = () => {
             <img
               id="public-img"
               src={session && session[0]?.userImg ? session[0].userImg : notUser}
-              alt={
-                session && session[0]?.userName
-                  ? `${session[0].userName}'s profile`
-                  : "Profile"
-              }
+              alt={session?.[0]?.userName ? `${session[0].userName}'s profile` : "Profile"}
             />
 
             <form
@@ -90,10 +108,10 @@ const PublicTweet = () => {
             >
               <div style={{ position: "relative", width: "100%" }}>
                 <textarea
-                  type="text"
+                  ref={textareaRef}
                   placeholder="¿Qué está pasando?"
                   name="publication"
-                  onChange={hashtagTweet}
+                  onChange={handleTextChange}
                   maxLength={maxChars}
                   aria-label="Escribe tu tweet"
                 />
@@ -110,6 +128,21 @@ const PublicTweet = () => {
                 >
                   {charCount}/{maxChars}
                 </div>
+
+                {showMentions && filteredUsers.length > 0 && (
+                  <div className="mention-dropdown">
+                    {filteredUsers.map(u => (
+                      <div
+                        key={u._id}
+                        className="mention-item"
+                        onMouseDown={(e) => { e.preventDefault(); insertMention(u.userName); }}
+                      >
+                        <img src={u.userImg || notUser} alt="" />
+                        <span>@{u.userName}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="abc d-flex">

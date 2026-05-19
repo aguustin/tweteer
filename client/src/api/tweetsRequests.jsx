@@ -80,7 +80,9 @@ export const getAllTendRequest = () => axios.get(`${process.env.REACT_APP_BACK_U
 
 export const getTendenciesRequest = (tendencie) => axios.get(`${process.env.REACT_APP_BACK_URL}/getTendencies/${tendencie}`);
 
-export const getAllTweetsRequest = () => axios.get(`${process.env.REACT_APP_BACK_URL}/explore`);
+export const getAllTweetsRequest = (page = 1) => axios.get(`${process.env.REACT_APP_BACK_URL}/explore?page=${page}&limit=20`);
+
+export const getFeedRequest = (page = 1) => axios.get(`${process.env.REACT_APP_BACK_URL}/feed?page=${page}&limit=30`);
 
 export const deleteTweetRequest = (tweetObj) => axios.post(`${process.env.REACT_APP_BACK_URL}/deleteTweet`, tweetObj)
 

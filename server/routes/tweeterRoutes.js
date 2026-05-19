@@ -2,23 +2,24 @@ import { Router } from "express";
 import { createTweetController,
      answerController,
      retweetController,
-     saveRetweetController, 
-     getProfileInformationController, 
-     increaseLikesController, 
+     saveRetweetController,
+     getProfileInformationController,
+     increaseLikesController,
      increaseCommentLikesController,
-     increaseAnswerLikesController, 
-     increaseRetweetsController, 
-     respondTweetController, 
+     increaseAnswerLikesController,
+     increaseRetweetsController,
+     respondTweetController,
      exploreTweetsController,
      searchController,
      saveTweetController,
-     getSavedTweetController, 
+     getSavedTweetController,
      tendenciesController,
      getAllTendController,
      getTendenciesController,
      getAllTweetsController,
+     getFeedController,
      deleteAllController,
-     deleteTweetController 
+     deleteTweetController
      } from "../controllers/tweetsController.js";
 
 const router = Router();
@@ -58,6 +59,8 @@ router.get('/getAllTend', getAllTendController);
 router.get('/getTendencies/:tendencie', getTendenciesController);
 
 router.get('/explore', getAllTweetsController);
+
+router.get('/feed', getFeedController);
 
 router.delete('/deleteAll', deleteAllController);
 

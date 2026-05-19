@@ -2,6 +2,7 @@ import tweets from "../models/tweeterModel.js";
 import { tweetsUploader } from "../libs/cloudinary.js";
 import fs from 'fs-extra';
 import mongoose from "mongoose";
+import { emitNotification } from "../sockets/index.js";
 
 export const getProfileInformationController = async (req, res) => {
    const {userId, sessionId} = req.body;
@@ -9,8 +10,8 @@ export const getProfileInformationController = async (req, res) => {
    if(userId && sessionId){
         const userFollows = await tweets.find({_id: userId}, {followers: { _id: sessionId }});  //buscar dentro del userId                                                        
         
-        if(userFollows?.length > 0){ 
-            const getProfile = await tweets.find({_id: userId}).sort({"tweets._id": -1});
+        if(userFollows?.length > 0){
+            const getProfile = await tweets.find({_id: userId});
             res.send(getProfile);
 
         }else{
@@ -23,35 +24,44 @@ export const getProfileInformationController = async (req, res) => {
                     "tweets.tweetUserId": userId,
                     "tweets.tweetPrivacy": "everyone"
                 },
-                
+
+            },
+            {
+                $sort: { "tweets.tweetDate": -1 }
             },
             {
                 $group: {
                     _id: {
                         _id:"$_id",
-                        userName: "$userName"
+                        userName: "$userName",
+                        userImg: "$userImg",
+                        userPortada: "$userPortada",
+                        userDesc: "$userDesc"
                     },
                     count: { $sum: 1 },
                     tweets: {
                         $push: "$tweets"
                     },
                     followers: {
-                        $push: "$followers"
+                        $first: "$followers"
                     },
                     following: {
-                        $push: "$following"
+                        $first: "$following"
                     }
                 }
             },
-            { //lo ultimo hecho ----------------------------(NO FUNCIONA LOS FOLLOWERS Y FOLLOWINGS)-------------------------------------
+            {
                 $project:{
                     _id: "$_id._id",
                     userName: "$_id.userName",
+                    userImg: "$_id.userImg",
+                    userPortada: "$_id.userPortada",
+                    userDesc: "$_id.userDesc",
                     tweets: 1,
                     followers: 1,
                     following: 1
                 }
-            }, //-------------------------------------------------------------------------------------------------------
+            },
             {
                 $sort:{
                     "tweets._id": -1
@@ -62,7 +72,7 @@ export const getProfileInformationController = async (req, res) => {
         }
         
    }else{
-       const getProfile = await tweets.find({_id: userId}).sort({"tweets._id": -1});
+       const getProfile = await tweets.find({_id: userId});
        res.send(getProfile);
    }
 }
@@ -119,44 +129,6 @@ export const createTweetController = async (req, res) => {
       });
     }
 
-    // Actualizar tendencia (solo si hay hashtag)
-    if (hashtag?.length > 0) {
-      const trend = await tweets.aggregate([
-        {
-          $match: { "tweets.hashtags.word": hashtag },
-        },
-        {
-          $project: {
-            tweets: {
-              $filter: {
-                input: "$tweets",
-                as: "t",
-                cond: { $eq: ["$$t.hashtags.word", [hashtag]] },
-              },
-            },
-          },
-        },
-      ]);
-
-      if (trend.length && trend[0].tweets[0]?.hashtags[0]) {
-        const tweetId = trend[0].tweets[0]._id.toString();
-        const hashtagId = trend[0].tweets[0].hashtags[0]._id.toString();
-
-        await tweets.updateOne(
-          { _id: trend[0]._id },
-          {
-            $inc: { "tweets.$[t].hashtags.$[h].countH": 1 },
-          },
-          {
-            arrayFilters: [
-              { "t._id": tweetId },
-              { "h._id": hashtagId },
-            ],
-          }
-        );
-      }
-    }
-
     // Obtener tweets actualizados del usuario (para devolver al frontend)
     const updatedUser = await tweets.findOne({ _id: userId });
     res.status(200).json(updatedUser);
@@ -172,14 +144,12 @@ export const createTweetController = async (req, res) => {
 export const respondTweetController = async (req, res) => {
     const {tweetId, commentsUsers, commentsProfilesImg, commentsPublication, commentsDate} = req.body;
     let commentsImg;
-    console.log(req.body)
     if(req.files?.commentsImg){
         const result = await tweetsUploader(req.files.commentsImg.tempFilePath);
         commentsImg = result.secure_url;
         await fs.remove(req.files.commentsImg.tempFilePath);
-        
     }
-   
+
     await tweets.updateOne(
         {"tweets._id" : tweetId},
         {
@@ -198,8 +168,22 @@ export const respondTweetController = async (req, res) => {
         ]}
     )
 
-        const actualice = await tweets.find({"tweets._id": tweetId});
-        res.send(actualice);
+    const actualice = await tweets.find({"tweets._id": tweetId});
+
+    if (actualice.length > 0) {
+        const tweetOwner = actualice[0];
+        const targetTweet = tweetOwner.tweets.find(t => String(t._id) === String(tweetId));
+        if (targetTweet && String(tweetOwner._id) !== commentsUsers) {
+            emitNotification(String(tweetOwner._id), {
+                type: "comment",
+                fromUser: commentsUsers,
+                fromImg: commentsProfilesImg,
+                message: `${commentsUsers} comentó tu tweet`
+            });
+        }
+    }
+
+    res.send(actualice);
 }
 
 export const answerController = async (req, res) => {
@@ -209,7 +193,7 @@ export const answerController = async (req, res) => {
     if(req.files?.answerTweetImg){
         const result = await tweetsUploader(req.files.answerTweetImg.tempFilePath);
         answerTweetImg = result.secure_url;
-        fs.remove(req.files.answerTweetImg.tempFilePath);
+        await fs.remove(req.files.answerTweetImg.tempFilePath);
     }
 
     await tweets.updateOne(
@@ -230,6 +214,15 @@ export const answerController = async (req, res) => {
         ]}
         )
     const updateTweets = await tweets.find({_id: profileId});
+
+    if (profileId !== answerUsername) {
+        emitNotification(profileId, {
+            type: "answer",
+            fromUser: answerUsername,
+            fromImg: answerProfilesImg,
+            message: `${answerUsername} respondió un comentario en tu tweet`
+        });
+    }
 
     res.send(updateTweets);
 }
@@ -324,7 +317,7 @@ export const getSavedTweetController = async (req, res) => {
                                input: "$tweets",
                                as:"tweets",
                                cond: {
-                                    $eq: ["$$tweets.saved.savedSession", [sessionId]]
+                                    $in: [sessionId, "$$tweets.saved.savedSession"]
                                }
                                },
                            }
@@ -426,10 +419,10 @@ export const increaseLikesController = async (req, res) => { //deberia encontrar
       })
   
     if(findLike?.length > 0){
-        
+
        await tweets.updateOne(
             {_id: profileId },
-            { 
+            {
                 $pull: {
                    "tweets.$[o].tweetLikess": {profileIdLikes: profileIdLikes}
                 }
@@ -445,7 +438,7 @@ export const increaseLikesController = async (req, res) => { //deberia encontrar
     res.send(getProfile);
 
     }else{
-       
+
         await tweets.updateOne(
             {"tweets._id": tweetId},
             {
@@ -463,6 +456,16 @@ export const increaseLikesController = async (req, res) => { //deberia encontrar
                 ]
             }
         )
+
+        if (profileId !== profileIdLikes) {
+            emitNotification(profileId, {
+                type: "like",
+                fromUser: userNameLikes,
+                fromImg: profileImgLikes,
+                message: `${userNameLikes} le dio like a tu tweet`
+            });
+        }
+
         const updateLikes = await tweets.find({_id: profileId});
         res.send(updateLikes);
     }
@@ -629,17 +632,27 @@ export const increaseRetweetsController = async (req, res) => {
 }
 
 export const getAllTendController = async (req, res) => {
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
     const tendencies = await tweets.aggregate([
         { $unwind: "$tweets" },
-        { $match: { "tweets.hashtags.word": { $ne: "null" } } },
-        { $group: {
-            _id: "$tweets.hashtags",
+        { $match: {
+            "tweets.tweetDate": { $gte: since },
+            "tweets.hashtags.0": { $exists: true }
         }},
+        { $unwind: "$tweets.hashtags" },
+        { $match: {
+            "tweets.hashtags.word": { $exists: true, $nin: [null, "", "null"] }
+        }},
+        { $group: {
+            _id: "$tweets.hashtags.word",
+            count: { $sum: 1 }
+        }},
+        { $sort: { count: -1 } },
         { $limit: 7 }
-    ])
-  
-    res.send(tendencies);
+    ]);
 
+    res.send(tendencies);
 }
 
 export const getTendenciesController = async (req, res) => {
@@ -651,7 +664,7 @@ export const getTendenciesController = async (req, res) => {
                 input: "$tweets",
                 as:"tweets",
                 cond: {
-                     $eq: ["$$tweets.hashtags.word", [tendencie]]
+                    $in: [tendencie, "$$tweets.hashtags.word"]
                 }
                 }
             }
@@ -662,8 +675,46 @@ export const getTendenciesController = async (req, res) => {
 }
 
 export const getAllTweetsController = async (req, res) => {
-    const getAllTweets = await tweets.find({});
-    res.send(getAllTweets);
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(50, parseInt(req.query.limit) || 20);
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+        tweets.find({}).skip(skip).limit(limit),
+        tweets.countDocuments()
+    ]);
+
+    res.json({ data, page, limit, total, hasMore: skip + data.length < total });
+}
+
+export const getFeedController = async (req, res) => {
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(50, parseInt(req.query.limit) || 30);
+    const skip = (page - 1) * limit;
+
+    const [feed, countResult] = await Promise.all([
+        tweets.aggregate([
+            { $unwind: "$tweets" },
+            { $match: { "tweets.tweetPrivacy": "everyone" } },
+            { $sort: { "tweets.tweetDate": -1 } },
+            { $skip: skip },
+            { $limit: limit },
+            { $project: {
+                _id: 1,
+                tweet: "$tweets",
+                followers: 1,
+                following: 1
+            }}
+        ]),
+        tweets.aggregate([
+            { $unwind: "$tweets" },
+            { $match: { "tweets.tweetPrivacy": "everyone" } },
+            { $count: "total" }
+        ])
+    ]);
+
+    const total = countResult[0]?.total || 0;
+    res.json({ data: feed, page, limit, total, hasMore: skip + feed.length < total });
 }
 
 export const deleteAllController = async (req, res) => {
@@ -673,7 +724,6 @@ export const deleteAllController = async (req, res) => {
 
 export const deleteTweetController = async (req, res) => {
     const {userId, tweetId} = req.body
-    console.log(req.body)
     await tweets.updateOne(
         { _id: userId },
         { $pull: { tweets: { _id: tweetId } } }

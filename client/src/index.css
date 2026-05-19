@@ -1,12 +1,90 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif !important;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ─── Design tokens ─────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bg-primary:  #f0f2f5;
+  --bg-card:     #ffffff;
+  --bg-hover:    #f7f9fa;
+  --bg-input:    #f0f2f5;
+  --bg-comment:  #f8f9fa;
+
+  /* Text */
+  --text-primary:   #0f1419;
+  --text-secondary: #536471;
+  --text-muted:     #8b98a5;
+
+  /* Borders */
+  --border:       #eff3f4;
+  --border-input: #cfd9de;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 15px rgba(0,0,0,0.09);
+  --shadow-lg: 0 20px 50px rgba(0,0,0,0.18);
+
+  /* Brand */
+  --accent:    #667eea;
+  --accent-2:  #764ba2;
+  --accent-bg: rgba(102,126,234,0.10);
+  --gradient:  linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  /* Nav */
+  --nav-bg: #ffffff;
+  --nav-width: 70px;
 }
 
-code {
-   font-family: 'Poppins', sans-serif !important;
+/* ─── Dark theme ─────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --bg-primary:  #15202b;
+  --bg-card:     #192734;
+  --bg-hover:    #1e2f3d;
+  --bg-input:    #253341;
+  --bg-comment:  #1a2c3a;
+
+  --text-primary:   #e7e9ea;
+  --text-secondary: #8b98a5;
+  --text-muted:     #5b7083;
+
+  --border:       #2f3336;
+  --border-input: #38444d;
+
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.35);
+  --shadow-md: 0 4px 15px rgba(0,0,0,0.40);
+  --shadow-lg: 0 20px 50px rgba(0,0,0,0.60);
+
+  --nav-bg: #192734;
+}
+
+/* ─── Global resets ──────────────────────────────────────────── */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* ─── Dark mode global overrides ─────────────────────────────── */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background-color: var(--bg-input) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-input) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: var(--text-muted) !important;
+}
+
+[data-theme="dark"] .modal-base {
+  background: var(--bg-card) !important;
 }

@@ -1,6 +1,7 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useRef } from "react";
 import { authenticateUserRequest, createUserRequest, editPasswordRequest, editProfileRequest, followRequest, checkFollowRequest, unFollowRequest, getAllUsersRequest } from "../api/userRequests";
 import { createTweetRequest, respondTweetRequest, searchRequest, answerRequest, retweetRequest, saveTweetRequest, saveRetweetRequest, increaseLikesRequest, increaseCommentLikesRequest, increaseAnswerLikesRequest, getProfileInformationRequest, exploreTweetsRequest, getTendenciesRequest, getAllTendRequest, deleteTweetRequest } from "../api/tweetsRequests";
+import { io } from "socket.io-client";
 
 const TweetsContext = createContext();
 
@@ -16,14 +17,31 @@ export const TweetsContextProvider = ({children}) => {
     const [checkF, setCheckF] = useState(0);
     const [publicT, setPublicT] = useState(true);
     const [changeHomeLayout, setChangeHomeLayout] = useState(false);
+    const [notifications, setNotifications] = useState([]);
+    const socketRef = useRef(null);
 
     useEffect(() => {
         (async () => {
-            setSession(JSON.parse(localStorage.getItem("credentials")));
+            const stored = JSON.parse(localStorage.getItem("credentials"));
+            setSession(stored);
             const res = await getAllUsersRequest();
             setAllUsers(res.data);
-        })()
-    },[setAllUsers])
+
+            if (stored?.[0]?._id) {
+                socketRef.current = io(process.env.REACT_APP_BACK_URL);
+                socketRef.current.emit("register", stored[0]._id);
+                socketRef.current.on("notification", (data) => {
+                    setNotifications(prev => [{ ...data, id: Date.now() }, ...prev].slice(0, 20));
+                });
+            }
+        })();
+
+        return () => {
+            socketRef.current?.disconnect();
+        };
+    }, [])
+
+    const clearNotifications = () => setNotifications([]);
    
     const createUserContext = async (accountData) => {
         await createUserRequest(accountData);
@@ -32,14 +50,11 @@ export const TweetsContextProvider = ({children}) => {
     const setSessionContext = async (authenticateData) => {
         const res = await authenticateUserRequest(authenticateData);
         if(res.data !== 2){
-            console.log('aca b')
-            
             await localStorage.setItem("credentials", JSON.stringify(res.data));
             await setSession(JSON.parse(localStorage.getItem("credentials")));
             
             return res.data
         }else{
-            console.log('aca')
             return res.data
         }
     }
@@ -48,9 +63,8 @@ const sortTweetsByDate = (data) => {
   return data.map(user => ({
     ...user,
     tweets: [...(user.tweets || [])].sort((a, b) => {
-        const dateA = new Date(a.tweetDate).getTime();
-      const dateB = new Date(b.tweetDate).getTime();
-      return dateB - dateA; 
+      const parse = (d) => { const t = new Date(d).getTime(); return isNaN(t) ? 0 : t; };
+      return parse(b.tweetDate) - parse(a.tweetDate);
     }),
   }));
 };
@@ -196,13 +210,13 @@ const deleteTweetContext = async (userId, tweetId) => {
             se,
             setSe,
             setTweets,
-            searchUser, 
+            searchUser,
             setSearchUser,
             retweet,
             tendencies,
             retweetLayout,
             publicT,
-            changeHomeLayout, 
+            changeHomeLayout,
             setChangeHomeLayout,
             followContext,
             unFollowContext,
@@ -230,7 +244,9 @@ const deleteTweetContext = async (userId, tweetId) => {
             seeProfileContext,
             getAllTendContext,
             getTendenciesContext,
-            deleteTweetContext
+            deleteTweetContext,
+            notifications,
+            clearNotifications
         }}>{children}</TweetsContext.Provider>
     )
 }

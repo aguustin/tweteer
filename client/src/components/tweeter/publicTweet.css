@@ -1,23 +1,23 @@
 /* Contenedor principal */
 .publicTweet {
-  background: white;
+  background: var(--bg-card);
   border-radius: 20px;
   padding: 25px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  border-bottom: 3px solid #f0f0f0;
+  box-shadow: var(--shadow-md);
+  border-bottom: 3px solid var(--border);
 }
 
 /* Header */
 .publicTweet-header {
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid var(--border);
 }
 
 .publicTweet-header p {
   font-size: 18px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -27,7 +27,7 @@
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--border-input);
   flex-shrink: 0;
   margin-right: 15px;
 }
@@ -44,25 +44,26 @@
   width: 100%;
   min-height: 100px;
   padding: 15px;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--border-input);
   border-radius: 12px;
   font-size: 16px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  font-family: inherit;
   resize: vertical;
   transition: all 0.3s ease;
-  background: #f8f9fa;
+  background: var(--bg-input);
+  color: var(--text-primary);
   box-sizing: border-box;
 }
 
 .public-form-size textarea:focus {
   outline: none;
-  border-color: #667eea;
-  background: white;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  border-color: var(--accent);
+  background: var(--bg-card);
+  box-shadow: 0 0 0 4px var(--accent-bg);
 }
 
 .public-form-size textarea::placeholder {
-  color: #999;
+  color: var(--text-muted);
 }
 
 /* Contenedor inferior del formulario */
@@ -77,12 +78,12 @@
 /* Select de privacidad */
 .selectPrivacyPublication {
   padding: 10px 16px;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--border-input);
   border-radius: 20px;
   font-size: 14px;
   font-weight: 500;
-  color: #667eea;
-  background: white;
+  color: var(--accent);
+  background: var(--bg-card);
   cursor: pointer;
   transition: all 0.3s ease;
   flex: 1;
@@ -92,13 +93,13 @@
 
 .selectPrivacyPublication:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-bg);
 }
 
 .selectPrivacyPublication:hover {
-  background: #f8f9fa;
-  border-color: #667eea;
+  background: var(--bg-hover);
+  border-color: var(--accent);
 }
 
 /* Input de imagen (oculto) */
@@ -114,15 +115,15 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: white;
-  border: 2px solid #e0e0e0;
+  background: var(--bg-card);
+  border: 2px solid var(--border-input);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .public-form-size label:hover {
-  background: #667eea;
-  border-color: #667eea;
+  background: var(--accent);
+  border-color: var(--accent);
   transform: scale(1.1);
 }
 
@@ -143,7 +144,7 @@
   padding: 12px 32px;
   border: none;
   border-radius: 22px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient);
   color: white;
   font-weight: 700;
   font-size: 15px;
@@ -172,9 +173,9 @@
   align-items: center;
 }
 
-.abc{
-    width: 100%;
-    justify-content: right !important;
+.abc {
+  width: 100%;
+  justify-content: right !important;
 }
 
 /* Responsive */
@@ -251,10 +252,43 @@
   }
 }
 
-/*@media screen and (max-width:900px) {
-   
-    .publicTweet{
-       width: 100% !important;
-    }
+/* Mention dropdown */
+.mention-dropdown {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background: var(--bg-card);
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+  z-index: 50;
+  overflow: hidden;
+}
 
-}*/
+.mention-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+  color: var(--text-primary);
+}
+
+.mention-item:hover {
+  background: var(--bg-hover);
+}
+
+.mention-item img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.mention-item span {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}

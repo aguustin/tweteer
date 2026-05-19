@@ -19,12 +19,11 @@ const SearchLayout = (users) => {
         await getProfileInformationContext(session);
         await layoutHomeContext(e);
     };
-    console.log("us: " ,users)
     return(
         <div>
             {se ?
         <div className="searchedPeople">
-             {users.users.map((all) => <div className="peopleData">
+             {users.users.map((all) => <div key={all._id} className="peopleData">
                     <div>
                        {all.userImg ? <img src={all.userImg} alt=""></img> : <img src={notUser} alt=""></img> }
                     </div>

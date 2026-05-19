@@ -5,8 +5,6 @@ import TweetsContext from "../../context/tweetsContext";
 
 const Form = () => {
 
-  const backUrl = process.env.REACT_APP_BACK_URL;
-console.log(backUrl);
   const nav = useNavigate();
   const { createUserContext, setSessionContext, getProfileInformationContext } = useContext(TweetsContext);
   const [form, setForm] = useState(false);

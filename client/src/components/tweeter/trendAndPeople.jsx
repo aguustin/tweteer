@@ -36,37 +36,28 @@ const TrendAndPeople = () => {
                     <p>Tendencias para ti</p>
                 </div>
                 <div>
-    {topTrends && topTrends.some(tend => 
-        tend?._id?.some(t => t?.word && t.word.trim().length > 0)
-    ) ? (
-        topTrends.map((tend, index) => (
-            <span key={index}>
-                {tend?._id?.map((t, i) => (
-                    t?.word && t.word.trim().length > 0 && ( 
-                        <span key={i}>
-                            <div 
+                    {topTrends.length > 0 ? (
+                        topTrends.map((tend, index) => (
+                            <div
+                                key={index}
                                 className='trendsDivs'
-                                onClick={(e) => getTendencie(e, t.word)}
+                                onClick={(e) => getTendencie(e, tend._id)}
                                 role="button"
                                 tabIndex={0}
                                 onKeyPress={(e) => {
-                                    if (e.key === 'Enter') getTendencie(e, t.word);
+                                    if (e.key === 'Enter') getTendencie(e, tend._id);
                                 }}
                             >
-                                <p>#{t.word}</p>
-                                <label>{t?.countH || 0} Tweets</label>
+                                <p>#{tend._id}</p>
+                                <label>{tend.count} {tend.count === 1 ? 'Tweet' : 'Tweets'}</label>
                             </div>
-                        </span>
-                    )
-                ))}
-            </span>
-        ))
-    ) : (
-        <div style={{ padding: '20px', textAlign: 'center', color: '#999' }}>
-            <p>No hay tendencias disponibles</p>
-        </div>
-    )}
-</div>
+                        ))
+                    ) : (
+                        <div style={{ padding: '20px', textAlign: 'center', color: '#999' }}>
+                            <p>No hay tendencias en las últimas 24hs</p>
+                        </div>
+                    )}
+                </div>
 
             </div>
 

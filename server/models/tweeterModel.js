@@ -72,4 +72,11 @@ const tweeterSchema = new mongoose.Schema({
     }]
 })
 
+tweeterSchema.index({ userMail: 1 });
+tweeterSchema.index({ userName: 1 });
+tweeterSchema.index({ "tweets.tweetDate": -1 });
+tweeterSchema.index({ "tweets.hashtags.word": 1 });
+tweeterSchema.index({ "followers.followerId": 1 });
+tweeterSchema.index({ "following.followingId": 1 });
+
 export default mongoose.model('tweets', tweeterSchema);

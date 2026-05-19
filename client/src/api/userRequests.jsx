@@ -1,14 +1,12 @@
 import axios from "axios";
 
-console.log(process.env.BACK_URL)
-
 export const getAllUsersRequest = async () => axios.get(`${process.env.REACT_APP_BACK_URL}/getAllUsers`);
 
 export const createUserRequest = async (accountData) =>  axios.post(`${process.env.REACT_APP_BACK_URL}/createUser`, accountData);
 
 export const authenticateUserRequest = async (authenticateData) => axios.post(`${process.env.REACT_APP_BACK_URL}/authenticateUser`, authenticateData);
 
-export const editPasswordRequest = async (userName, password, confirmPassword) => axios.put(`${process.env.REACT_APP_BACK_URL}/editPassword/${userName}/${password}/${confirmPassword}`);
+export const editPasswordRequest = async (userMail, password, confirmPassword) => axios.put(`${process.env.REACT_APP_BACK_URL}/editPassword/${userMail}/${password}/${confirmPassword}`);
 
 export const editProfileRequest = async (editData) => {
     const form = new FormData();

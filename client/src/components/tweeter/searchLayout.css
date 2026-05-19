@@ -1,65 +1,79 @@
-.searchedPeople{
+.searchedPeople {
     position: absolute;
     max-height: 600px;
     width: 550px;
     top: 3.5rem;
     left: 20vw;
     transform: translateX(-20vw);
-    background-color: white;
+    background-color: var(--bg-card);
     z-index: 2;
-    padding: 0rem 2rem 2rem;
-    border-radius: 5px;
+    padding: 0 2rem 2rem;
+    border-radius: 8px;
     overflow-y: scroll;
-    box-shadow: 1px 2px 5px 0px rgba(179,179,179,0.75);
-    -webkit-box-shadow: 1px 2px 5px 0px rgba(179,179,179,0.75);
-    -moz-box-shadow: 1px 2px 5px 0px rgba(179,179,179,0.75);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
 }
 
-.peopleData{
+.peopleData {
     position: relative;
     display: flex;
     align-items: center;
     margin-top: 15px;
-    border-bottom: 1px solid rgb(216, 216, 216);
+    border-bottom: 1px solid var(--border);
     padding-bottom: 15px;
     font-weight: 600;
 }
 
-.peopleData .data{
+.peopleData .data {
     margin-left: 10px;
 }
-.peopleData img{
+
+.peopleData .data p {
+    color: var(--text-primary);
+    margin: 0 0 4px 0;
+}
+
+.peopleData img {
     width: 70px;
     height: 70px;
     border-radius: 50px;
 }
 
-.peopleData label{
-    color: rgb(182, 182, 182);
+.peopleData label {
+    color: var(--text-muted);
 }
 
-.peopleData button{
+.peopleData button {
     position: absolute;
     right: 0;
     padding: .5rem .7rem;
-    background-color: rgb(65, 65, 248);
+    background: var(--gradient);
     color: white;
     font-weight: 600;
     border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
 }
 
-.searchedPeople::-webkit-scrollbar{
+.peopleData button:hover {
+    opacity: 0.85;
+}
+
+.searchedPeople::-webkit-scrollbar {
     background-color: transparent;
     width: 6px;
 }
 
-.searchedPeople{
-    scrollbar-color: rgb(65, 65, 248);
-    scrollbar-width: 6px;
-    scrollbar-base-color: red;
+.searchedPeople::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: var(--accent);
 }
 
-.searchedPeople::-webkit-scrollbar-thumb{
-    border-radius: 10px;
-    background-color: rgb(65, 65, 248);
+@media (max-width: 600px) {
+    .searchedPeople {
+        width: 90vw;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
